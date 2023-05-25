@@ -9,7 +9,7 @@ import { useDebouncedValue } from "~/hooks/useDebouncedValue"
 
 export function Search() {
   const router = useRouter()
-  const [query, setQuery] = useState("express")
+  const [query, setQuery] = useState<string>()
   const debouncedQuery = useDebouncedValue(query, 500)
 
   const { data, isLoading } = useQuery({
@@ -37,7 +37,11 @@ export function Search() {
       className={css`
         width: 100%;
       `}
-      initialContent={isLoading ? <MenuItem disabled={true} text="Loading..." /> : null}
+      initialContent={
+        isLoading && debouncedQuery ? (
+          <MenuItem disabled={true} text="Loading..." />
+        ) : null
+      }
       popoverProps={{
         matchTargetWidth: true,
         minimal: true,

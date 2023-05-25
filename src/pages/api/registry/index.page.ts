@@ -7,13 +7,9 @@ export const config: PageConfig = {
 
 export default async function getRegistry(req: NextRequest) {
   const url = new URL(req.url)
-  const pathname = url.pathname.slice("/api/registry/".length)
 
-  return fetch(`https://registry.npmjs.org/${pathname}${url.search}`, {
+  return fetch(`https://registry.npmjs.org/${url.search}`, {
     redirect: "follow",
-    headers: {
-      ...req.headers,
-      "x-spiferack": "1",
-    },
+    headers: { ...req.headers, "x-spiferack": "1" },
   })
 }

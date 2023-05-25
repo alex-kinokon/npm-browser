@@ -1,24 +1,32 @@
-import { onlineManager } from "@tanstack/react-query"
 import getRegistry from "~/pages/api/registry/[...route].page"
 import type { IssuesResult } from "./githubIssues"
 import type { PullsResult } from "./githubPull"
 import type { FileResult } from "./npmFile"
-import type { PackageMetadata } from "./npmPackage"
-import type { NpmPackage } from "./npmPackage2"
-import type { NpmSearchResult } from "./npmSearch"
+import type { NpmPackage } from "./npmPackage"
 import getNPM from "~/pages/api/npm/[...route].page"
 import { queryOptions } from "~/utils/queryType"
+import * as npm from "~/vendor/node-query-registry"
+import getNPMRoot from "~/pages/api/npm/index.page"
+import type { NpmSite } from "./npmSite"
 
 if (typeof window !== "undefined") {
   // onlineManager.setOnline(false)
 }
 
+// Endpoints
+const npmMirror = "/api/npm"
+const npmjs = "https://www.npmjs.com"
+const github = "https://api.github.com"
+
 function isomorphicFetch(url: string, init?: RequestInit) {
   if (typeof window === "undefined") {
+    const wrapped = `http://localhost${url}`
     if (url.startsWith("/api/registry")) {
-      return getRegistry({ url: `http://localhost${url}` } as any)
-    } else if (url.startsWith("/api/npm")) {
-      return getNPM({ url: `http://localhost${url}` } as any)
+      return getRegistry({ url: wrapped } as any)
+    } else if (url === npmMirror) {
+      return getNPMRoot({ url: wrapped } as any)
+    } else if (url.startsWith(npmMirror)) {
+      return getNPM({ url: wrapped } as any)
     }
   }
 
@@ -31,56 +39,49 @@ async function get<T>(url: string, contentType = "application/json") {
     headers: { "Content-Type": contentType },
   })
   if (!res.ok) {
-    if (process.env.NODE_ENV === "development") console.error(url)
-    throw new Error(`Request failed with status ${res.status}`)
+    if (process.env.NODE_ENV === "development") {
+      console.trace()
+      console.error(url)
+    }
+    throw new Error(`Request failed with status ${res.status} ${res.statusText}`)
   }
   return res.json() as Promise<T>
 }
 
-export function getSearchSuggestions(params: {
-  /** full-text search to apply */
-  text: string
-  /** how many results should be returned (default 20, max 250) */
-  size?: number
-  /** offset to return results from */
-  from?: number
-  /** how much of an effect should quality have on search results */
-  quality?: number
-  /** how much of an effect should popularity have on search results */
-  popularity?: number
-  /** how much of an effect should maintenance have on search results */
-  maintenance?: number
-}): Promise<NpmSearchResult> {
-  return get(`/api/registry/-/v1/search?${new URLSearchParams(params as any)}`)
+export function getSearchSuggestions(params: npm.SearchCriteria) {
+  return npm.searchPackages({
+    query: params,
+    registry: npm.cloudflareRegistry,
+  })
 }
 
-export function getRegistryPackageInfo(name: string, version?: string) {
+export function getRegistryPackageInfo(name: string) {
   return queryOptions({
-    queryKey: ["getRegistryPackageInfo", name, version || null],
-    queryFn: () =>
-      get<PackageMetadata>(`/api/registry/${name}` + (version ? `/${version}` : "")),
+    queryKey: ["getRegistryPackageInfo", name],
+    queryFn: () => npm.getPackument({ name, registry: npm.cloudflareRegistry }),
   })
 }
 
 export function getPackageFiles(name: string, version: string) {
   return queryOptions({
     queryKey: ["getPackageFiles", name, version],
-    queryFn: () => get<FileResult>(`/api/npm/package/${name}/v/${version}/index`),
+    queryFn: () => get<FileResult>(`${npmMirror}/package/${name}/v/${version}/index`),
   })
 }
 
 export function getPulls(owner: string, repo: string): Promise<PullsResult> {
-  return get(`https://api.github.com/repos/${owner}/${repo}/pulls`)
+  return get(`${github}/repos/${owner}/${repo}/pulls`)
 }
 
 export function getIssues(owner: string, repo: string): Promise<IssuesResult> {
-  return get(`https://api.github.com/repos/${owner}/${repo}/issues`)
+  return get(`${github}/repos/${owner}/${repo}/issues`)
 }
 
 export function getPackageInfo(name: string, version?: string) {
   return queryOptions({
     queryKey: ["getPackageInfo", name, version || null],
-    queryFn: () => get<NpmPackage>(`/api/npm/${name}` + (version ? `/v/${version}` : "")),
+    queryFn: () =>
+      get<NpmPackage>(`${npmMirror}/${name}` + (version ? `/v/${version}` : "")),
   })
 }
 
@@ -88,8 +89,14 @@ export function getPackageFile(name: string, hex?: string) {
   return queryOptions({
     queryKey: ["getPackageFile", hex || null],
     enabled: !!hex,
-    queryFn: () =>
-      fetch(`https://www.npmjs.com/package/${name}/file/${hex}`).then(res => res.text()),
+    queryFn: () => fetch(`${npmjs}/package/${name}/file/${hex}`).then(res => res.text()),
+  })
+}
+
+export function getInterestingStats() {
+  return queryOptions({
+    queryKey: ["getInterestingStats"],
+    queryFn: () => get<NpmSite>(npmMirror),
   })
 }
 

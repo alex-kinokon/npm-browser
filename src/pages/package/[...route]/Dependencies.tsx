@@ -1,8 +1,8 @@
 import { Classes, H4 } from "@blueprintjs/core"
 import { memo } from "react"
 import Link from "next/link"
-import type { PackageMetadata } from "~/remote/npmPackage"
-import type { NpmPackage } from "~/remote/npmPackage2"
+import type { NpmPackage } from "~/remote/npmPackage"
+import type { Packument } from "~/vendor/node-query-registry"
 
 function DepList({
   title,
@@ -30,7 +30,7 @@ function DepList({
 }
 
 export const Dependencies = memo(
-  ({ data, version }: { data: PackageMetadata; version: string }) => {
+  ({ data, version }: { data: Packument; version: string }) => {
     const cur = data.versions[version]
     const deps = Object.keys(cur.dependencies ?? {})
     const devDeps = Object.keys(cur.devDependencies ?? {})

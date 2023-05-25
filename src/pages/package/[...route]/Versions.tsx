@@ -1,13 +1,14 @@
 import { Button, Classes, Code, H4 } from "@blueprintjs/core"
+import { ChevronDown, ChevronUp } from "@blueprintjs/icons"
 import { memo, useMemo, useState } from "react"
 import Link from "next/link"
 import { css } from "@emotion/css"
 import { RelativeTime } from "~/utils/relativeTime"
-import type { PackageMetadata } from "~/remote/npmPackage"
+import type { Packument } from "~/vendor/node-query-registry"
 
-export const VersionList = memo(({ data }: { data: PackageMetadata }) => {
+export const VersionList = memo(({ data }: { data: Packument }) => {
   const versions = useMemo(() => Object.keys(data.versions).reverse(), [data.versions])
-  const distTags = useMemo(() => Object.entries(data["dist-tags"]), [data["dist-tags"]])
+  const distTags = useMemo(() => Object.entries(data.distTags), [data.distTags])
   const [showAll, setShowAll] = useState(false)
 
   return (
@@ -20,6 +21,8 @@ export const VersionList = memo(({ data }: { data: PackageMetadata }) => {
             <Code
               className={css`
                 font-size: 1em;
+                margin-left: 3px;
+                margin-right: 3px;
               `}
             >
               {tag}
@@ -36,7 +39,7 @@ export const VersionList = memo(({ data }: { data: PackageMetadata }) => {
             minimal
             small
             onClick={() => setShowAll(!showAll)}
-            icon={showAll ? "chevron-up" : "chevron-down"}
+            icon={showAll ? <ChevronUp /> : <ChevronDown />}
           />
         )}
       </H4>

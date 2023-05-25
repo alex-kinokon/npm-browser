@@ -37,6 +37,7 @@ async function getServerSide(params?: ParsedUrlQuery) {
 
   const client = new QueryClient()
   const pkgInfo = await client.fetchQuery(getRegistryPackageInfo(name))
+
   const pkgFileOptions = await client.fetchQuery(
     getPackageFiles(name, version ?? pkgInfo["dist-tags"].latest)
   )
@@ -45,9 +46,16 @@ async function getServerSide(params?: ParsedUrlQuery) {
     await client.prefetchQuery(getPackageFile(name, readmeHex))
   }
 
+  let dehydratedState = dehydrate(client)
+
+  if (process.env.NODE_ENV === "development") {
+    // https://github.com/vercel/next.js/discussions/11209
+    dehydratedState = JSON.parse(JSON.stringify(dehydratedState))
+  }
+
   return {
     route: { name, version: version || null },
-    dehydratedState: dehydrate(client),
+    dehydratedState,
   }
 }
 

@@ -1,21 +1,19 @@
 import { useQuery } from "@tanstack/react-query"
 import { css, cx } from "@emotion/css"
-import { Classes, Colors, Divider, FormGroup, H2, Tab, Tabs } from "@blueprintjs/core"
+import { Classes, Colors, Divider, H2, Tab, Tabs } from "@blueprintjs/core"
 import styled from "@emotion/styled"
 import { useEffect, useState } from "react"
-import Link from "next/link"
+import Head from "next/head"
 import { RelativeTime } from "~/utils/relativeTime"
 import { getPackageInfo, getRegistryPackageInfo } from "~/remote"
 import { Readme } from "./Readme"
 import { FileView } from "./Files"
-import type { PackageMetadata } from "~/remote/npmPackage"
-import type { NpmPackage } from "~/remote/npmPackage2"
-import { getFileSize } from "~/utils/fileSize"
 import { PageHeader } from "./Header"
 import { TypeScriptStatus } from "./TypeScriptStatus"
 import { VersionList } from "./Versions"
 import { Dependencies, Dependents } from "./Dependencies"
-import { Install } from "./InstallInstruction"
+import Footer from "~/components/Footer"
+import { Sidebar } from "./Sidebar"
 
 const flex = css`
   display: flex;
@@ -58,6 +56,10 @@ export function PackagePage({ name, version }: { name: string; version?: string 
   return (
     <div className={isLoading ? css({ cursor: "wait" }) : undefined}>
       <PageHeader />
+
+      <Head>
+        <title>{name}</title>
+      </Head>
 
       <Container>
         <div
@@ -152,98 +154,15 @@ export function PackagePage({ name, version }: { name: string; version?: string 
 
           <Sidebar data={data} version={ver!} npm={npm} package={name} />
         </Grid>
+
+        <Divider
+          className={css`
+            margin-top: 40px;
+            margin-left: -2px;
+          `}
+        />
+        <Footer />
       </Container>
     </div>
-  )
-}
-
-const SidebarContainer = styled.div`
-  .bp5-label {
-    font-weight: 600;
-  }
-  .bp5-form-content {
-    font-size: 1.1em;
-  }
-`
-
-function Sidebar({
-  data,
-  npm,
-  version,
-  package: name,
-}: {
-  data?: PackageMetadata
-  npm?: NpmPackage
-  version: string
-  package: string
-}) {
-  const cur = data?.versions[version]
-
-  return (
-    <SidebarContainer>
-      <Install name={name} />
-
-      <FormGroup label="Repository">
-        <a
-          href={data?.repository?.url}
-          target="_blank"
-          rel="noopener noreferrer"
-          className={cx(!data && Classes.SKELETON)}
-        >
-          {data?.repository?.url}
-        </a>
-      </FormGroup>
-      <FormGroup label="Homepage">
-        <a
-          href={data?.homepage}
-          target="_blank"
-          rel="noopener noreferrer"
-          className={cx(!data && Classes.SKELETON)}
-        >
-          {data?.homepage}
-        </a>
-      </FormGroup>
-      <FormGroup label="Weekly Downloads">
-        <span className={cx(!npm && Classes.SKELETON)}>
-          {npm?.downloads.at(-1)?.downloads.toLocaleString()}
-        </span>
-      </FormGroup>
-      <FormGroup label="Version">{version}</FormGroup>
-      <FormGroup label="License">
-        <span className={cx(!data && Classes.SKELETON)}>
-          {data?.license ?? "Unknown"}
-        </span>
-      </FormGroup>
-      <FormGroup label="Unpacked file size">
-        <span className={cx(!data && Classes.SKELETON)}>
-          {cur?.dist.unpackedSize != null
-            ? getFileSize(cur.dist.unpackedSize!)
-            : "Unknown"}
-        </span>
-      </FormGroup>
-      <FormGroup label="Total Files">{cur?.dist.fileCount || "N/A"}</FormGroup>
-      <FormGroup label="Maintainers">
-        {npm?.packument.maintainers.map(maintainer => (
-          <Link
-            href={`/user/${maintainer.name}`}
-            key={maintainer.name}
-            title={maintainer.name}
-          >
-            <img
-              key={maintainer.name}
-              src={`https://www.npmjs.com/${maintainer.avatars.medium}`}
-              height={50}
-              width={50}
-              alt={maintainer.name}
-              className={css`
-                border-radius: 5px;
-                margin-right: 6px;
-                margin-bottom: 6px;
-              `}
-            />
-          </Link>
-        ))}
-      </FormGroup>
-    </SidebarContainer>
   )
 }

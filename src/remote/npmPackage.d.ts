@@ -81,7 +81,7 @@ interface Packument {
   distTags?: DistTags
 }
 
-interface Author {
+export interface Author {
   name: string
   avatars: Avatars
 }
@@ -99,7 +99,7 @@ interface Version {
   dist: Dist
 }
 
-interface DateClass {
+export interface DateClass {
   ts: number
   rel: string
 }

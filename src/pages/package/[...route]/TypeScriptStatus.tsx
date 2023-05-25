@@ -1,6 +1,7 @@
 import { css } from "@emotion/css"
+import Link from "next/link"
 import { SiTypescript } from "react-icons/si"
-import type { NpmPackage } from "~/remote/npmPackage2"
+import type { NpmPackage } from "~/remote/npmPackage"
 
 export function TypeScriptStatus({ npm }: { npm?: NpmPackage }) {
   const t = npm?.capsule.types?.typescript
@@ -21,7 +22,8 @@ export function TypeScriptStatus({ npm }: { npm?: NpmPackage }) {
   }
 
   return (
-    <div
+    <Link
+      href={`/package/${t.package}`}
       className={css`
         border: 1px solid #3178c6;
         color: #3178c6;
@@ -33,6 +35,6 @@ export function TypeScriptStatus({ npm }: { npm?: NpmPackage }) {
       `}
     >
       <div>DT</div>
-    </div>
+    </Link>
   )
 }

@@ -1,3 +1,4 @@
 {
-  "eslint.runtime": "node"
+  "eslint.runtime": "node",
+  "cSpell.words": ["packument"]
 }
