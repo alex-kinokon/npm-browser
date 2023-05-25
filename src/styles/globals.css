@@ -1,0 +1,14 @@
+@import "normalize.css";
+@import "@blueprintjs/core/lib/css/blueprint.css";
+@import "@blueprintjs/icons/lib/css/blueprint-icons.css";
+
+body {
+  font-size: 15px;
+}
+
+body.bp5-dark {
+  background-color: #0d1117;
+}
+.bp5-dark .bp5-navbar {
+  background-color: #161b22;
+}
