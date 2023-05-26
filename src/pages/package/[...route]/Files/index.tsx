@@ -77,7 +77,9 @@ export function FileView({ package: { name, version } }: { package: PackageIdent
     )
   }
 
-  const list = files.filter(file => file.dirname === path)
+  const list = files
+    .filter(file => file.dirname === path)
+    .sort((a, b) => a.basename.localeCompare(b.basename))
   const childDirs = directories.filter(dir => dir.parent === path)
 
   return (
