@@ -3,13 +3,17 @@ import invariant from "tiny-invariant"
 import type { DehydratedState } from "@tanstack/react-query"
 import { QueryClient, dehydrate } from "@tanstack/react-query"
 import type { GetServerSideProps, InferGetServerSidePropsType } from "next"
-import { PackagePage } from "./package"
+import dynamic from "next/dynamic"
 import {
   getPackageFile,
   getPackageFiles,
   getReadmeFileHex,
   getRegistryPackageInfo,
 } from "~/remote"
+
+const PackagePage = dynamic(() => import("./package"), {
+  ssr: false,
+})
 
 // four possibilities:
 // 1. pkgName

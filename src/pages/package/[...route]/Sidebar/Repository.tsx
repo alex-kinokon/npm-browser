@@ -53,7 +53,7 @@ function GitHubDataWrapper({ repo }: { repo: string }) {
   return <GitHubData owner={owner} repo={repoName.replace(/\.git$/, "")} />
 }
 
-function GitHubData({ owner, repo }: { owner: string; repo: string }) {
+const GitHubData = memo(({ owner, repo }: { owner: string; repo: string }) => {
   const pulls = useQuery({
     queryKey: ["getGitHubPulls", owner, repo],
     queryFn: () => getPulls(owner, repo),
@@ -100,4 +100,4 @@ function GitHubData({ owner, repo }: { owner: string; repo: string }) {
       )}
     </div>
   )
-}
+})

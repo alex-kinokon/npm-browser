@@ -69,7 +69,7 @@
     "no-template-curly-in-string": "error",
     "no-var": "error",
     "import/export": "off",
-    "import/order": ["error", { "groups": ["builtin", "external"] }],
+    "import/order": ["warn", { "groups": ["builtin", "external"] }],
     "object-shorthand": ["error", "always", { "ignoreConstructors": true }],
     "one-var": ["error", { "var": "never", "let": "never" }],
     "prefer-arrow-callback": "error",

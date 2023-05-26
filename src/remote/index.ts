@@ -34,10 +34,10 @@ function isomorphicFetch(url: string, init?: RequestInit) {
   return fetch(url, init)
 }
 
-async function get<T>(url: string, contentType = "application/json") {
+async function get<T>(url: string) {
   const res = await isomorphicFetch(url, {
     method: "GET",
-    headers: { "Content-Type": contentType },
+    headers: { "Content-Type": "application/json" },
   })
   if (!res.ok) {
     if (process.env.NODE_ENV === "development") {
@@ -81,11 +81,10 @@ export function getGitHubRepo(owner: string, repo: string) {
   return get<GithubRepo>(`${github}/repos/${owner}/${repo}`)
 }
 
-export function getPackageInfo(name: string, version?: string) {
+export function getPackageInfo(name: string) {
   return queryOptions({
-    queryKey: ["getPackageInfo", name, version || null],
-    queryFn: () =>
-      get<NpmPackage>(`${npmMirror}/${name}` + (version ? `/v/${version}` : "")),
+    queryKey: ["getPackageInfo", name],
+    queryFn: () => get<NpmPackage>(`${npmMirror}/${name}`),
   })
 }
 

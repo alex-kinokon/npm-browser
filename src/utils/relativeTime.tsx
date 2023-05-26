@@ -1,4 +1,4 @@
-import { useMemo } from "react"
+import { memo, useMemo } from "react"
 import { useLocale } from "~/contexts/Locale"
 
 const is = (interval: number, cycle: number) =>
@@ -45,8 +45,12 @@ export function relativeTime(time: Date | number, now = Date.now(), locale?: str
   }
 }
 
-export function RelativeTime({ date }: { date: Date | number }) {
+export const RelativeTime = memo(({ date }: { date: Date | number }) => {
   const locale = useLocale()
   const t = useMemo(() => new Date(date), [date])
-  return <time dateTime={t.toISOString()}>{relativeTime(t, undefined, locale)}</time>
-}
+  return (
+    <time dateTime={t.toISOString()} title={t.toLocaleString()}>
+      {relativeTime(t, undefined, locale)}
+    </time>
+  )
+})

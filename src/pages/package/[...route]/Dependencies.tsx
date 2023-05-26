@@ -1,8 +1,11 @@
 import { Classes, H4 } from "@blueprintjs/core"
 import { memo } from "react"
 import Link from "next/link"
-import type { NpmPackage } from "~/remote/npmPackage"
+import { useQuery } from "@tanstack/react-query"
 import type { Packument } from "~/vendor/node-query-registry"
+import type { PackageIdentifier } from "./package"
+import { skeleton } from "./package"
+import { getPackageInfo } from "~/remote"
 
 function DepList({
   title,
@@ -45,12 +48,24 @@ export const Dependencies = memo(
   }
 )
 
-export const Dependents = memo(({ npm }: { npm: NpmPackage }) => (
-  <div>
-    <DepList
-      title="Dependents"
-      count={npm.dependents.dependentsCount}
-      deps={npm.dependents.dependentsTruncated}
-    />
-  </div>
-))
+export const Dependents = memo(
+  ({ package: { name } }: { package: PackageIdentifier }) => {
+    const { data: npm, isLoading } = useQuery(getPackageInfo(name))
+    if (isLoading) {
+      return skeleton
+    }
+    if (!npm) {
+      return null
+    }
+
+    return (
+      <div>
+        <DepList
+          title="Dependents"
+          count={npm.dependents.dependentsCount}
+          deps={npm.dependents.dependentsTruncated}
+        />
+      </div>
+    )
+  }
+)

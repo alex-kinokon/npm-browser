@@ -2,10 +2,10 @@ import { useQuery } from "@tanstack/react-query"
 import { css, cx } from "@emotion/css"
 import { Classes, Colors, Divider, H2, Tab, Tabs } from "@blueprintjs/core"
 import styled from "@emotion/styled"
-import { useEffect, useState } from "react"
+import { useEffect, useMemo, useState } from "react"
 import Head from "next/head"
 import { RelativeTime } from "~/utils/relativeTime"
-import { getPackageInfo, getRegistryPackageInfo } from "~/remote"
+import { getRegistryPackageInfo } from "~/remote"
 import { Readme } from "./Readme"
 import { FileView } from "./Files"
 import { PageHeader } from "~/components/Header"
@@ -15,6 +15,11 @@ import { Dependencies, Dependents } from "./Dependencies"
 import Footer from "~/components/Footer"
 import { Sidebar } from "./Sidebar"
 import { T } from "~/contexts/Locale"
+
+export interface PackageIdentifier {
+  name: string
+  version: string
+}
 
 const flex = css`
   display: flex;
@@ -41,19 +46,25 @@ const enum TAB {
   Versions,
 }
 
-const skeleton = <div className={Classes.SKELETON} style={{ height: 500 }} />
+export const skeleton = <div className={Classes.SKELETON} style={{ height: 500 }} />
 
-export function PackagePage({ name, version }: { name: string; version?: string }) {
+export default function PackagePage({
+  name,
+  version,
+}: {
+  name: string
+  version?: string
+}) {
   const { data, isLoading } = useQuery(getRegistryPackageInfo(name))
-  const { data: npm, isLoading: isNPMLoading } = useQuery(getPackageInfo(name, version))
+  const ver = version ?? data?.["dist-tags"].latest
+  const id: PackageIdentifier = useMemo(() => ({ name, version: ver! }), [name, ver])
 
   const [activeTab, setActiveTab] = useState<TAB>(TAB.Readme)
+  const isPrivate = false as boolean
 
   useEffect(() => {
     setActiveTab(TAB.Readme)
   }, [name, version])
-
-  const ver = version ?? data?.["dist-tags"].latest
 
   return (
     <div className={isLoading ? css({ cursor: "wait" }) : undefined}>
@@ -88,7 +99,7 @@ export function PackagePage({ name, version }: { name: string; version?: string 
                 >
                   {name}
                 </H2>{" "}
-                <TypeScriptStatus npm={npm} />
+                <TypeScriptStatus package={id} />
               </div>
               <div
                 className={css`
@@ -99,9 +110,9 @@ export function PackagePage({ name, version }: { name: string; version?: string 
                 `}
               >
                 <div>{ver}</div> <Divider />
-                <div className={cx(isNPMLoading && Classes.SKELETON)}>
+                <div>
                   Scope:{" "}
-                  {npm?.private ? (
+                  {isPrivate ? (
                     <span style={{ color: Colors.RED4 }}>Private</span>
                   ) : (
                     <span style={{ color: Colors.GREEN4 }}>Public</span>
@@ -122,6 +133,8 @@ export function PackagePage({ name, version }: { name: string; version?: string 
                 overflow: hidden;
                 padding-top: 4px;
                 padding-left: 4px;
+                padding-bottom: 4px;
+                padding-right: 4px;
                 margin-left: -4px;
                 .bp5-tab {
                   font-size: inherit;
@@ -133,12 +146,12 @@ export function PackagePage({ name, version }: { name: string; version?: string 
               <Tab
                 id={TAB.Readme}
                 title={<T en="Readme" fr="Description" ja="説明" zh-Hant="說明" />}
-                panel={<Readme package={name} fallback={data?.readme} version={ver!} />}
+                panel={<Readme package={id} fallback={data?.readme} />}
               />
               <Tab
                 id={TAB.Code}
                 title={<T en="Code" fr="Code" ja="コード" zh-Hant="程式碼" />}
-                panel={ver ? <FileView package={name} version={ver} /> : skeleton}
+                panel={ver ? <FileView package={id} /> : skeleton}
               />
               <Tab
                 id={TAB.Dependencies}
@@ -155,7 +168,7 @@ export function PackagePage({ name, version }: { name: string; version?: string 
               <Tab
                 id={TAB.Dependents}
                 title={<T en="Dependents" fr="Dépendants" zh-Hant="相依" />}
-                panel={npm ? <Dependents npm={npm} /> : skeleton}
+                panel={<Dependents package={id} />}
               />
               <Tab
                 id={TAB.Versions}
@@ -165,7 +178,7 @@ export function PackagePage({ name, version }: { name: string; version?: string 
             </Tabs>
           </div>
 
-          <Sidebar data={data} version={ver!} npm={npm} package={name} />
+          <Sidebar data={data} package={id} />
         </Grid>
 
         <Divider

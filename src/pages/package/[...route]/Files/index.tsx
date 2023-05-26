@@ -21,14 +21,19 @@ import { getPackageFiles } from "~/remote"
 import { CodeView } from "./CodeView"
 import { PathNavigation } from "./PathNavigation"
 import { ErrorView, LoadingView } from "../NonIdeal"
+import type { PackageIdentifier } from "../package"
+import type { FileResult } from "~/remote/npmFile"
 
-export function FileView({
-  package: name,
-  version,
-}: {
-  package: string
-  version: string
-}) {
+function mapFile(files?: FileResult["files"]) {
+  return Object.values(files ?? {}).map(file => ({
+    ...file,
+    basename: basename(file.path),
+    dirname: dirname(file.path),
+  }))
+}
+export type MappedFile = ReturnType<typeof mapFile>[number]
+
+export function FileView({ package: { name, version } }: { package: PackageIdentifier }) {
   const { data, isLoading, isError, error } = useQuery(getPackageFiles(name, version))
 
   const [path, setPath] = useState("/")
@@ -37,15 +42,7 @@ export function FileView({
     setPath("/")
   }, [name, version])
 
-  const files = useMemo(
-    () =>
-      Object.values(data?.files ?? {}).map(file => ({
-        ...file,
-        basename: basename(file.path),
-        dirname: dirname(file.path),
-      })),
-    [data?.files]
-  )
+  const files = useMemo(() => mapFile(data?.files), [data?.files])
 
   const directories = useMemo(() => {
     const set = new Set<string>()
@@ -75,7 +72,7 @@ export function FileView({
     return (
       <Container>
         <PathNavigation path={path} setPath={setPath} package={name} />
-        <CodeView package={name} file={activeFile} />
+        <CodeView package={name} file={activeFile} files={files} setPath={setPath} />
       </Container>
     )
   }

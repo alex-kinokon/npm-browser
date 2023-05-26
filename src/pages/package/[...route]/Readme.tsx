@@ -2,14 +2,13 @@ import { css } from "@emotion/css"
 import { useQuery } from "@tanstack/react-query"
 import { Markdown, markdownStyle } from "~/components/Markdown"
 import { getPackageFile, getPackageFiles, getReadmeFileHex } from "~/remote"
+import type { PackageIdentifier } from "./package"
 
 export function Readme({
-  package: name,
-  version,
+  package: { name, version },
   fallback,
 }: {
-  package: string
-  version: string
+  package: PackageIdentifier
   fallback?: string
 }) {
   const { data: files } = useQuery(getPackageFiles(name, version))

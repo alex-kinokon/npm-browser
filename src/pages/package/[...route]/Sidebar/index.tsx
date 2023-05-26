@@ -1,7 +1,6 @@
 import { css, cx } from "@emotion/css"
 import { Classes, FormGroup } from "@blueprintjs/core"
 import styled from "@emotion/styled"
-import type { NpmPackage } from "~/remote/npmPackage"
 import { getFileSize } from "~/utils/fileSize"
 import { Install } from "../InstallInstruction"
 import type { Packument } from "~/vendor/node-query-registry"
@@ -9,18 +8,16 @@ import { T } from "~/contexts/Locale"
 import { RepositoryView } from "./Repository"
 import { MaintainersView } from "./Maintainers"
 import { DownloadsView } from "./Downloads"
+import type { PackageIdentifier } from "../package"
 
 export function Sidebar({
   data,
-  npm: _npm,
-  version,
-  package: name,
+  package: pkg,
 }: {
   data?: Packument
-  npm?: NpmPackage
-  version: string
-  package: string
+  package: PackageIdentifier
 }) {
+  const { name, version } = pkg
   const cur = data?.versions[version]
 
   return (
@@ -90,7 +87,7 @@ export function Sidebar({
         {cur?.dist.fileCount || "N/A"}
       </FormGroup>
 
-      <MaintainersView npm={_npm} />
+      <MaintainersView package={name} />
     </SidebarContainer>
   )
 }

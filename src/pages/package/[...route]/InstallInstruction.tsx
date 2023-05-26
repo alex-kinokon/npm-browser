@@ -1,7 +1,7 @@
 import { css } from "@emotion/css"
 import { FormGroup } from "@blueprintjs/core"
 import styled from "@emotion/styled"
-import { useMemo, useState } from "react"
+import { memo, useMemo, useState } from "react"
 import { Markdown, markdownStyle } from "~/components/Markdown"
 import { T } from "~/contexts/Locale"
 
@@ -23,7 +23,7 @@ const PkgSwitcher = styled.a`
   }
 `
 
-export function Install({ name }: { name: string }) {
+export const Install = memo(({ name }: { name: string }) => {
   const [pkgMan, setPkgMan] = useState<PkgMan>("npm")
   const installInstruction = useMemo(() => {
     switch (pkgMan) {
@@ -68,4 +68,4 @@ export function Install({ name }: { name: string }) {
       />
     </FormGroup>
   )
-}
+})
