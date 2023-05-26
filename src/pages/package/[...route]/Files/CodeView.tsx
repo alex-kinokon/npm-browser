@@ -62,7 +62,6 @@ export const CodeView = memo<{
           prevPrev?.classList.contains("function") &&
           prevPrev.textContent === "require")
       ) {
-        el.classList.add(link)
         const path = JSON5.parse(text!)
         const packageNameSegments = path.split("/")
         const packageName =
@@ -71,6 +70,7 @@ export const CodeView = memo<{
             : packageNameSegments[0]
 
         if (builtinModules.includes(path)) return
+        el.classList.add(link)
         ;(el as HTMLElement).onclick = () => setLocation(`/package/${packageName}`)
         return
       }

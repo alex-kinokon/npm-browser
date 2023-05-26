@@ -20,7 +20,18 @@ async function main() {
 
   const context = await esbuild.context({
     bundle: true,
-    entryPoints: ["src/pages/api/main.ts"],
+    stdin: {
+      loader: "js",
+      resolveDir: ".",
+      contents: /* js */ `
+        import { main } from "./src/pages/api/main";
+
+        main().catch(err => {
+          console.error(err)
+          process.exit(1)
+        });
+      `,
+    },
     external: Array.from(external),
     format: "iife",
     legalComments: "none",

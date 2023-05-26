@@ -1,5 +1,5 @@
 import { resolve } from "node:path"
-import { readFile } from "node:fs/promises"
+import { promises as fs } from "node:fs"
 import createFastify from "fastify"
 import fastifyStatic from "@fastify/static"
 import fastifyMultipart from "@fastify/multipart"
@@ -9,7 +9,7 @@ import { bindRoutes } from "./routes.generated"
 
 const port = parseInt(process.env.PORT || "3000")
 
-async function main() {
+export async function main() {
   const app = createFastify({ logger: { level: "error" } })
 
   await app.register(fastifyMultipart)
@@ -34,8 +34,8 @@ async function main() {
 
     await app.vite.ready()
   } else {
-    const root = resolve(__dirname, "..")
-    const html = await readFile(resolve(root, "index.html"))
+    const root = process.env.ASSETS_DIR || resolve(__dirname, "..")
+    const html = await fs.readFile(resolve(root, "index.html"))
 
     await app.register(fastifyStatic, {
       root: resolve(root, "assets"),
@@ -53,8 +53,3 @@ async function main() {
     console.log(`Server listening on port ${port}`)
   }
 }
-
-main().catch(err => {
-  console.error(err)
-  process.exit(1)
-})
