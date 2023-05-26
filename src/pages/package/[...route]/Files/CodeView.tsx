@@ -57,15 +57,21 @@ export const CodeView = memo<{
       }
 
       if (
-        (prev?.classList.contains("keyword") && prev.classList.contains("module")) ||
+        (prev?.classList.contains("keyword") && prev.textContent === "from") ||
         (prev?.classList.contains("punctuation") &&
           prevPrev?.classList.contains("function") &&
           prevPrev.textContent === "require")
       ) {
         el.classList.add(link)
         const path = JSON5.parse(text!)
+        const packageNameSegments = path.split("/")
+        const packageName =
+          packageNameSegments[0][0] === "@"
+            ? packageNameSegments.slice(0, 2).join("/")
+            : packageNameSegments[0]
+
         if (builtinModules.includes(path)) return
-        ;(el as HTMLElement).onclick = () => router.push(`/package/${path}`)
+        ;(el as HTMLElement).onclick = () => router.push(`/package/${packageName}`)
         return
       }
     })
