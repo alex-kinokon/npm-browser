@@ -1,5 +1,6 @@
 import type { ParsedUrlQuery } from "querystring"
 import invariant from "tiny-invariant"
+import type { DehydratedState } from "@tanstack/react-query"
 import { QueryClient, dehydrate } from "@tanstack/react-query"
 import type { GetServerSideProps, InferGetServerSidePropsType } from "next"
 import { PackagePage } from "./package"
@@ -35,22 +36,25 @@ function parseRoute(routes: string[]) {
 async function getServerSide(params?: ParsedUrlQuery) {
   const { name, version } = parseRoute(params!.route as string[])
 
-  const client = new QueryClient()
-  const pkgInfo = await client.fetchQuery(getRegistryPackageInfo(name))
+  let dehydratedState: DehydratedState | undefined = undefined
+  if (process.env.DEPLOYMENT !== "vercel") {
+    const client = new QueryClient()
+    const pkgInfo = await client.fetchQuery(getRegistryPackageInfo(name))
 
-  const pkgFileOptions = await client.fetchQuery(
-    getPackageFiles(name, version ?? pkgInfo["dist-tags"].latest)
-  )
-  const readmeHex = getReadmeFileHex(pkgFileOptions)
-  if (readmeHex) {
-    await client.prefetchQuery(getPackageFile(name, readmeHex))
-  }
+    const pkgFileOptions = await client.fetchQuery(
+      getPackageFiles(name, version ?? pkgInfo["dist-tags"].latest)
+    )
+    const readmeHex = getReadmeFileHex(pkgFileOptions)
+    if (readmeHex) {
+      await client.prefetchQuery(getPackageFile(name, readmeHex))
+    }
 
-  let dehydratedState = dehydrate(client)
+    dehydratedState = dehydrate(client)
 
-  if (process.env.NODE_ENV === "development") {
-    // https://github.com/vercel/next.js/discussions/11209
-    dehydratedState = JSON.parse(JSON.stringify(dehydratedState))
+    if (process.env.NODE_ENV === "development") {
+      // https://github.com/vercel/next.js/discussions/11209
+      dehydratedState = JSON.parse(JSON.stringify(dehydratedState))
+    }
   }
 
   return {
