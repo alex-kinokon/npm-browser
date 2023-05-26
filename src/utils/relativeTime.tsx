@@ -1,10 +1,11 @@
 import { useMemo } from "react"
+import { useLocale } from "~/contexts/Locale"
 
 const is = (interval: number, cycle: number) =>
   cycle >= interval ? Math.round(cycle / interval) : 0
 
-export function relativeTime(time: Date | number, now = Date.now()) {
-  const formatter = new Intl.RelativeTimeFormat(undefined, {
+export function relativeTime(time: Date | number, now = Date.now(), locale?: string) {
+  const formatter = new Intl.RelativeTimeFormat(locale, {
     style: "long",
   })
 
@@ -45,6 +46,7 @@ export function relativeTime(time: Date | number, now = Date.now()) {
 }
 
 export function RelativeTime({ date }: { date: Date | number }) {
+  const locale = useLocale()
   const t = useMemo(() => new Date(date), [date])
-  return <time dateTime={t.toISOString()}>{relativeTime(t)}</time>
+  return <time dateTime={t.toISOString()}>{relativeTime(t, undefined, locale)}</time>
 }

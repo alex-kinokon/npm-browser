@@ -3,6 +3,7 @@ import { Alignment, Navbar } from "@blueprintjs/core"
 import { SiNpm } from "react-icons/si"
 import Link from "next/link"
 import { Search } from "./Search"
+import { LocaleSwitch } from "./LocaleSwitch"
 
 export function PageHeader() {
   return (
@@ -51,7 +52,16 @@ export function PageHeader() {
         </Navbar.Group>
 
         <Navbar.Group align={Alignment.RIGHT}>
-          <span>npm-browser</span>
+          <LocaleSwitch />
+          <div
+            className={css`
+              opacity: 0.8;
+              margin-left: 5px;
+              margin-right: 10px;
+            `}
+          >
+            #{process.env.GIT_COMMIT}
+          </div>
         </Navbar.Group>
       </div>
     </Navbar>

@@ -3,6 +3,7 @@ import { FormGroup } from "@blueprintjs/core"
 import styled from "@emotion/styled"
 import { useMemo, useState } from "react"
 import { Markdown, markdownStyle } from "~/components/Markdown"
+import { T } from "~/contexts/Locale"
 
 type PkgMan = "npm" | "yarn" | "pnpm"
 
@@ -44,7 +45,9 @@ export function Install({ name }: { name: string }) {
             align-items: center;
           `}
         >
-          <div className={css({ flex: 1 })}>Install</div>
+          <div className={css({ flex: 1 })}>
+            <T en="Install" fr="Installer" ja="インストール" zh-Hant="安裝" />
+          </div>
           <div>
             {pkgMan !== "npm" && (
               <PkgSwitcher onClick={() => setPkgMan("npm")}>NPM</PkgSwitcher>

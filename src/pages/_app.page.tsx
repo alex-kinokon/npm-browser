@@ -5,6 +5,7 @@ import { createSyncStoragePersister } from "@tanstack/query-sync-storage-persist
 import { Hydrate, QueryClient, QueryClientProvider } from "@tanstack/react-query"
 import { useState } from "react"
 import { SideEffect } from "~/components/SideEffect"
+import { LocaleProvider } from "~/contexts/Locale"
 
 const getQueryClient = () =>
   new QueryClient({
@@ -28,10 +29,12 @@ export default function App({ Component, pageProps }: AppProps) {
   const [persister] = useState(getPersister)
 
   const children = (
-    <Hydrate state={pageProps.dehydratedState}>
-      <SideEffect />
-      <Component {...pageProps} />
-    </Hydrate>
+    <LocaleProvider>
+      <Hydrate state={pageProps.dehydratedState}>
+        <SideEffect />
+        <Component {...pageProps} />
+      </Hydrate>
+    </LocaleProvider>
   )
 
   if (process.env.NODE_ENV === "production") {

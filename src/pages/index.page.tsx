@@ -1,6 +1,7 @@
 import styled from "@emotion/styled"
 import { Card, Classes, Divider, H2, H5 } from "@blueprintjs/core"
-import { PageHeader } from "./package/[...route]/Header"
+import Head from "next/head"
+import { PageHeader } from "~/components/Header"
 import Footer from "~/components/Footer"
 
 const Grid = styled.div`
@@ -26,6 +27,10 @@ const commonPackages = [
 export default function Home() {
   return (
     <div>
+      <Head>
+        <title>npm-browser</title>
+      </Head>
+
       <PageHeader />
 
       <Container>

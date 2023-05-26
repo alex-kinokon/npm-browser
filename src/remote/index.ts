@@ -8,6 +8,7 @@ import { queryOptions } from "~/utils/queryType"
 import * as npm from "~/vendor/node-query-registry"
 import getNPMRoot from "~/pages/api/npm/index.page"
 import type { NpmSite } from "./npmSite"
+import type { GithubRepo } from "./githubRepo"
 
 if (typeof window !== "undefined") {
   // onlineManager.setOnline(false)
@@ -40,7 +41,6 @@ async function get<T>(url: string, contentType = "application/json") {
   })
   if (!res.ok) {
     if (process.env.NODE_ENV === "development") {
-      console.trace()
       console.error(url)
     }
     throw new Error(`Request failed with status ${res.status} ${res.statusText}`)
@@ -69,12 +69,16 @@ export function getPackageFiles(name: string, version: string) {
   })
 }
 
-export function getPulls(owner: string, repo: string): Promise<PullsResult> {
+export function getPulls(owner: string, repo: string): Promise<PullsResult[]> {
   return get(`${github}/repos/${owner}/${repo}/pulls`)
 }
 
 export function getIssues(owner: string, repo: string): Promise<IssuesResult> {
   return get(`${github}/repos/${owner}/${repo}/issues`)
+}
+
+export function getGitHubRepo(owner: string, repo: string) {
+  return get<GithubRepo>(`${github}/repos/${owner}/${repo}`)
 }
 
 export function getPackageInfo(name: string, version?: string) {
