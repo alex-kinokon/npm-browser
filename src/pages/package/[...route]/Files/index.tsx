@@ -140,9 +140,6 @@ export function FileView({
 }
 
 const Container = styled.div``
-const Header = styled.header`
-  margin-bottom: 10px;
-`
 
 // childDirs
 const grid = css`
