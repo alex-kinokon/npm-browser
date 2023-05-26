@@ -19,7 +19,7 @@ export const MaintainersView = memo(({ npm }: { npm?: NpmPackage }) => (
           `}
         >
           <Link
-            href={`/user/${maintainer.name}`}
+            href={`/~${maintainer.name}`}
             title={maintainer.name}
             className={css`
               display: flex;

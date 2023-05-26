@@ -28,6 +28,7 @@ const Container = styled.div`
 const Grid = styled.div`
   display: grid;
   grid-template-columns: 1fr 300px;
+  grid-template-columns: minmax(0, 1fr) 300px;
   grid-gap: 30px;
   margin-left: -4px;
 `
@@ -132,7 +133,7 @@ export function PackagePage({ name, version }: { name: string; version?: string 
               <Tab
                 id={TAB.Readme}
                 title={<T en="Readme" fr="Description" ja="説明" zh-Hant="說明" />}
-                panel={<Readme package={name} version={ver!} />}
+                panel={<Readme package={name} fallback={data?.readme} version={ver!} />}
               />
               <Tab
                 id={TAB.Code}
