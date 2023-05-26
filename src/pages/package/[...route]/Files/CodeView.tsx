@@ -47,6 +47,15 @@ export const CodeView = memo<{
       const prev = el.previousElementSibling
       const prevPrev = el.previousElementSibling?.previousElementSibling
 
+      if (isRelativeImport(text)) {
+        const path = JSON5.parse(text)
+        const resolved = resolveLink(file, path, files)
+        if (!resolved) return
+        el.classList.add(link)
+        ;(el as HTMLElement).onclick = () => setPath(resolved)
+        return
+      }
+
       if (
         (prev?.classList.contains("keyword") && prev.classList.contains("module")) ||
         (prev?.classList.contains("punctuation") &&
@@ -58,14 +67,6 @@ export const CodeView = memo<{
         if (builtinModules.includes(path)) return
         ;(el as HTMLElement).onclick = () => router.push(`/package/${path}`)
         return
-      }
-
-      if (isRelativeImport(text)) {
-        const path = JSON5.parse(text)
-        const resolved = resolveLink(file, path, files)
-        if (!resolved) return
-        el.classList.add(link)
-        ;(el as HTMLElement).onclick = () => setPath(resolved)
       }
     })
   }, [code, file.dirname, setPath, files])
