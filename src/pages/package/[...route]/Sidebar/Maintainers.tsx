@@ -23,6 +23,7 @@ export const MaintainersView = memo(({ package: name }: { package: string }) => 
             `}
           >
             <Link
+              shallow
               href={`https://www.npmjs.com/~${maintainer.name}`}
               title={maintainer.name}
               className={css`

@@ -65,6 +65,7 @@ export function getRegistryPackageInfo(name: string) {
 export function getPackageFiles(name: string, version: string) {
   return queryOptions({
     queryKey: ["getPackageFiles", name, version],
+    enabled: !!version,
     queryFn: () => get<FileResult>(`${npmMirror}/package/${name}/v/${version}/index`),
   })
 }

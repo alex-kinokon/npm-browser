@@ -24,7 +24,9 @@ function DepList({
       <ul className={Classes.LIST}>
         {deps.map(dep => (
           <li key={dep}>
-            <Link href={`/package/${dep}`}>{dep}</Link>
+            <Link href={`/package/${dep}`} shallow>
+              {dep}
+            </Link>
           </li>
         ))}
       </ul>

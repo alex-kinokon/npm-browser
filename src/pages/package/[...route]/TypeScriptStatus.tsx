@@ -18,6 +18,7 @@ export function TypeScriptStatus({ package: { name } }: { package: PackageIdenti
       const pkgName = name.slice("@types/".length).replace(/^(\w+)__(.+)$/, "$1/$2")
       return (
         <Link
+          shallow
           href={`/package/${pkgName}`}
           className={css`
             display: flex;

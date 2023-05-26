@@ -20,7 +20,7 @@ export function PageHeader() {
         `}
       >
         <Navbar.Group align={Alignment.LEFT}>
-          <Link href="/">
+          <Link shallow href="/">
             <Navbar.Heading
               className={css`
                 margin-right: 0;

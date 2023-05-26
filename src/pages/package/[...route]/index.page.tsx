@@ -1,19 +1,6 @@
-import type { ParsedUrlQuery } from "querystring"
 import invariant from "tiny-invariant"
-import type { DehydratedState } from "@tanstack/react-query"
-import { QueryClient, dehydrate } from "@tanstack/react-query"
-import type { GetServerSideProps, InferGetServerSidePropsType } from "next"
-import dynamic from "next/dynamic"
-import {
-  getPackageFile,
-  getPackageFiles,
-  getReadmeFileHex,
-  getRegistryPackageInfo,
-} from "~/remote"
-
-const PackagePage = dynamic(() => import("./package"), {
-  ssr: false,
-})
+import { useRouter } from "next/router"
+import PackagePage from "./package"
 
 // four possibilities:
 // 1. pkgName
@@ -37,44 +24,8 @@ function parseRoute(routes: string[]) {
   }
 }
 
-async function getServerSide(params?: ParsedUrlQuery) {
-  const { name, version } = parseRoute(params!.route as string[])
-
-  let dehydratedState: DehydratedState | undefined = undefined
-  if (process.env.DEPLOYMENT !== "vercel") {
-    const client = new QueryClient()
-    const pkgInfo = await client.fetchQuery(getRegistryPackageInfo(name))
-
-    const pkgFileOptions = await client.fetchQuery(
-      getPackageFiles(name, version ?? pkgInfo["dist-tags"].latest)
-    )
-    const readmeHex = getReadmeFileHex(pkgFileOptions)
-    if (readmeHex) {
-      await client.prefetchQuery(getPackageFile(name, readmeHex))
-    }
-
-    dehydratedState = dehydrate(client)
-
-    if (process.env.NODE_ENV === "development") {
-      // https://github.com/vercel/next.js/discussions/11209
-      dehydratedState = JSON.parse(JSON.stringify(dehydratedState))
-    }
-  }
-
-  return {
-    route: { name, version: version || null },
-    dehydratedState,
-  }
-}
-
-export const getServerSideProps: GetServerSideProps<
-  Awaited<ReturnType<typeof getServerSide>>
-> = async ({ params }) => ({
-  props: await getServerSide(params),
-})
-
-export default function Package({
-  route,
-}: InferGetServerSidePropsType<typeof getServerSideProps>) {
+export default function Package() {
+  console.log(useRouter())
+  const route = parseRoute(useRouter().query.route as string[])
   return <PackagePage name={route.name} version={route.version || undefined} />
 }

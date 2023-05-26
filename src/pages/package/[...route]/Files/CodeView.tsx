@@ -71,7 +71,8 @@ export const CodeView = memo<{
             : packageNameSegments[0]
 
         if (builtinModules.includes(path)) return
-        ;(el as HTMLElement).onclick = () => router.push(`/package/${packageName}`)
+        ;(el as HTMLElement).onclick = () =>
+          router.push(`/package/${packageName}`, undefined, { shallow: true })
         return
       }
     })

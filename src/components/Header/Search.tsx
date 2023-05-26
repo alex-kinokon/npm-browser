@@ -18,7 +18,7 @@ export function Search() {
     queryFn: () =>
       getSearchSuggestions({
         text: debouncedQuery,
-        size: 10,
+        size: 25,
       }),
   })
 
@@ -31,7 +31,7 @@ export function Search() {
       items={list}
       onItemSelect={item => {
         setQuery(item.package.name)
-        router.push(`/package/${item.package.name}`)
+        router.push(`/package/${item.package.name}`, undefined, { shallow: true })
       }}
       activeItem={list.find(item => item.package.name === query)}
       className={css`
@@ -45,6 +45,12 @@ export function Search() {
       popoverProps={{
         matchTargetWidth: true,
         minimal: true,
+      }}
+      menuProps={{
+        className: css`
+          max-height: max(50vh, 400px);
+          overflow: scroll;
+        `,
       }}
       noResults={<MenuItem disabled={true} text="No results." />}
       inputValueRenderer={item => item.package.name}

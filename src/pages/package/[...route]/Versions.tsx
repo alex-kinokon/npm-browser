@@ -17,7 +17,9 @@ export const VersionList = memo(({ data }: { data: Packument }) => {
       <ul className={Classes.LIST}>
         {distTags.map(([tag, version]) => (
           <li key={tag}>
-            <Link href={`/package/${data.name}/v/${version}`}>{version}</Link>
+            <Link shallow href={`/package/${data.name}/v/${version}`}>
+              {version}
+            </Link>
             <Code
               className={css`
                 font-size: 1em;
