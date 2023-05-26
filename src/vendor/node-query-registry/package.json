@@ -4,11 +4,7 @@
   "version": "2.6.0",
   "author": "Edoardo Scibona (velut)",
   "license": "MIT",
-  "source": "./src/index.ts",
-  "main": "./dist/index.js",
-  "module": "./dist/query-registry.esm.js",
-  "types": "./dist/index.d.ts",
-  "sideEffects": false,
+  "main": "index.ts",
   "files": [
     "src",
     "dist"

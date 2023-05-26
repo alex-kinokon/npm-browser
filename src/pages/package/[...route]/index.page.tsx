@@ -1,5 +1,4 @@
 import invariant from "tiny-invariant"
-import { useRouter } from "next/router"
 import PackagePage from "./package"
 
 // four possibilities:
@@ -24,8 +23,11 @@ function parseRoute(routes: string[]) {
   }
 }
 
-export default function Package() {
-  console.log(useRouter())
-  const route = parseRoute(useRouter().query.route as string[])
+interface PageParams {
+  route: string
+}
+
+export default function Package({ params }: { params: PageParams }) {
+  const route = parseRoute(params.route.split("/"))
   return <PackagePage name={route.name} version={route.version || undefined} />
 }

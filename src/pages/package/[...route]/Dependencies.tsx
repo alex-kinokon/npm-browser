@@ -1,6 +1,6 @@
 import { Classes, H4 } from "@blueprintjs/core"
 import { memo } from "react"
-import Link from "next/link"
+import { Link } from "wouter"
 import { useQuery } from "@tanstack/react-query"
 import type { Packument } from "~/vendor/node-query-registry"
 import type { PackageIdentifier } from "./package"
@@ -24,9 +24,7 @@ function DepList({
       <ul className={Classes.LIST}>
         {deps.map(dep => (
           <li key={dep}>
-            <Link href={`/package/${dep}`} shallow>
-              {dep}
-            </Link>
+            <Link href={`/package/${dep}`}>{dep}</Link>
           </li>
         ))}
       </ul>

@@ -1,12 +1,9 @@
-import getRegistry from "~/pages/api/registry/[...route].page"
 import type { IssuesResult } from "./githubIssues"
 import type { PullsResult } from "./githubPull"
 import type { FileResult } from "./npmFile"
 import type { NpmPackage } from "./npmPackage"
-import getNPM from "~/pages/api/npm/[...route].page"
 import { queryOptions } from "~/utils/queryType"
 import * as npm from "~/vendor/node-query-registry"
-import getNPMRoot from "~/pages/api/npm/index.page"
 import type { NpmSite } from "./npmSite"
 import type { GithubRepo } from "./githubRepo"
 
@@ -19,23 +16,8 @@ const npmMirror = "/api/npm"
 const npmjs = "https://www.npmjs.com"
 const github = "https://api.github.com"
 
-function isomorphicFetch(url: string, init?: RequestInit) {
-  if (typeof window === "undefined") {
-    const wrapped = `http://localhost${url}`
-    if (url.startsWith("/api/registry")) {
-      return getRegistry({ url: wrapped } as any)
-    } else if (url === npmMirror) {
-      return getNPMRoot({ url: wrapped } as any)
-    } else if (url.startsWith(npmMirror)) {
-      return getNPM({ url: wrapped } as any)
-    }
-  }
-
-  return fetch(url, init)
-}
-
 async function get<T>(url: string) {
-  const res = await isomorphicFetch(url, {
+  const res = await fetch(url, {
     method: "GET",
     headers: { "Content-Type": "application/json" },
   })

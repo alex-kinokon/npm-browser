@@ -3,7 +3,7 @@ import JSON5 from "json5"
 import { useQuery } from "@tanstack/react-query"
 import { memo, useEffect, useMemo, useRef } from "react"
 import { css } from "@emotion/css"
-import { useRouter } from "next/router"
+import { useLocation } from "wouter"
 import { Markdown, markdownStyle } from "~/components/Markdown"
 import { ErrorView, LoadingView } from "../NonIdeal"
 import { getPackageFile } from "~/remote"
@@ -15,7 +15,7 @@ export const CodeView = memo<{
   setPath: (path: string) => void
   package: string
 }>(({ file, files, setPath, package: pkg }) => {
-  const router = useRouter()
+  const [, setLocation] = useLocation()
   const ref = useRef<HTMLDivElement>(null)
   const { data, isLoading, isError, error, refetch } = useQuery(
     getPackageFile(pkg, file.hex)
@@ -71,12 +71,11 @@ export const CodeView = memo<{
             : packageNameSegments[0]
 
         if (builtinModules.includes(path)) return
-        ;(el as HTMLElement).onclick = () =>
-          router.push(`/package/${packageName}`, undefined, { shallow: true })
+        ;(el as HTMLElement).onclick = () => setLocation(`/package/${packageName}`)
         return
       }
     })
-  }, [code, file.dirname, setPath, files])
+  }, [code, file.dirname, setPath, files, setLocation])
 
   if (isError) {
     return <ErrorView error={error} isLoading={isLoading} retry={refetch} />

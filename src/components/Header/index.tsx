@@ -1,7 +1,7 @@
 import { css } from "@emotion/css"
 import { Alignment, Navbar } from "@blueprintjs/core"
 import { SiNpm } from "react-icons/si"
-import Link from "next/link"
+import { Link } from "wouter"
 import { Search } from "./Search"
 import { LocaleSwitch } from "./LocaleSwitch"
 
@@ -20,7 +20,7 @@ export function PageHeader() {
         `}
       >
         <Navbar.Group align={Alignment.LEFT}>
-          <Link shallow href="/">
+          <Link href="/">
             <Navbar.Heading
               className={css`
                 margin-right: 0;

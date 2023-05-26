@@ -1,6 +1,6 @@
 import { css } from "@emotion/css"
 import { useQuery } from "@tanstack/react-query"
-import Link from "next/link"
+import { Link } from "wouter"
 import { SiTypescript } from "react-icons/si"
 import { getPackageInfo } from "~/remote"
 import type { PackageIdentifier } from "./package"
@@ -17,18 +17,13 @@ export function TypeScriptStatus({ package: { name } }: { package: PackageIdenti
     if (name.startsWith("@types/")) {
       const pkgName = name.slice("@types/".length).replace(/^(\w+)__(.+)$/, "$1/$2")
       return (
-        <Link
-          shallow
-          href={`/package/${pkgName}`}
-          className={css`
-            display: flex;
-            margin-left: 5px;
-          `}
-        >
+        <Link href={`/package/${pkgName}`}>
           <SiTypescript
             fill="#3178C6"
             className={css`
               font-size: 1.3em;
+              display: flex;
+              margin-left: 5px;
             `}
           />
         </Link>
@@ -47,19 +42,20 @@ export function TypeScriptStatus({ package: { name } }: { package: PackageIdenti
   }
 
   return (
-    <Link
-      href={`/package/${t.package}`}
-      className={css`
-        border: 1px solid #3178c6;
-        color: #3178c6;
-        font-family: "Segoe UI", -apple-system, BlinkMacSystemFont, Roboto;
-        font-size: 0.8em;
-        font-weight: 600;
-        margin-left: 5px;
-        padding: 1px;
-      `}
-    >
-      <div>DT</div>
+    <Link href={`/package/${t.package}`}>
+      <div
+        className={css`
+          border: 1px solid #3178c6;
+          color: #3178c6;
+          font-family: "Segoe UI", -apple-system, BlinkMacSystemFont, Roboto;
+          font-size: 0.8em;
+          font-weight: 600;
+          margin-left: 5px;
+          padding: 1px;
+        `}
+      >
+        DT
+      </div>
     </Link>
   )
 }

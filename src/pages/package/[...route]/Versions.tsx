@@ -1,7 +1,7 @@
 import { Button, Classes, Code, H4 } from "@blueprintjs/core"
 import { ChevronDown, ChevronUp } from "@blueprintjs/icons"
 import { memo, useMemo, useState } from "react"
-import Link from "next/link"
+import { Link } from "wouter"
 import { css } from "@emotion/css"
 import { RelativeTime } from "~/utils/relativeTime"
 import type { Packument } from "~/vendor/node-query-registry"
@@ -17,9 +17,7 @@ export const VersionList = memo(({ data }: { data: Packument }) => {
       <ul className={Classes.LIST}>
         {distTags.map(([tag, version]) => (
           <li key={tag}>
-            <Link shallow href={`/package/${data.name}/v/${version}`}>
-              {version}
-            </Link>
+            <Link href={`/package/${data.name}/v/${version}`}>{version}</Link>
             <Code
               className={css`
                 font-size: 1em;

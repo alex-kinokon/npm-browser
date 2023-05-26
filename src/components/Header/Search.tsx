@@ -3,12 +3,12 @@ import { useState } from "react"
 import { useQuery } from "@tanstack/react-query"
 import { MenuItem } from "@blueprintjs/core"
 import { css } from "@emotion/css"
-import { useRouter } from "next/router"
+import { useLocation } from "wouter"
 import { getSearchSuggestions } from "~/remote"
 import { useDebouncedValue } from "~/hooks/useDebouncedValue"
 
 export function Search() {
-  const router = useRouter()
+  const [, setLocation] = useLocation()
   const [query, setQuery] = useState<string>()
   const debouncedQuery = useDebouncedValue(query, 500)
 
@@ -31,7 +31,7 @@ export function Search() {
       items={list}
       onItemSelect={item => {
         setQuery(item.package.name)
-        router.push(`/package/${item.package.name}`, undefined, { shallow: true })
+        setLocation(`/package/${item.package.name}`)
       }}
       activeItem={list.find(item => item.package.name === query)}
       className={css`

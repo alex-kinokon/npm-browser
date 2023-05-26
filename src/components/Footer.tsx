@@ -1,7 +1,7 @@
 import { Classes } from "@blueprintjs/core"
 import { SiGithub } from "react-icons/si"
 import { css, cx } from "@emotion/css"
-import Link from "next/link"
+import { Link } from "wouter"
 
 export default function Footer() {
   return (

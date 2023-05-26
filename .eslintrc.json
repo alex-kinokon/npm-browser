@@ -11,8 +11,7 @@
     "plugin:import/typescript",
     "prettier",
     "plugin:react/recommended",
-    "plugin:react-hooks/recommended",
-    "next/core-web-vitals"
+    "plugin:react-hooks/recommended"
   ],
   "settings": {
     "import/parsers": { "@typescript-eslint/parser": [".ts", ".tsx"] },

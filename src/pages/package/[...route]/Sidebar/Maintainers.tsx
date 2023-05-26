@@ -1,7 +1,6 @@
 import { css } from "@emotion/css"
 import { Classes, FormGroup } from "@blueprintjs/core"
-import Link from "next/link"
-import Image from "next/image"
+import { Link } from "wouter"
 import { memo } from "react"
 import { useQuery } from "@tanstack/react-query"
 import { T } from "~/contexts/Locale"
@@ -23,7 +22,6 @@ export const MaintainersView = memo(({ package: name }: { package: string }) => 
             `}
           >
             <Link
-              shallow
               href={`https://www.npmjs.com/~${maintainer.name}`}
               title={maintainer.name}
               className={css`
@@ -31,7 +29,7 @@ export const MaintainersView = memo(({ package: name }: { package: string }) => 
                 align-items: center;
               `}
             >
-              <Image
+              <img
                 src={`https://www.npmjs.com${maintainer.avatars.small}`}
                 height={20}
                 width={20}

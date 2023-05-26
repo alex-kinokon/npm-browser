@@ -1,4 +1,4 @@
-import { cx } from "@emotion/css"
+import { css, cx } from "@emotion/css"
 import { Classes, FormGroup } from "@blueprintjs/core"
 import { useQuery } from "@tanstack/react-query"
 import { memo } from "react"
@@ -22,7 +22,14 @@ export const DownloadsView = memo(({ package: name }: { package: string }) => {
         />
       }
     >
-      <span className={cx(!downloads && Classes.SKELETON)}>
+      <span
+        className={cx(
+          !downloads && Classes.SKELETON,
+          css`
+            font-variant-numeric: tabular-nums;
+          `
+        )}
+      >
         {downloads?.downloads.toLocaleString()}
       </span>
     </FormGroup>
