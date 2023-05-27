@@ -10,7 +10,11 @@ import { bindRoutes } from "./routes.generated"
 const port = parseInt(process.env.PORT || "3000")
 
 export async function main() {
-  const app = createFastify({ logger: { level: "error" } })
+  const app = createFastify({
+    logger: {
+      level: process.env.NODE_ENV === "production" ? "info" : "error",
+    },
+  })
 
   await app.register(fastifyMultipart)
   await app.register(formDataPlugin)
