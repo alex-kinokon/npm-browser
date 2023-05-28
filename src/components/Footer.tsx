@@ -2,8 +2,10 @@ import { Classes } from "@blueprintjs/core"
 import { SiGithub } from "react-icons/si"
 import { css, cx } from "@emotion/css"
 import { Link } from "wouter"
+import { T, useT } from "~/contexts/Locale"
 
 export default function Footer() {
+  const t = useT()
   return (
     <footer
       className={cx(
@@ -21,7 +23,15 @@ export default function Footer() {
           flex: 1%;
         `}
       >
-        © 2023. This website is not affiliated with npm or Microsoft.
+        © 2023.{" "}
+        <T
+          en="This website is not affiliated with npm or Microsoft."
+          fr="Ce site web n’est pas affilié à npm ou Microsoft."
+          ja="このウェブサイトはnpmまたはMicrosoftと関係ありません。"
+          zh-Hant="本網站與npm或Microsoft無關。"
+        />{" "}
+        <Link href="/third-party-notices">{t(thirdPartyNoticeLabel)}</Link> •{" "}
+        <T en="Beta preview" fr="Version bêta" ja="ベータ版" zh-Hant="測試版" />
       </div>
       <div>
         <Link
@@ -49,3 +59,8 @@ export default function Footer() {
     </footer>
   )
 }
+
+export const thirdPartyNoticeLabel = {
+  en: "Third-party notices",
+  fr: "Avis relatifs aux logiciels tiers",
+} as const

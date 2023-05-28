@@ -54,7 +54,7 @@ export const Dependents = memo(
     if (isLoading) {
       return skeleton
     }
-    if (!npm) {
+    if (!npm?.dependents) {
       return null
     }
 

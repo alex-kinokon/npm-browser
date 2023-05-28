@@ -15,6 +15,7 @@ import { Dependencies, Dependents } from "./Dependencies"
 import Footer from "~/components/Footer"
 import { Sidebar } from "./Sidebar"
 import { T } from "~/contexts/Locale"
+import { Container } from "~/components/Container"
 
 export interface PackageIdentifier {
   name: string
@@ -24,10 +25,6 @@ export interface PackageIdentifier {
 const flex = css`
   display: flex;
   align-items: center;
-`
-
-const Container = styled.div`
-  margin: 20px 60px;
 `
 
 const Grid = styled.div`

@@ -7,7 +7,7 @@ import type { PackageIdentifier } from "./package"
 
 export function TypeScriptStatus({ package: { name } }: { package: PackageIdentifier }) {
   const { data } = useQuery(getPackageInfo(name))
-  const t = data?.capsule.types?.typescript
+  const t = data?.capsule?.types?.typescript
 
   if (!t) {
     return null
@@ -19,8 +19,10 @@ export function TypeScriptStatus({ package: { name } }: { package: PackageIdenti
       return (
         <Link href={`/package/${pkgName}`}>
           <SiTypescript
+            title={pkgName}
             fill="#3178C6"
             className={css`
+              cursor: pointer;
               font-size: 1.3em;
               display: flex;
               margin-left: 5px;
@@ -47,11 +49,15 @@ export function TypeScriptStatus({ package: { name } }: { package: PackageIdenti
         className={css`
           border: 1px solid #3178c6;
           color: #3178c6;
+          cursor: pointer;
           font-family: "Segoe UI", -apple-system, BlinkMacSystemFont, Roboto;
           font-size: 0.8em;
           font-weight: 600;
           margin-left: 5px;
           padding: 1px;
+          &:hover {
+            text-decoration: underline;
+          }
         `}
       >
         DT

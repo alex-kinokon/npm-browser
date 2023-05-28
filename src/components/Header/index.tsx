@@ -2,10 +2,10 @@ import { css } from "@emotion/css"
 import { Alignment, Navbar } from "@blueprintjs/core"
 import { SiNpm } from "react-icons/si"
 import { Link } from "wouter"
-import { Search } from "./Search"
+import { SearchView } from "./Search"
 import { LocaleSwitch } from "./LocaleSwitch"
 
-export function PageHeader() {
+export function PageHeader({ defaultQuery }: { defaultQuery?: string }) {
   return (
     <Navbar
       className={css`
@@ -31,6 +31,7 @@ export function PageHeader() {
                 className={css`
                   display: block;
                   font-size: 1.5em;
+                  cursor: pointer;
                 `}
               />
             </Navbar.Heading>
@@ -47,7 +48,7 @@ export function PageHeader() {
               width: 50%;
             `}
           >
-            <Search />
+            <SearchView defaultQuery={defaultQuery} />
           </div>
         </Navbar.Group>
 

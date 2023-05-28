@@ -7,6 +7,7 @@ import { BiGitPullRequest } from "react-icons/bi"
 import type { Packument } from "~/vendor/node-query-registry"
 import { T } from "~/contexts/Locale"
 import { getGitHubRepo, getPulls } from "~/remote"
+import { parseRepo } from "~/utils/parseRepo"
 
 export const RepositoryView = memo(({ data }: { data?: Packument }) => {
   const repo =
@@ -33,25 +34,12 @@ export const RepositoryView = memo(({ data }: { data?: Packument }) => {
   )
 })
 
-function GitHubDataWrapper({ repo }: { repo: string }) {
-  const [owner, repoName] = useMemo(() => {
-    let copy = repo
-    if (copy.startsWith("git+")) {
-      copy = copy.slice(4)
-    }
-
-    const url = new URL(copy)
-    if (url.hostname !== "github.com") {
-      return []
-    }
-
-    return url.pathname.slice(1).split("/")
-  }, [repo])
-
+const GitHubDataWrapper = memo(({ repo }: { repo: string }) => {
+  const { owner, repoName } = parseRepo(repo)
   if (!owner || !repoName) return null
 
   return <GitHubData owner={owner} repo={repoName.replace(/\.git$/, "")} />
-}
+})
 
 const GitHubData = memo(({ owner, repo }: { owner: string; repo: string }) => {
   const pulls = useQuery({

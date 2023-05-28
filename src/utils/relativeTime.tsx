@@ -45,7 +45,7 @@ export function relativeTime(time: Date | number, now = Date.now(), locale?: str
   }
 }
 
-export const RelativeTime = memo(({ date }: { date: Date | number }) => {
+export const RelativeTime = memo(({ date }: { date: Date | string | number }) => {
   const locale = useLocale()
   const t = useMemo(() => new Date(date), [date])
   return (

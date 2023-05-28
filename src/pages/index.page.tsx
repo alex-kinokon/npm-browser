@@ -1,17 +1,17 @@
 import styled from "@emotion/styled"
 import { Card, Classes, Divider, H2, H5 } from "@blueprintjs/core"
+import { Link } from "wouter"
 import { Head } from "~/components/Head"
 import { PageHeader } from "~/components/Header"
 import Footer from "~/components/Footer"
+import { Container } from "~/components/Container"
+import { T } from "~/contexts/Locale"
 
 const Grid = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
   margin-top: 50px;
   margin-bottom: 100px;
-`
-const Container = styled.div`
-  margin: 50px 100px;
 `
 
 const commonPackages = [
@@ -38,11 +38,13 @@ export default function Home() {
 
         <Grid>
           <Card>
-            <H5>Common Packages</H5>
+            <H5>
+              <T en="Common Packages" fr="Paquets communs" ja="一般的なパッケージ" />
+            </H5>
             <ol className={Classes.LIST}>
               {commonPackages.map(pkg => (
                 <li key={pkg}>
-                  <a href={`/package/${pkg}`}>{pkg}</a>
+                  <Link href={`/package/${pkg}`}>{pkg}</Link>
                 </li>
               ))}
             </ol>

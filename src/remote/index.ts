@@ -31,9 +31,14 @@ async function get<T>(url: string) {
 }
 
 export function getSearchSuggestions(params: npm.SearchCriteria) {
-  return npm.searchPackages({
-    query: params,
-    registry: npm.cloudflareRegistry,
+  return queryOptions({
+    queryKey: ["getSearchSuggestions", JSON.stringify(params)],
+    enabled: !!params.text,
+    queryFn: () =>
+      npm.searchPackages({
+        query: params,
+        registry: npm.cloudflareRegistry,
+      }),
   })
 }
 

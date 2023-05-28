@@ -14,7 +14,7 @@ export const MaintainersView = memo(({ package: name }: { package: string }) => 
       label={<T en="Maintainers" fr="Mainteneurs" ja="メンテナー" zh-Hant="維護者" />}
     >
       <ul className={Classes.LIST_UNSTYLED}>
-        {npm?.packument.maintainers.map(maintainer => (
+        {npm?.packument?.maintainers.map(maintainer => (
           <li
             key={maintainer.name}
             className={css`
