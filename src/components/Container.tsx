@@ -6,4 +6,13 @@ export const Container = styled.div`
   @media (max-width: 1450px) {
     margin: 20px 40px;
   }
+  @media (max-width: 768px) {
+    margin: 20px 20px;
+    .bp5-tab-list {
+      overflow: scroll;
+      &::-webkit-scrollbar {
+        display: none;
+      }
+    }
+  }
 `

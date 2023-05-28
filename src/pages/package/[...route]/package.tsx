@@ -33,6 +33,15 @@ const Grid = styled.div`
   grid-template-columns: minmax(0, 1fr) 300px;
   grid-gap: 30px;
   margin-left: -4px;
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+    margin-left: 0;
+    > div {
+      max-width: 100%;
+      overflow: scroll;
+    }
+  }
 `
 
 const enum TAB {

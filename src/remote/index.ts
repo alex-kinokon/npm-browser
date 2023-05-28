@@ -69,6 +69,9 @@ export function getGitHubRepo(owner: string, repo: string) {
   return get<GithubRepo>(`${github}/repos/${owner}/${repo}`)
 }
 
+/**
+ * @deprecated This is private API.
+ */
 export function getPackageInfo(name: string) {
   return queryOptions({
     queryKey: ["getPackageInfo", name],

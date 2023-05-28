@@ -1,5 +1,5 @@
 import { css, cx } from "@emotion/css"
-import { Classes, FormGroup } from "@blueprintjs/core"
+import { Classes, Divider, FormGroup } from "@blueprintjs/core"
 import styled from "@emotion/styled"
 import { getFileSize } from "~/utils/fileSize"
 import { Install } from "../InstallInstruction"
@@ -22,6 +22,14 @@ export function Sidebar({
 
   return (
     <SidebarContainer>
+      <Divider
+        className={css`
+          margin-bottom: 20px;
+          @media (min-width: 768px) {
+            display: none;
+          }
+        `}
+      />
       <Install name={name} />
       <RepositoryView data={data} />
 

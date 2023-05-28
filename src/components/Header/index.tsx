@@ -1,5 +1,6 @@
 import { css } from "@emotion/css"
-import { Alignment, Navbar } from "@blueprintjs/core"
+import { Alignment, Button, Navbar } from "@blueprintjs/core"
+import { Menu } from "@blueprintjs/icons"
 import { SiNpm } from "react-icons/si"
 import { Link } from "wouter"
 import { SearchView } from "./Search"
@@ -46,6 +47,9 @@ export function PageHeader({ defaultQuery }: { defaultQuery?: string }) {
           <div
             className={css`
               width: 50%;
+              @media (max-width: 768px) {
+                width: 99%;
+              }
             `}
           >
             <SearchView defaultQuery={defaultQuery} />
@@ -59,10 +63,14 @@ export function PageHeader({ defaultQuery }: { defaultQuery?: string }) {
               opacity: 0.8;
               margin-left: 5px;
               margin-right: 10px;
+              @media (max-width: 768px) {
+                display: none;
+              }
             `}
           >
             #{process.env.GIT_COMMIT}
           </div>
+          {false && <Button icon={<Menu />} minimal />}
         </Navbar.Group>
       </div>
     </Navbar>

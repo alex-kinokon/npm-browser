@@ -15,5 +15,7 @@ export async function proxy(url: string, req: FastifyRequest, reply: FastifyRepl
   }
 
   const data = await json.json()
+  delete data.csrftoken
+  delete data.npmExpansions
   return reply.code(200).type("application/json").send(data)
 }

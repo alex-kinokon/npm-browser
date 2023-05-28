@@ -1,5 +1,5 @@
 import { basename, dirname, extname } from "path"
-import { useEffect, useMemo, useState } from "react"
+import { memo, useEffect, useMemo, useState } from "react"
 import { useQuery } from "@tanstack/react-query"
 import { css } from "@emotion/css"
 import { Document, FolderClose } from "@blueprintjs/icons"
@@ -120,23 +120,30 @@ export function FileView({ package: { name, version } }: { package: PackageIdent
           </Li>
         ))}
         {list.map(file => (
-          <Li className={grid} key={file.path} onClick={() => setPath(file.path)}>
-            <Icon>{getIcon(file.basename)}</Icon>
-            <Name>{file.basename}</Name>
-            <Type>{file.contentType}</Type>
-            <Size
-              className={css`
-                text-align: right;
-              `}
-            >
-              {getFileSize(file.size)}
-            </Size>
-          </Li>
+          <FileItem key={file.path} file={file} setPath={setPath} />
         ))}
       </ul>
     </Container>
   )
 }
+
+const FileItem = memo<{
+  file: MappedFile
+  setPath: (path: string) => void
+}>(({ file, setPath }) => (
+  <Li className={grid} onClick={() => setPath(file.path)}>
+    <Icon>{getIcon(file.basename)}</Icon>
+    <Name>{file.basename}</Name>
+    <Type>{file.contentType}</Type>
+    <Size
+      className={css`
+        text-align: right;
+      `}
+    >
+      {getFileSize(file.size)}
+    </Size>
+  </Li>
+))
 
 const Container = styled.div``
 
@@ -144,6 +151,9 @@ const Container = styled.div``
 const grid = css`
   display: grid;
   grid-template-columns: 20px 55% 1fr 0.3fr;
+  @media (max-width: 600px) {
+    grid-template-columns: 20px 73% 1fr 0.3fr;
+  }
 `
 
 const Li = styled.li`
@@ -165,7 +175,11 @@ const Name = styled.div`
     text-decoration: underline;
   }
 `
-const Type = styled.div``
+const Type = styled.div`
+  @media (max-width: 600px) {
+    display: none;
+  }
+`
 const Size = styled.div``
 
 function getIcon(fileName: string) {
