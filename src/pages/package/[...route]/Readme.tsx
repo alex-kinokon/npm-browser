@@ -15,6 +15,9 @@ export function Readme({
   const readmeHex = getReadmeFileHex(files)
   const { data: readme } = useQuery(getPackageFile(name, readmeHex))
 
+  const code = readme || fallback
+  if (typeof code !== "string") return null
+
   return (
     <div
       className={css`
@@ -24,7 +27,7 @@ export function Readme({
         }
       `}
     >
-      <Markdown className={markdownStyle} source={readme || fallback} />
+      <Markdown className={markdownStyle} source={code} />
     </div>
   )
 }

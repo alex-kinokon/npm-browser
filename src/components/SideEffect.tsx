@@ -1,14 +1,15 @@
-import { useMediaQuery } from "@react-hookz/web"
 import { useEffect } from "react"
+import { useDarkMode } from "~/hooks/useDarkMode"
 
 export function SideEffect() {
-  const media = useMediaQuery("(prefers-color-scheme: dark)")
+  const dark = useDarkMode()
+
   useEffect(() => {
-    document.body.classList.toggle("bp5-dark", media)
+    document.body.classList.toggle("bp5-dark", dark)
     document.head
       .querySelector("meta[name=theme-color]")
-      ?.setAttribute("content", media ? "#0d1117" : "#fff")
-  }, [media])
+      ?.setAttribute("content", dark ? "#0d1117" : "#fff")
+  }, [dark])
 
   return null
 }

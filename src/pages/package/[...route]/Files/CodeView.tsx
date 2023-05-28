@@ -2,80 +2,170 @@ import { extname, resolve } from "path"
 import JSON5 from "json5"
 import { useQuery } from "@tanstack/react-query"
 import { memo, useEffect, useMemo, useRef } from "react"
-import { css } from "@emotion/css"
+import CodeMirror from "@uiw/react-codemirror"
+import { githubDarkInit, githubLightInit } from "@uiw/codemirror-theme-github"
+import { EditorView } from "@codemirror/view"
+import type { Extension } from "@codemirror/state"
+import { EditorState } from "@codemirror/state"
+import { javascript } from "@codemirror/lang-javascript"
+import { json } from "@codemirror/lang-json"
+import { indentUnit } from "@codemirror/language"
+import { tags } from "@lezer/highlight"
+import { css, cx } from "@emotion/css"
+import { indentationMarkers } from "@replit/codemirror-indentation-markers"
 import { useLocation } from "wouter"
 import { Markdown, markdownStyle } from "~/components/Markdown"
 import { ErrorView, LoadingView } from "../NonIdeal"
 import { getPackageFile } from "~/remote"
 import type { MappedFile } from "./index"
+import { useDarkMode } from "~/hooks/useDarkMode"
+import { setupLinks } from "./utils"
 
-export const CodeView = memo<{
+const fontFamily =
+  "ui-monospace,SFMono-Regular,SF Mono,Menlo,Consolas,Liberation Mono,monospace"
+
+const basicTheme = EditorView.theme({
+  ".cm-scroller": {
+    backgroundColor: "var(--color-canvas-subtle)",
+    borderRadius: "6px",
+    padding: "16px",
+  },
+  ".cm-content, .cm-scroller": {
+    fontFamily,
+    fontSize: "13.6px",
+    lineHeight: "21px",
+  },
+  ".cm-gutters": {
+    background: "transparent !important",
+    borderRight: "none",
+  },
+})
+
+interface CodeViewProps {
   file: MappedFile
   files: MappedFile[]
   setPath: (path: string) => void
   package: string
-}>(({ file, files, setPath, package: pkg }) => {
-  const [, setLocation] = useLocation()
-  const ref = useRef<HTMLDivElement>(null)
-  const { data, isLoading, isError, error, refetch } = useQuery(
-    getPackageFile(pkg, file.hex)
-  )
+}
 
-  const ext = useMemo(() => {
-    const ext = extname(file.basename)
+const CodeViewInternal = memo<
+  CodeViewProps & {
+    data: string
+  }
+>(({ file, files, setPath, data }) => {
+  const [, setLocation] = useLocation()
+  const dark = useDarkMode()
+  setLocation
+  files
+  setPath
+  useEffect
+  css
+  JSON5
+  resolve
+  const ref = useRef<HTMLDivElement>(null)
+  const ext = extname(file.basename)
+
+  const mode: Extension | undefined = useMemo(() => {
     switch (ext) {
       case ".mjs":
-        return "js"
-      default:
-        return ext.slice(1)
+      case ".js":
+        return javascript()
+      case ".jsx":
+        return javascript({ jsx: true })
+      case ".ts":
+        return javascript({ typescript: true })
+      case ".tsx":
+        return javascript({ typescript: true, jsx: true })
+      case ".json":
+        return json()
     }
-  }, [file.basename])
+  }, [ext])
 
-  const code = useMemo(
-    () => (ext === "md" ? data : "```" + ext + "\n" + data),
-    [data, ext]
+  const theme = useMemo(
+    () =>
+      dark
+        ? githubDarkInit({
+            styles: [
+              {
+                tag: tags.variableName,
+                color: "inherit",
+              },
+            ],
+          })
+        : githubLightInit({
+            styles: [
+              {
+                tag: tags.variableName,
+                color: "inherit",
+              },
+            ],
+          }),
+    [dark]
+  )
+
+  const extensions: Extension[] = useMemo(
+    () => [
+      mode!,
+      basicTheme,
+      // indentationMarkers({
+      //   hideFirstIndent: true,
+      // }),
+      EditorView.editable.of(false),
+      EditorState.tabSize.of(2),
+      indentUnit.of("  "),
+    ],
+    [mode]
   )
 
   useEffect(() => {
-    const node = ref.current
-    if (!node) return
-
-    node.querySelectorAll(".token.string").forEach(el => {
-      const text = el.textContent
-      if (!text) return
-
-      const prev = el.previousElementSibling
-      const prevPrev = el.previousElementSibling?.previousElementSibling
-
-      if (isRelativeImport(text)) {
-        const path = JSON5.parse(text)
-        const resolved = resolveLink(file, path, files)
-        if (!resolved) return
-        el.classList.add(link)
-        ;(el as HTMLElement).onclick = () => setPath(resolved)
-        return
-      }
-
-      if (
-        (prev?.classList.contains("keyword") && prev.textContent === "from") ||
-        (prev?.classList.contains("punctuation") &&
-          prevPrev?.classList.contains("function") &&
-          prevPrev.textContent === "require")
-      ) {
-        const path = JSON5.parse(text!)
-        const packageNameSegments = path.split("/")
-        const packageName =
-          packageNameSegments[0][0] === "@"
-            ? packageNameSegments.slice(0, 2).join("/")
-            : packageNameSegments[0]
-
-        if (builtinModules.includes(path)) return
-        el.classList.add(link)
-        ;(el as HTMLElement).onclick = () => setLocation(`/package/${packageName}`)
-        return
-      }
+    setupLinks({
+      node: ref.current,
+      file,
+      files,
+      setPath,
+      navigate: setLocation,
     })
-  }, [code, file.dirname, setPath, files, setLocation])
+  }, [file, setPath, files, setLocation])
+
+  if (!mode || data.length < 10000) {
+    const code = "```" + ext.slice(1) + "\n" + data
+    return (
+      <div ref={ref}>
+        <Markdown className={markdownStyle} source={code} />
+      </div>
+    )
+  }
+
+  return (
+    <div ref={ref}>
+      <CodeMirror
+        extensions={extensions}
+        value={data.replace(/\n$/g, "")}
+        basicSetup={{
+          highlightActiveLine: false,
+          highlightActiveLineGutter: false,
+          lineNumbers: false,
+          foldGutter: false,
+        }}
+        theme={theme}
+        readOnly
+        className={cx(
+          "wmde-markdown-var",
+          css`
+            max-height: 100vh;
+            overflow: scroll;
+          `
+        )}
+      />
+    </div>
+  )
+})
+
+export function CodeView(props: CodeViewProps) {
+  const { package: pkg, file } = props
+  const { data, isLoading, isError, error, refetch } = useQuery(
+    getPackageFile(pkg, file.hex)
+  )
 
   if (isError) {
     return <ErrorView error={error} isLoading={isLoading} retry={refetch} />
@@ -85,122 +175,9 @@ export const CodeView = memo<{
     return null
   }
 
-  return (
-    <div ref={ref}>
-      <Markdown className={markdownStyle} source={code} />
-    </div>
-  )
-})
-
-function isRelativeImport(text: string) {
-  return (
-    (text[0] === '"' || text[0] === "'") &&
-    text[1] === "." &&
-    (text[2] === "/" || (text[2] === "." && text[3] === "/")) &&
-    text[0] === text[text.length - 1]
-  )
-}
-
-const link = css`
-  cursor: pointer;
-  &:hover {
-    text-decoration: underline;
-  }
-  &::first-letter {
-    text-decoration-color: #fff;
-  }
-`
-
-function resolveLink(source: MappedFile, target: string, files: MappedFile[]) {
-  switch (source.contentType.split("/")[1]) {
-    case "javascript":
-    case "typescript":
-      const native = resolve(source.dirname, target)
-      const paths = new Set(files.map(file => file.path))
-
-      for (const candidate of [
-        native,
-        `${native}.js`,
-        `${native}.jsx`,
-        `${native}.ts`,
-        `${native}.tsx`,
-        `${native}/index.js`,
-        `${native}/index.jsx`,
-        `${native}/index.ts`,
-        `${native}/index.tsx`,
-      ]) {
-        if (paths.has(candidate)) return candidate
-      }
+  if (file.basename.endsWith(".md")) {
+    return <Markdown className={markdownStyle} source={data} />
+  } else {
+    return <CodeViewInternal {...props} data={data} />
   }
 }
-
-const builtinModules = [
-  "_http_agent",
-  "_http_client",
-  "_http_common",
-  "_http_incoming",
-  "_http_outgoing",
-  "_http_server",
-  "_stream_duplex",
-  "_stream_passthrough",
-  "_stream_readable",
-  "_stream_transform",
-  "_stream_wrap",
-  "_stream_writable",
-  "_tls_common",
-  "_tls_wrap",
-  "assert",
-  "assert/strict",
-  "async_hooks",
-  "buffer",
-  "child_process",
-  "cluster",
-  "console",
-  "constants",
-  "crypto",
-  "dgram",
-  "diagnostics_channel",
-  "dns",
-  "dns/promises",
-  "domain",
-  "events",
-  "fs",
-  "fs/promises",
-  "http",
-  "http2",
-  "https",
-  "inspector",
-  "inspector/promises",
-  "module",
-  "net",
-  "os",
-  "path",
-  "path/posix",
-  "path/win32",
-  "perf_hooks",
-  "process",
-  "punycode",
-  "querystring",
-  "readline",
-  "readline/promises",
-  "repl",
-  "stream",
-  "stream/consumers",
-  "stream/promises",
-  "stream/web",
-  "string_decoder",
-  "sys",
-  "timers",
-  "timers/promises",
-  "tls",
-  "trace_events",
-  "tty",
-  "url",
-  "util",
-  "util/types",
-  "v8",
-  "vm",
-  "wasi",
-  "worker_threads",
-  "zlib",
-]
