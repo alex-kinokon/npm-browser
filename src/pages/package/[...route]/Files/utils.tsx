@@ -47,7 +47,7 @@ export function setupLinks({
           ? packageNameSegments.slice(0, 2).join("/")
           : packageNameSegments[0]
 
-      if (builtinModules.includes(path)) return
+      if (builtinModules.includes(path) || path[0] === "#") return
       el.classList.add(link)
       ;(el as HTMLElement).onclick = () => navigate(`/package/${packageName}`)
       return

@@ -19,7 +19,7 @@ export const RepositoryView = memo(({ data }: { data?: Packument }) => {
     <FormGroup label={<T en="Repository" fr="Dépôt" ja="リポジトリ" zh-Hant="儲存庫" />}>
       <div>
         <a
-          href={repo}
+          href={repo.replace(/^git\+https/, "https")}
           target="_blank"
           rel="noopener noreferrer"
           className={css`
