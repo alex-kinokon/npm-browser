@@ -2,11 +2,14 @@ import "~/styles/globals.css"
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 import { Router, Switch } from "wouter"
 import { Suspense } from "react"
+import { FocusStyleManager } from "@blueprintjs/core"
 import { SideEffect } from "~/components/SideEffect"
 import { LocaleProvider } from "~/contexts/Locale"
 import routes from "./routes.generated"
 import { Head } from "~/components/Head"
 import favicon from "~/assets/favicon.svg"
+
+FocusStyleManager.onlyShowFocusOnTabs()
 
 const client = new QueryClient({
   defaultOptions: {

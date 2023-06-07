@@ -12,7 +12,6 @@ import { json } from "@codemirror/lang-json"
 import { indentUnit } from "@codemirror/language"
 import { tags } from "@lezer/highlight"
 import { css, cx } from "@emotion/css"
-import { indentationMarkers } from "@replit/codemirror-indentation-markers"
 import { useLocation } from "wouter"
 import { Markdown, markdownStyle } from "~/components/Markdown"
 import { ErrorView, LoadingView } from "../NonIdeal"
@@ -128,7 +127,11 @@ const CodeViewInternal = memo<
   }, [file, setPath, files, setLocation])
 
   if (!mode || data.length < 10000) {
-    const code = "```" + ext.slice(1) + "\n" + data
+    let mdExt = ext.slice(1)
+    if (mdExt === "mjs") {
+      mdExt = "js"
+    }
+    const code = "```" + mdExt + "\n" + data
     return (
       <div ref={ref}>
         <Markdown className={markdownStyle} source={code} />
