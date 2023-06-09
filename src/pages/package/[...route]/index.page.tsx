@@ -9,7 +9,7 @@ import PackagePage from "./package"
 function parseRoute(routes: string[]) {
   switch (routes.length) {
     case 4:
-      invariant(routes[1] === "v", "invalid route")
+      invariant(routes[2] === "v", "invalid route")
       return { name: routes.slice(0, 2).join("/"), version: routes[3] }
     case 3:
       invariant(routes[1] === "v", "invalid route")
