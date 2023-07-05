@@ -1,5 +1,4 @@
-import { extname, resolve } from "path"
-import JSON5 from "json5"
+import { extname } from "path"
 import { useQuery } from "@tanstack/react-query"
 import { memo, useEffect, useMemo, useRef } from "react"
 import CodeMirror from "@uiw/react-codemirror"
@@ -20,9 +19,6 @@ import type { MappedFile } from "./index"
 import { useDarkMode } from "~/hooks/useDarkMode"
 import { setupLinks } from "./utils"
 
-const fontFamily =
-  "ui-monospace,SFMono-Regular,SF Mono,Menlo,Consolas,Liberation Mono,monospace"
-
 const basicTheme = EditorView.theme({
   ".cm-scroller": {
     backgroundColor: "var(--color-canvas-subtle)",
@@ -30,7 +26,7 @@ const basicTheme = EditorView.theme({
     padding: "16px",
   },
   ".cm-content, .cm-scroller": {
-    fontFamily,
+    fontFamily: "var(--monospace)",
     fontSize: "13.6px",
     lineHeight: "21px",
   },
@@ -47,20 +43,29 @@ interface CodeViewProps {
   package: string
 }
 
+export function useCodeMirrorTheme() {
+  const dark = useDarkMode()
+  return useMemo(
+    () =>
+      dark
+        ? githubDarkInit({
+            styles: [{ tag: tags.variableName, color: "inherit" }],
+          })
+        : githubLightInit({
+            styles: [{ tag: tags.variableName, color: "inherit" }],
+          }),
+    [dark]
+  )
+}
+
 const CodeViewInternal = memo<
   CodeViewProps & {
     data: string
   }
 >(({ file, files, setPath, data }) => {
   const [, setLocation] = useLocation()
-  const dark = useDarkMode()
-  setLocation
-  files
-  setPath
-  useEffect
-  css
-  JSON5
-  resolve
+  const theme = useCodeMirrorTheme()
+
   const ref = useRef<HTMLDivElement>(null)
   const ext = extname(file.basename)
 
@@ -79,28 +84,6 @@ const CodeViewInternal = memo<
         return json()
     }
   }, [ext])
-
-  const theme = useMemo(
-    () =>
-      dark
-        ? githubDarkInit({
-            styles: [
-              {
-                tag: tags.variableName,
-                color: "inherit",
-              },
-            ],
-          })
-        : githubLightInit({
-            styles: [
-              {
-                tag: tags.variableName,
-                color: "inherit",
-              },
-            ],
-          }),
-    [dark]
-  )
 
   const extensions: Extension[] = useMemo(
     () => [

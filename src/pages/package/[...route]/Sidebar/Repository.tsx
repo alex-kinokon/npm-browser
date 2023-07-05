@@ -29,7 +29,9 @@ export const RepositoryView = memo(({ data }: { data?: Packument }) => {
           {repo}
         </a>
       </div>
-      {process.env.NODE_ENV !== "production" && <GitHubDataWrapper repo={repo} />}
+      {false && process.env.NODE_ENV !== "production" && (
+        <GitHubDataWrapper repo={repo} />
+      )}
     </FormGroup>
   )
 })

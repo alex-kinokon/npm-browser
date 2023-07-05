@@ -6,6 +6,8 @@ body {
   font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", Inter, "Noto Sans CJK SC",
     sans-serif;
   font-size: 15px;
+  --monospace: ui-monospace, SFMono-Regular, SF Mono, Menlo, Consolas, Liberation Mono,
+    monospace;
 }
 
 body.bp5-dark {

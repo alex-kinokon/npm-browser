@@ -2,6 +2,7 @@ import { resolve } from "node:path"
 import { promises as fs } from "node:fs"
 import createFastify from "fastify"
 import fastifyStatic from "@fastify/static"
+import fastifyHelmet from "@fastify/helmet"
 import fastifyMultipart from "@fastify/multipart"
 import fastifyRateLimit from "@fastify/rate-limit"
 import formDataPlugin from "@fastify/formbody"
@@ -16,6 +17,10 @@ export async function main() {
     },
   })
 
+  await app.register(fastifyHelmet, {
+    contentSecurityPolicy: false,
+    crossOriginEmbedderPolicy: false,
+  })
   await app.register(fastifyMultipart)
   await app.register(formDataPlugin)
   await bindRoutes(app)

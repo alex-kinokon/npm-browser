@@ -16,6 +16,7 @@ import Footer from "~/components/Footer"
 import { Sidebar } from "./Sidebar"
 import { T } from "~/contexts/Locale"
 import { Container } from "~/components/Container"
+import { Playground } from "./Playground"
 
 export interface PackageIdentifier {
   name: string
@@ -50,6 +51,7 @@ const enum TAB {
   Dependencies,
   Dependents,
   Versions,
+  Playground,
 }
 
 export const skeleton = <div className={Classes.SKELETON} style={{ height: 500 }} />
@@ -180,6 +182,18 @@ export default function PackagePage({
                 id={TAB.Versions}
                 title={<T en="Versions" fr="Versions" ja="バージョン" zh-Hant="版本" />}
                 panel={data ? <VersionList data={data} /> : skeleton}
+              />
+              <Tab
+                id={TAB.Playground}
+                title={
+                  <T
+                    en="Playground"
+                    fr="Playground"
+                    ja="プレイグラウンド"
+                    zh-Hant="遊樂場"
+                  />
+                }
+                panel={<Playground package={id} active={activeTab === TAB.Playground} />}
               />
             </Tabs>
           </div>

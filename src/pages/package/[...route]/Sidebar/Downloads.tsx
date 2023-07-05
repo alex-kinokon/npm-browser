@@ -22,14 +22,7 @@ export const DownloadsView = memo(({ package: name }: { package: string }) => {
         />
       }
     >
-      <span
-        className={cx(
-          !downloads && Classes.SKELETON,
-          css`
-            font-variant-numeric: tabular-nums;
-          `
-        )}
-      >
+      <span className={cx(!downloads && Classes.SKELETON)}>
         {downloads?.downloads.toLocaleString()}
       </span>
     </FormGroup>

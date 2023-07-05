@@ -1,12 +1,13 @@
 import invariant from "tiny-invariant"
 import PackagePage from "./package"
+import NotFoundPage from "~/pages/404.page"
 
 // four possibilities:
 // 1. pkgName
 // 2. @scope/pkgName
 // 3. pkgName/v/version
 // 4. @scope/pkgName/v/version
-function parseRoute(routes: string[]) {
+export function parseRoute(routes: string[]) {
   switch (routes.length) {
     case 4:
       invariant(routes[2] === "v", "invalid route")
@@ -18,8 +19,6 @@ function parseRoute(routes: string[]) {
       return { name: routes.join("/"), version: undefined }
     case 1:
       return { name: routes[0], version: undefined }
-    default:
-      throw new Error("invalid route")
   }
 }
 
@@ -29,5 +28,8 @@ interface PageParams {
 
 export default function Package({ params }: { params: PageParams }) {
   const route = parseRoute(params.route.split("/"))
+  if (!route) {
+    return <NotFoundPage />
+  }
   return <PackagePage name={route.name} version={route.version || undefined} />
 }

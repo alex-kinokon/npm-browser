@@ -23,7 +23,8 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "stripInternal": true,
-    "useUnknownInCatchVariables": false
+    "useUnknownInCatchVariables": false,
+    "plugins": [{ "name": "typescript-plugin-css-modules" }]
   },
   "include": ["**/*.ts", "**/*.tsx"],
   "exclude": ["node_modules"]

@@ -1,4 +1,5 @@
 {
   "eslint.runtime": "node",
-  "cSpell.words": ["packument"]
+  "cSpell.words": ["packument"],
+  "typescript.tsdk": "node_modules/typescript/lib"
 }

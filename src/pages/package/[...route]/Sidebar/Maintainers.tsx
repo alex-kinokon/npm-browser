@@ -34,6 +34,8 @@ export const MaintainersView = memo(({ package: name }: { package: string }) => 
                 height={20}
                 width={20}
                 alt={maintainer.name}
+                crossOrigin="anonymous"
+                referrerPolicy="no-referrer"
                 className={css`
                   border-radius: 5px;
                   margin-right: 6px;

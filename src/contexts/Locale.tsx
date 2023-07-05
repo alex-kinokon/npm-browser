@@ -87,7 +87,7 @@ export function useT() {
   const locale = useLocale()
   const callback = useCallback(
     (record: {
-      [locale in Locale]?: string
+      [locale in Locale]?: React.ReactNode
     }) => record[locale] ?? record[DEFAULT_LOCALE],
     [locale]
   )
@@ -96,7 +96,7 @@ export function useT() {
 }
 
 export function T(props: {
-  [locale in Locale]?: string
+  [locale in Locale]?: React.ReactNode
 }) {
   const t = useT()
 
