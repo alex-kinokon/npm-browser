@@ -51,14 +51,12 @@ export async function main() {
       prefix: "/assets",
       wildcard: false,
     })
-    app.setNotFoundHandler((_req, reply) => {
-      reply.type("text/html").send(html)
+    app.setNotFoundHandler(async (_req, reply) => {
+      await reply.type("text/html").send(html)
     })
   }
 
   await app.listen({ port })
 
-  if (process.env.NODE_ENV === "production") {
-    console.log(`Server listening on port ${port}`)
-  }
+  console.log(`Server listening on port ${port}`)
 }

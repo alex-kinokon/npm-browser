@@ -25,16 +25,27 @@ export async function fetch({
     })
     return cachedJSON
   }
+  let response: Response
 
-  const response = await globalThis.fetch(url, { headers })
-  if (!response.ok) {
+  try {
+    response = await globalThis.fetch(url, { headers })
+    if (!response.ok) {
+      log("fetch: request failed: %O", {
+        url,
+        headers,
+        status: response.status,
+        statusText: response.statusText,
+        response,
+      })
+      throw new FetchError(url, response)
+    }
+  } catch (e) {
     log("fetch: request failed: %O", {
       url,
       headers,
-      status: response.statusText,
-      response,
+      e,
     })
-    throw new FetchError(url, response)
+    throw new FetchError(url, e)
   }
 
   const json = await response.json()

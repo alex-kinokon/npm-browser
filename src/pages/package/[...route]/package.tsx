@@ -1,8 +1,9 @@
 import { useQuery } from "@tanstack/react-query"
 import { css, cx } from "@emotion/css"
-import { Classes, Colors, Divider, H2, Tab, Tabs } from "@blueprintjs/core"
+import { Classes, Colors, Divider, H2, NonIdealState, Tab, Tabs } from "@blueprintjs/core"
 import styled from "@emotion/styled"
 import { useEffect, useMemo, useState } from "react"
+import { Error } from "@blueprintjs/icons"
 import { Head } from "~/components/Head"
 import { RelativeTime } from "~/utils/relativeTime"
 import { getRegistryPackageInfo } from "~/remote"
@@ -63,12 +64,21 @@ export default function PackagePage({
   name: string
   version?: string
 }) {
-  const { data, isLoading } = useQuery(getRegistryPackageInfo(name))
+  const { data, isLoading, error, isError } = useQuery(getRegistryPackageInfo(name))
+
   const ver = version ?? data?.["dist-tags"].latest
   const id: PackageIdentifier = useMemo(() => ({ name, version: ver! }), [name, ver])
 
   const [activeTab, setActiveTab] = useState<TAB>(TAB.Readme)
   const isPrivate = false as boolean
+
+  const currentVersion = !!(data && ver) && data?.versions[ver]
+
+  const depCount = useMemo(
+    () =>
+      currentVersion ? Object.keys(currentVersion.dependencies ?? {}).length : undefined,
+    [currentVersion]
+  )
 
   useEffect(() => {
     setActiveTab(TAB.Readme)
@@ -83,123 +93,143 @@ export default function PackagePage({
       </Head>
 
       <Container>
-        <Grid>
-          <div>
-            <div
-              className={css`
-                margin-bottom: 5px;
-              `}
-            >
-              <div
-                className={cx(
-                  flex,
-                  css`
-                    margin-bottom: 7px;
-                  `
-                )}
-              >
-                <H2
-                  className={css`
-                    margin: 0;
-                    padding: 0;
-                    margin-right: 3px;
-                  `}
-                >
-                  {name}
-                </H2>{" "}
-                <TypeScriptStatus package={id} />
-              </div>
+        {isError ? (
+          <div
+            className={css`
+              margin: 70px 0;
+            `}
+          >
+            <NonIdealState
+              icon={<Error size={48} />}
+              title={<T en="Error" fr="Erreur" ja="エラー" zh-Hant="錯誤" />}
+              description={(error as Error).message ?? "Unknown error"}
+            />
+          </div>
+        ) : (
+          <Grid>
+            <div>
               <div
                 className={css`
-                  ${flex};
-                  .bp5-divider {
-                    height: 1em;
-                  }
+                  margin-bottom: 5px;
                 `}
               >
-                <div>{ver}</div> <Divider />
-                <div>
-                  Scope:{" "}
-                  {isPrivate ? (
-                    <span style={{ color: Colors.RED4 }}>Private</span>
-                  ) : (
-                    <span style={{ color: Colors.GREEN4 }}>Public</span>
+                <div
+                  className={cx(
+                    flex,
+                    css`
+                      margin-bottom: 7px;
+                    `
                   )}
-                </div>{" "}
-                <Divider />
-                <div className={cx(isLoading && Classes.SKELETON)}>
-                  <T en="Published " fr="Publié " zh-Hant="發佈於 " />
-                  {data?.time != null && (
-                    <RelativeTime date={new Date(data.time[ver!])} />
-                  )}
+                >
+                  <H2
+                    className={css`
+                      margin: 0;
+                      padding: 0;
+                      margin-right: 3px;
+                    `}
+                  >
+                    {name}
+                  </H2>{" "}
+                  <TypeScriptStatus package={id} />
+                </div>
+                <div
+                  className={css`
+                    ${flex};
+                    .bp5-divider {
+                      height: 1em;
+                    }
+                  `}
+                >
+                  <div>{ver}</div> <Divider />
+                  <div>
+                    Scope:{" "}
+                    {isPrivate ? (
+                      <span style={{ color: Colors.RED4 }}>Private</span>
+                    ) : (
+                      <span style={{ color: Colors.GREEN4 }}>Public</span>
+                    )}
+                  </div>{" "}
+                  <Divider />
+                  <div className={cx(isLoading && Classes.SKELETON)}>
+                    <T en="Published " fr="Publié " zh-Hant="發佈於 " />
+                    {data?.time != null && (
+                      <RelativeTime date={new Date(data.time[ver!])} />
+                    )}
+                  </div>
                 </div>
               </div>
+              {/* Main */}
+              <Tabs
+                className={css`
+                  overflow: hidden;
+                  padding-top: 4px;
+                  padding-left: 4px;
+                  padding-bottom: 4px;
+                  padding-right: 4px;
+                  margin-left: -4px;
+                  .bp5-tab {
+                    font-size: inherit;
+                  }
+                `}
+                selectedTabId={activeTab}
+                onChange={id => setActiveTab(id as TAB)}
+              >
+                <Tab
+                  id={TAB.Readme}
+                  title={<T en="Readme" fr="Description" ja="説明" zh-Hant="說明" />}
+                  panel={<Readme package={id} fallback={data?.readme} />}
+                />
+                <Tab
+                  id={TAB.Code}
+                  title={<T en="Code" fr="Code" ja="コード" zh-Hant="程式碼" />}
+                  panel={ver ? <FileView package={id} /> : skeleton}
+                />
+                <Tab
+                  id={TAB.Dependencies}
+                  title={
+                    <>
+                      <T
+                        en="Dependencies"
+                        fr="Dépendances"
+                        ja="依存関係"
+                        zh-Hant="依賴關係"
+                      />
+                      {depCount != null && <sup>{depCount}</sup>}
+                    </>
+                  }
+                  panel={data ? <Dependencies data={data} version={ver!} /> : skeleton}
+                />
+                <Tab
+                  id={TAB.Dependents}
+                  title={<T en="Dependents" fr="Dépendants" zh-Hant="相依" />}
+                  panel={<Dependents package={id} />}
+                />
+                <Tab
+                  id={TAB.Versions}
+                  title={<T en="Versions" fr="Versions" ja="バージョン" zh-Hant="版本" />}
+                  panel={data ? <VersionList data={data} /> : skeleton}
+                />
+                <Tab
+                  id={TAB.Playground}
+                  disabled
+                  title={
+                    <T
+                      en="Playground"
+                      fr="Playground"
+                      ja="プレイグラウンド"
+                      zh-Hant="遊樂場"
+                    />
+                  }
+                  panel={
+                    <Playground package={id} active={activeTab === TAB.Playground} />
+                  }
+                />
+              </Tabs>
             </div>
-            {/* Main */}
-            <Tabs
-              className={css`
-                overflow: hidden;
-                padding-top: 4px;
-                padding-left: 4px;
-                padding-bottom: 4px;
-                padding-right: 4px;
-                margin-left: -4px;
-                .bp5-tab {
-                  font-size: inherit;
-                }
-              `}
-              selectedTabId={activeTab}
-              onChange={id => setActiveTab(id as TAB)}
-            >
-              <Tab
-                id={TAB.Readme}
-                title={<T en="Readme" fr="Description" ja="説明" zh-Hant="說明" />}
-                panel={<Readme package={id} fallback={data?.readme} />}
-              />
-              <Tab
-                id={TAB.Code}
-                title={<T en="Code" fr="Code" ja="コード" zh-Hant="程式碼" />}
-                panel={ver ? <FileView package={id} /> : skeleton}
-              />
-              <Tab
-                id={TAB.Dependencies}
-                title={
-                  <T
-                    en="Dependencies"
-                    fr="Dépendances"
-                    ja="依存関係"
-                    zh-Hant="依賴關係"
-                  />
-                }
-                panel={data ? <Dependencies data={data} version={ver!} /> : skeleton}
-              />
-              <Tab
-                id={TAB.Dependents}
-                title={<T en="Dependents" fr="Dépendants" zh-Hant="相依" />}
-                panel={<Dependents package={id} />}
-              />
-              <Tab
-                id={TAB.Versions}
-                title={<T en="Versions" fr="Versions" ja="バージョン" zh-Hant="版本" />}
-                panel={data ? <VersionList data={data} /> : skeleton}
-              />
-              <Tab
-                id={TAB.Playground}
-                title={
-                  <T
-                    en="Playground"
-                    fr="Playground"
-                    ja="プレイグラウンド"
-                    zh-Hant="遊樂場"
-                  />
-                }
-                panel={<Playground package={id} active={activeTab === TAB.Playground} />}
-              />
-            </Tabs>
-          </div>
 
-          <Sidebar data={data} package={id} />
-        </Grid>
+            <Sidebar data={data} package={id} />
+          </Grid>
+        )}
 
         <Divider
           className={css`

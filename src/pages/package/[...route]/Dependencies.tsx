@@ -3,8 +3,7 @@ import { memo } from "react"
 import { Link } from "wouter"
 import { useQuery } from "@tanstack/react-query"
 import type { Packument } from "~/vendor/node-query-registry"
-import type { PackageIdentifier } from "./package"
-import { skeleton } from "./package"
+import { type PackageIdentifier, skeleton } from "./package"
 import { getPackageInfo } from "~/remote"
 
 function DepList({

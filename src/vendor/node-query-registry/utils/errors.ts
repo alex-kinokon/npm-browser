@@ -11,7 +11,11 @@ export class FetchError extends Error {
     /** Response received */
     readonly response: Response
   ) {
-    super(`fetch: request to ${url} failed with status ${response.statusText}`)
+    let message = `fetch: request to ${url} failed`
+    if (response.status) {
+      message += ` with status ${response.status}`
+    }
+    super(message)
   }
 }
 

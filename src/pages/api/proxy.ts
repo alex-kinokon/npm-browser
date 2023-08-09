@@ -1,7 +1,7 @@
 import type { FastifyReply, FastifyRequest } from "fastify"
 
 export async function proxy(url: string, req: FastifyRequest, reply: FastifyReply) {
-  const json = await fetch(url, {
+  const res = await fetch(url, {
     redirect: "follow",
     headers: {
       accept: "application/json",
@@ -10,12 +10,20 @@ export async function proxy(url: string, req: FastifyRequest, reply: FastifyRepl
     },
   })
 
-  if (!json.ok) {
-    return reply.code(json.status).send(await json.text())
+  if (!res.ok) {
+    return reply.code(res.status).send(await res.text())
   }
 
-  const data = await json.json()
-  delete data.csrftoken
-  delete data.npmExpansions
-  return reply.code(200).type("application/json").send(data)
+  const contentType = res.headers.get("content-type") ?? "application/octet-stream"
+  if (contentType?.includes("application/json")) {
+    const data = await res.json()
+    delete data.csrftoken
+    delete data.npmExpansions
+    return reply.code(res.status).type(contentType).send(data)
+  } else {
+    return reply
+      .code(res.status)
+      .type(contentType)
+      .send(await res.text())
+  }
 }

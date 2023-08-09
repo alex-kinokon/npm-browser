@@ -46,6 +46,7 @@ export function getRegistryPackageInfo(name: string) {
   return queryOptions({
     queryKey: ["getRegistryPackageInfo", name],
     queryFn: () => npm.getPackument({ name, registry: npm.cloudflareRegistry }),
+    retry: false,
   })
 }
 
@@ -54,6 +55,7 @@ export function getPackageFiles(name: string, version: string) {
     queryKey: ["getPackageFiles", name, version],
     enabled: !!version,
     queryFn: () => get<FileResult>(`${npmMirror}/package/${name}/v/${version}/index`),
+    retry: false,
   })
 }
 

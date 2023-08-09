@@ -26,6 +26,6 @@
     "useUnknownInCatchVariables": false,
     "plugins": [{ "name": "typescript-plugin-css-modules" }]
   },
-  "include": ["**/*.ts", "**/*.tsx"],
+  "include": ["**/*.ts", "**/*.tsx", "./.eslintrc.js"],
   "exclude": ["node_modules"]
 }

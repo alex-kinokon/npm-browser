@@ -1,9 +1,5 @@
-export async function log(formatter: any, ...args: any[]): Promise<void> {
+export function log(formatter: any, ...args: any[]) {
   if (process.env.NODE_ENV !== "production") {
-    try {
-      const { debug } = await import("debug")
-      const logger = debug("query-registry")
-      logger(formatter, args)
-    } catch {}
+    console.debug(formatter, args)
   }
 }
