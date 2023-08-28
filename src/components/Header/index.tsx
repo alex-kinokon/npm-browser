@@ -1,7 +1,7 @@
 import { css } from "@emotion/css"
 import { Alignment, Button, Navbar } from "@blueprintjs/core"
 import { Menu } from "@blueprintjs/icons"
-import { SiNpm } from "react-icons/si"
+import Icon from "@aet/icons/macro"
 import { Link } from "wouter"
 import { SearchView } from "./Search"
 import { LocaleSwitch } from "./LocaleSwitch"
@@ -27,7 +27,8 @@ export function PageHeader({ defaultQuery }: { defaultQuery?: string }) {
                 margin-right: 0;
               `}
             >
-              <SiNpm
+              <Icon
+                icon="SiNpm"
                 fill="#cb3837"
                 className={css`
                   display: block;

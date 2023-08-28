@@ -1,9 +1,8 @@
 import { css, cx } from "@emotion/css"
 import { Classes, FormGroup } from "@blueprintjs/core"
-import { memo, useMemo } from "react"
+import { memo } from "react"
 import { useQuery } from "@tanstack/react-query"
-import { VscIssues } from "react-icons/vsc"
-import { BiGitPullRequest } from "react-icons/bi"
+import Icon from "@aet/icons/macro"
 import type { Packument } from "~/vendor/node-query-registry"
 import { T } from "~/contexts/Locale"
 import { getGitHubRepo, getPulls } from "~/remote"
@@ -78,13 +77,13 @@ const GitHubData = memo(({ owner, repo }: { owner: string; repo: string }) => {
     >
       {!repoData.isError && (
         <div className={cx(repoData.isLoading && Classes.SKELETON)}>
-          <VscIssues />
+          <Icon icon="VscIssues" />
           {repoData.data?.open_issues_count} issues
         </div>
       )}
       {!pulls.isError && (
         <div className={cx(pulls.isLoading && Classes.SKELETON)}>
-          <BiGitPullRequest />
+          <Icon icon="BiGitPullRequest" />
           {pulls.data?.length} pull requests
         </div>
       )}

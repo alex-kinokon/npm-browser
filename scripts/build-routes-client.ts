@@ -1,4 +1,4 @@
-#!/usr/bin/env -S node -r esbuild-register
+#!/usr/bin/env tsx
 import { extname, resolve } from "node:path"
 import { existsSync } from "node:fs"
 import { format } from "prettier"

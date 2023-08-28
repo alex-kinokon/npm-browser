@@ -1,4 +1,4 @@
-#!/usr/bin/env -S node -r esbuild-register
+#!/usr/bin/env tsx
 import { promises as fs } from "node:fs"
 import esbuild from "esbuild"
 import nodemon from "nodemon"

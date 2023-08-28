@@ -1,5 +1,5 @@
 import { Classes } from "@blueprintjs/core"
-import { SiGithub } from "react-icons/si"
+import Icon from "@aet/icons/macro"
 import { css, cx } from "@emotion/css"
 import { Link } from "wouter"
 import { T, useT } from "~/contexts/Locale"
@@ -48,7 +48,8 @@ export default function Footer() {
             }
           `}
         >
-          <SiGithub
+          <Icon
+            icon="SiGithub"
             className={css`
               margin-right: 5px;
             `}

@@ -1,4 +1,4 @@
-#!/usr/bin/env -S node -r esbuild-register
+#!/usr/bin/env tsx
 import fs from "fs"
 import { resolve } from "path"
 // import { dependencies } from "../package.json"
@@ -18,7 +18,7 @@ const packages = ([] as string[])
     "json5",
     "normalize.css",
     "react-dom",
-    "react-icons",
+    "@aet/icons",
     "react-paginate",
     "react",
     "wouter",

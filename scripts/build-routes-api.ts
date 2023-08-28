@@ -1,4 +1,4 @@
-#!/usr/bin/env -S node -r esbuild-register
+#!/usr/bin/env tsx
 import { readFileSync } from "node:fs"
 import glob from "fast-glob"
 import { camelCase } from "lodash"

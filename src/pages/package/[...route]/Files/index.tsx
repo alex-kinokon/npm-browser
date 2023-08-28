@@ -4,18 +4,7 @@ import { useQuery } from "@tanstack/react-query"
 import { css } from "@emotion/css"
 import { Document, FolderClose } from "@blueprintjs/icons"
 import styled from "@emotion/styled"
-import {
-  SiCss3,
-  SiHtml5,
-  SiJavascript,
-  SiJson,
-  SiMarkdown,
-  SiSass,
-  SiTypescript,
-} from "react-icons/si"
-import { GrCertificate } from "react-icons/gr"
-import { BsFillFileBinaryFill } from "react-icons/bs"
-import { FaMap } from "react-icons/fa"
+import Icon from "@aet/icons/macro"
 import { getFileSize } from "~/utils/fileSize"
 import { getPackageFiles } from "~/remote"
 import { CodeView } from "./CodeView"
@@ -94,9 +83,9 @@ export function FileView({ package: { name, version } }: { package: PackageIdent
       >
         {path !== "/" && (
           <Li className={grid} onClick={() => setPath(dirname(path))}>
-            <Icon>
+            <IconDiv>
               <FolderClose />
-            </Icon>
+            </IconDiv>
             <Name>..</Name>
             <Type />
             <Size />
@@ -105,9 +94,9 @@ export function FileView({ package: { name, version } }: { package: PackageIdent
 
         {childDirs.map(dir => (
           <Li className={grid} key={dir.dirname} onClick={() => setPath(dir.dirname)}>
-            <Icon>
+            <IconDiv>
               <FolderClose />
-            </Icon>
+            </IconDiv>
             <Name>{basename(dir.dirname)}</Name>
             <Type>directory</Type>
             <Size
@@ -132,7 +121,7 @@ const FileItem = memo<{
   setPath: (path: string) => void
 }>(({ file, setPath }) => (
   <Li className={grid} onClick={() => setPath(file.path)}>
-    <Icon>{getIcon(file.basename)}</Icon>
+    <IconDiv>{getIcon(file.basename)}</IconDiv>
     <Name>{file.basename}</Name>
     <Type>{file.contentType}</Type>
     <Size
@@ -159,7 +148,7 @@ const grid = css`
 const Li = styled.li`
   margin: 9px 0;
 `
-const Icon = styled.div`
+const IconDiv = styled.div`
   display: flex;
   align-items: center;
   svg {
@@ -186,31 +175,31 @@ function getIcon(fileName: string) {
   fileName = fileName.toLowerCase()
 
   if (fileName.startsWith("license")) {
-    return <GrCertificate />
+    return <Icon icon="GrCertificate" />
   }
 
   switch (extname(fileName)) {
     case ".map":
-      return <FaMap />
+      return <Icon icon="FaMap" />
     case ".js":
     case ".mjs":
-      return <SiJavascript />
+      return <Icon icon="SiJavascript" />
     case ".ts":
     case ".tsx":
-      return <SiTypescript />
+      return <Icon icon="SiTypescript" />
     case ".md":
-      return <SiMarkdown />
+      return <Icon icon="SiMarkdown" />
     case ".scss":
     case ".sass":
-      return <SiSass />
+      return <Icon icon="SiSass" />
     case ".css":
-      return <SiCss3 />
+      return <Icon icon="SiCss3" />
     case ".json":
-      return <SiJson />
+      return <Icon icon="SiJson" />
     case ".html":
-      return <SiHtml5 />
+      return <Icon icon="SiHtml5" />
     case ".node":
-      return <BsFillFileBinaryFill />
+      return <Icon icon="BsFillFileBinaryFill" />
     default:
       return <Document />
   }

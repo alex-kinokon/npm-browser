@@ -21,7 +21,7 @@ export default /* @__PURE__ */ defineConfig(({ command }) => ({
     react({
       jsxImportSource: "@emotion/react",
       babel: {
-        plugins: ["@emotion/babel-plugin"],
+        plugins: ["babel-plugin-macros", "@emotion/babel-plugin"],
       },
     }),
     tsconfigPaths({

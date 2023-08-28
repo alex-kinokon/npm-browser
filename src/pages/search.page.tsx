@@ -13,7 +13,7 @@ import { useQuery } from "@tanstack/react-query"
 import { css, cx } from "@emotion/css"
 import { memo, useCallback, useMemo } from "react"
 import { Link } from "wouter"
-import { SiGithub, SiGitlab } from "react-icons/si"
+import Icon from "@aet/icons/macro"
 import { ChevronLeft, ChevronRight, GitRepo, Home, Unlock } from "@blueprintjs/icons"
 import ReactPaginate from "react-paginate"
 import { Head } from "~/components/Head"
@@ -386,13 +386,13 @@ const RepoLink = memo(({ repo }: { repo?: string }) => {
     case "github":
       return (
         <a href={repo} rel="noopener noreferrer">
-          <SiGithub className={repoIcon} />
+          <Icon icon="SiGithub" className={repoIcon} />
         </a>
       )
     case "gitlab":
       return (
         <a href={repo} rel="noopener noreferrer">
-          <SiGitlab className={repoIcon} />
+          <Icon icon="SiGitlab" className={repoIcon} />
         </a>
       )
     default:

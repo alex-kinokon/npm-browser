@@ -1,7 +1,7 @@
 import { css } from "@emotion/css"
 import { useQuery } from "@tanstack/react-query"
 import { Link } from "wouter"
-import { SiTypescript } from "react-icons/si"
+import Icon from "@aet/icons/macro"
 import { getPackageInfo } from "~/remote"
 import type { PackageIdentifier } from "./package"
 
@@ -18,7 +18,8 @@ export function TypeScriptStatus({ package: { name } }: { package: PackageIdenti
       const pkgName = name.slice("@types/".length).replace(/^(\w+)__(.+)$/, "$1/$2")
       return (
         <Link href={`/package/${pkgName}`}>
-          <SiTypescript
+          <Icon
+            icon="SiTypescript"
             title={pkgName}
             fill="#3178C6"
             className={css`
@@ -33,7 +34,8 @@ export function TypeScriptStatus({ package: { name } }: { package: PackageIdenti
     }
 
     return (
-      <SiTypescript
+      <Icon
+        icon="SiTypescript"
         fill="#3178C6"
         className={css`
           margin-left: 5px;
@@ -50,7 +52,11 @@ export function TypeScriptStatus({ package: { name } }: { package: PackageIdenti
           border: 1px solid #3178c6;
           color: #3178c6;
           cursor: pointer;
-          font-family: "Segoe UI", -apple-system, BlinkMacSystemFont, Roboto;
+          font-family:
+            "Segoe UI",
+            -apple-system,
+            BlinkMacSystemFont,
+            Roboto;
           font-size: 0.8em;
           font-weight: 600;
           margin-left: 5px;
