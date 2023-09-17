@@ -4,8 +4,7 @@ import { memo, useEffect, useMemo, useRef } from "react"
 import CodeMirror from "@uiw/react-codemirror"
 import { githubDarkInit, githubLightInit } from "@uiw/codemirror-theme-github"
 import { EditorView } from "@codemirror/view"
-import type { Extension } from "@codemirror/state"
-import { EditorState } from "@codemirror/state"
+import { EditorState, type Extension } from "@codemirror/state"
 import { javascript } from "@codemirror/lang-javascript"
 import { json } from "@codemirror/lang-json"
 import { indentUnit } from "@codemirror/language"
@@ -109,7 +108,7 @@ const CodeViewInternal = memo<
     })
   }, [file, setPath, files, setLocation])
 
-  if (!mode || data.length < 10000) {
+  if (!data.includes("```") && (!mode || data.length < 10000)) {
     let mdExt = ext.slice(1)
     if (mdExt === "mjs") {
       mdExt = "js"
