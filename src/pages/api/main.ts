@@ -26,7 +26,7 @@ export async function main() {
   await bindRoutes(app)
 
   await app.register(fastifyRateLimit, {
-    max: 100,
+    max: 70,
     timeWindow: "1 minute",
   })
 

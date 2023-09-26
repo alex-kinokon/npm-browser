@@ -1,6 +1,17 @@
 import { useQuery } from "@tanstack/react-query"
 import { css, cx } from "@emotion/css"
-import { Classes, Colors, Divider, H2, NonIdealState, Tab, Tabs } from "@blueprintjs/core"
+import {
+  Callout,
+  Classes,
+  Colors,
+  Divider,
+  H2,
+  H5,
+  Intent,
+  NonIdealState,
+  Tab,
+  Tabs,
+} from "@blueprintjs/core"
 import styled from "@emotion/styled"
 import { useEffect, useMemo, useState } from "react"
 import { Error } from "@blueprintjs/icons"
@@ -15,7 +26,7 @@ import { VersionList } from "./Versions"
 import { Dependencies, Dependents } from "./Dependencies"
 import Footer from "~/components/Footer"
 import { Sidebar } from "./Sidebar"
-import { T } from "~/contexts/Locale"
+import { T, useT } from "~/contexts/Locale"
 import { Container } from "~/components/Container"
 import { Playground } from "./Playground"
 
@@ -70,9 +81,11 @@ export default function PackagePage({
   const id: PackageIdentifier = useMemo(() => ({ name, version: ver! }), [name, ver])
 
   const [activeTab, setActiveTab] = useState<TAB>(TAB.Readme)
-  const isPrivate = false as boolean
 
-  const currentVersion = !!(data && ver) && data?.versions[ver]
+  const currentVersion = !!(data && ver) ? data?.versions[ver] : undefined
+
+  // This is available from getPackageInfo(), but it’s a private API that we’re deprecating
+  const isPrivate = false as boolean
 
   const depCount = useMemo(
     () =>
@@ -92,7 +105,7 @@ export default function PackagePage({
         <title>{name}</title>
       </Head>
 
-      <Container>
+      <Container data-v={currentVersion?.deprecated}>
         {isError ? (
           <div
             className={css`
@@ -113,6 +126,25 @@ export default function PackagePage({
                   margin-bottom: 5px;
                 `}
               >
+                {currentVersion?.deprecated && (
+                  <Callout
+                    intent={Intent.WARNING}
+                    className={css`
+                      margin: 10px 0;
+                    `}
+                  >
+                    <H5>
+                      <T
+                        en="This package has been deprecated"
+                        fr="Ce package a été déprécié"
+                        ja="このパッケージは非推奨です"
+                        zh-Hant="此套件已被廢棄"
+                      />
+                    </H5>
+                    <div>{currentVersion.deprecated}</div>
+                  </Callout>
+                )}
+
                 <div
                   className={cx(
                     flex,
@@ -209,21 +241,23 @@ export default function PackagePage({
                   title={<T en="Versions" fr="Versions" ja="バージョン" zh-Hant="版本" />}
                   panel={data ? <VersionList data={data} /> : skeleton}
                 />
-                <Tab
-                  id={TAB.Playground}
-                  disabled
-                  title={
-                    <T
-                      en="Playground"
-                      fr="Playground"
-                      ja="プレイグラウンド"
-                      zh-Hant="遊樂場"
-                    />
-                  }
-                  panel={
-                    <Playground package={id} active={activeTab === TAB.Playground} />
-                  }
-                />
+                {false && (
+                  <Tab
+                    id={TAB.Playground}
+                    disabled
+                    title={
+                      <T
+                        en="Playground"
+                        fr="Playground"
+                        ja="プレイグラウンド"
+                        zh-Hant="遊樂場"
+                      />
+                    }
+                    panel={
+                      <Playground package={id} active={activeTab === TAB.Playground} />
+                    }
+                  />
+                )}
               </Tabs>
             </div>
 
