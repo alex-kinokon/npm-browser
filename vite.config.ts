@@ -11,6 +11,9 @@ export default /* @__PURE__ */ defineConfig(({ command }) => ({
   build: {
     target: ["chrome120"],
   },
+  // server: {
+  //   proxy: {},
+  // },
   define: {
     "process.env.GIT_COMMIT": `"${commit}"`,
     "process.platform": '"linux"',

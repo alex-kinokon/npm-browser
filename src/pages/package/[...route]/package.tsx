@@ -26,7 +26,7 @@ import { VersionList } from "./Versions"
 import { Dependencies, Dependents } from "./Dependencies"
 import Footer from "~/components/Footer"
 import { Sidebar } from "./Sidebar"
-import { T, useT } from "~/contexts/Locale"
+import { T } from "~/contexts/Locale"
 import { Container } from "~/components/Container"
 import { Playground } from "./Playground"
 
@@ -82,7 +82,7 @@ export default function PackagePage({
 
   const [activeTab, setActiveTab] = useState<TAB>(TAB.Readme)
 
-  const currentVersion = !!(data && ver) ? data?.versions[ver] : undefined
+  const currentVersion = data && ver ? data?.versions[ver] : undefined
 
   // This is available from getPackageInfo(), but it’s a private API that we’re deprecating
   const isPrivate = false as boolean

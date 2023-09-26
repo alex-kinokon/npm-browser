@@ -4,21 +4,15 @@
   "private": true,
   "scripts": {
     "build:routes": "./scripts/build-routes-client.ts > src/routes.generated.tsx",
-    "build:api": "./scripts/build-routes-api.ts > src/pages/api/routes.generated.tsx",
     "build": "./scripts/build-production.sh",
     "dev": "NODE_ENV=development EXECUTE=1 ./scripts/build-server.ts",
     "deploy": "./scripts/deploy.sh"
   },
   "dependencies": {
-    "@fastify/formbody": "^7.4.0",
     "@fastify/helmet": "^11.1.1",
-    "@fastify/multipart": "^7.7.3",
     "@fastify/rate-limit": "^8.0.3",
     "@fastify/static": "^6.11.2",
-    "fastify": "^4.23.2",
-    "fastify-plugin": "^4.5.1",
-    "tiny-lru": "^11.1.2",
-    "validate-npm-package-name": "^5.0.0"
+    "fastify": "^4.23.2"
   },
   "devDependencies": {
     "@aet/eslint-rules": "0.0.1-beta.35",
@@ -51,10 +45,12 @@
     "@uiw/react-markdown-preview": "^4.1.16",
     "@vitejs/plugin-react": "^4.1.0",
     "babel-plugin-macros": "^3.1.0",
+    "bun-types": "^1.0.3",
     "debug": "^4.3.4",
     "esbuild": "0.19.3",
     "eslint": "8.50.0",
     "fast-glob": "^3.3.1",
+    "fastify-plugin": "^4.5.1",
     "json5": "^2.2.3",
     "lodash": "^4.17.21",
     "nodemon": "^3.0.1",
@@ -65,15 +61,12 @@
     "react-dom": "18.2.0",
     "react-paginate": "^8.2.0",
     "tiny-invariant": "^1.3.1",
+    "tiny-lru": "^11.1.2",
     "typescript": "5.2.2",
+    "validate-npm-package-name": "^5.0.0",
     "vite": "^4.4.9",
     "vite-tsconfig-paths": "^4.2.1",
     "wouter": "^2.11.0"
-  },
-  "pnpm": {
-    "patchedDependencies": {
-      "@fastify/busboy@1.2.1": "patches/@fastify__busboy@1.2.1.patch"
-    }
   },
   "pm2": {
     "apps": [

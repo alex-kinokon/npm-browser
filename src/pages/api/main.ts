@@ -1,12 +1,9 @@
 import { resolve } from "node:path"
 import { promises as fs } from "node:fs"
-import createFastify from "fastify"
+import createFastify, { type FastifyReply, type FastifyRequest } from "fastify"
 import fastifyStatic from "@fastify/static"
 import fastifyHelmet from "@fastify/helmet"
-import fastifyMultipart from "@fastify/multipart"
 import fastifyRateLimit from "@fastify/rate-limit"
-import formDataPlugin from "@fastify/formbody"
-import { bindRoutes } from "./routes.generated"
 
 const port = parseInt(process.env.PORT || "3000")
 
@@ -21,9 +18,16 @@ export async function main() {
     contentSecurityPolicy: false,
     crossOriginEmbedderPolicy: false,
   })
-  await app.register(fastifyMultipart)
-  await app.register(formDataPlugin)
-  await bindRoutes(app)
+
+  app.all("/api/npm/*", async (req, reply) => {
+    const pathname = req.url.slice("/api/npm/".length)
+
+    if (!pathname.startsWith("package/") && !/^(@[\w-]+\/)?[\w-]+$/.test(pathname)) {
+      return reply.code(400).send("Invalid route")
+    }
+
+    return proxy(`https://www.npmjs.com/${pathname}`, req, reply)
+  })
 
   await app.register(fastifyRateLimit, {
     max: 70,
@@ -59,4 +63,32 @@ export async function main() {
   await app.listen({ port })
 
   console.log(`Server listening on port ${port}`)
+}
+
+async function proxy(url: string, req: FastifyRequest, reply: FastifyReply) {
+  const res = await fetch(url, {
+    redirect: "follow",
+    headers: {
+      accept: "application/json",
+      "user-agent": req.headers["user-agent"]!,
+      "x-spiferack": "1",
+    },
+  })
+
+  if (!res.ok) {
+    return reply.code(res.status).send(await res.text())
+  }
+
+  const contentType = res.headers.get("content-type") ?? "application/octet-stream"
+  if (contentType?.includes("application/json")) {
+    const data = await res.json()
+    delete data.csrftoken
+    delete data.npmExpansions
+    return reply.code(res.status).type(contentType).send(data)
+  } else {
+    return reply
+      .code(res.status)
+      .type(contentType)
+      .send(await res.text())
+  }
 }
