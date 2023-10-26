@@ -3,8 +3,9 @@ import { useQuery } from "@tanstack/react-query"
 import { memo, useEffect, useMemo, useRef } from "react"
 import CodeMirror from "@uiw/react-codemirror"
 import { githubDarkInit, githubLightInit } from "@uiw/codemirror-theme-github"
-import { EditorView } from "@codemirror/view"
+import { EditorView, keymap } from "@codemirror/view"
 import { EditorState, type Extension } from "@codemirror/state"
+import { openSearchPanel, search, searchKeymap } from "@codemirror/search"
 import { javascript } from "@codemirror/lang-javascript"
 import { json } from "@codemirror/lang-json"
 import { indentUnit } from "@codemirror/language"
@@ -88,11 +89,21 @@ const CodeViewInternal = memo<
     () => [
       mode!,
       basicTheme,
+      keymap.of(searchKeymap),
+      keymap.of([
+        {
+          key: "Mod-k",
+          run: openSearchPanel,
+        },
+      ]),
       // indentationMarkers({
       //   hideFirstIndent: true,
       // }),
       EditorView.editable.of(false),
       EditorState.tabSize.of(2),
+      search({
+        top: true,
+      }),
       indentUnit.of("  "),
     ],
     [mode]

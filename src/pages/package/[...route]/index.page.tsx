@@ -19,6 +19,8 @@ export function parseRoute(routes: string[]) {
       return { name: routes.join("/"), version: undefined }
     case 1:
       return { name: routes[0], version: undefined }
+    case 0:
+      return undefined
   }
 }
 

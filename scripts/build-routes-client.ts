@@ -54,4 +54,4 @@ const script = /* jsx */ `
   export default routes;
 `
 
-console.log(format(script, { parser: "babel-ts" }))
+void format(script, { parser: "babel-ts" }).then(console.log)

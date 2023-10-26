@@ -122,7 +122,7 @@ export default function SearchPage() {
                     margin-bottom: 5px;
                   `}
                 >
-                  {flags?.insecure && (
+                  {!!flags?.insecure && (
                     <Unlock
                       title={t({
                         en: "This package has security vulnerabilities",

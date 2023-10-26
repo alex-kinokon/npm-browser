@@ -5,7 +5,7 @@ import fastifyStatic from "@fastify/static"
 import fastifyHelmet from "@fastify/helmet"
 import fastifyRateLimit from "@fastify/rate-limit"
 
-const port = parseInt(process.env.PORT || "3000")
+const port = parseInt(process.env.PORT || "3008")
 
 export async function main() {
   const app = createFastify({

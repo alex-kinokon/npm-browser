@@ -10,10 +10,8 @@ import { T } from "~/contexts/Locale"
 
 export function Playground({
   package: { name, version },
-  active,
 }: {
   package: PackageIdentifier
-  active: boolean
 }) {
   const theme = useCodeMirrorTheme()
   const [code, setCode] = useState(

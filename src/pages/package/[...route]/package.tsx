@@ -1,5 +1,6 @@
 import { useQuery } from "@tanstack/react-query"
 import { css, cx } from "@emotion/css"
+import { useFirstMountState } from "@react-hookz/web"
 import {
   Callout,
   Classes,
@@ -13,7 +14,7 @@ import {
   Tabs,
 } from "@blueprintjs/core"
 import styled from "@emotion/styled"
-import { useEffect, useMemo, useState } from "react"
+import { useEffect, useMemo } from "react"
 import { Error } from "@blueprintjs/icons"
 import { Head } from "~/components/Head"
 import { RelativeTime } from "~/utils/relativeTime"
@@ -29,6 +30,7 @@ import { Sidebar } from "./Sidebar"
 import { T } from "~/contexts/Locale"
 import { Container } from "~/components/Container"
 import { Playground } from "./Playground"
+import { useHash } from "~/hooks/useHash"
 
 export interface PackageIdentifier {
   name: string
@@ -57,13 +59,13 @@ const Grid = styled.div`
   }
 `
 
-const enum TAB {
-  Readme,
-  Code,
-  Dependencies,
-  Dependents,
-  Versions,
-  Playground,
+export const enum TAB {
+  Readme = "",
+  Code = "code",
+  Dependencies = "dependencies",
+  Dependents = "dependents",
+  Versions = "versions",
+  Playground = "playground",
 }
 
 export const skeleton = <div className={Classes.SKELETON} style={{ height: 500 }} />
@@ -80,7 +82,7 @@ export default function PackagePage({
   const ver = version ?? data?.["dist-tags"].latest
   const id: PackageIdentifier = useMemo(() => ({ name, version: ver! }), [name, ver])
 
-  const [activeTab, setActiveTab] = useState<TAB>(TAB.Readme)
+  const [[activeTab], setHash] = useHash()
 
   const currentVersion = data && ver ? data?.versions[ver] : undefined
 
@@ -93,8 +95,13 @@ export default function PackagePage({
     [currentVersion]
   )
 
+  const isFirstMount = useFirstMountState()
+
   useEffect(() => {
-    setActiveTab(TAB.Readme)
+    if (!isFirstMount) {
+      setHash("")
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [name, version])
 
   return (
@@ -204,22 +211,36 @@ export default function PackagePage({
                   }
                 `}
                 selectedTabId={activeTab}
-                onChange={id => setActiveTab(id as TAB)}
               >
                 <Tab
                   id={TAB.Readme}
-                  title={<T en="Readme" fr="Description" ja="説明" zh-Hant="說明" />}
+                  title={
+                    // eslint-disable-next-line jsx-a11y/anchor-is-valid
+                    <a
+                      href="#"
+                      onClick={e => {
+                        e.preventDefault()
+                        setHash("")
+                      }}
+                    >
+                      <T en="Readme" fr="Description" ja="説明" zh-Hant="說明" />
+                    </a>
+                  }
                   panel={<Readme package={id} fallback={data?.readme} />}
                 />
                 <Tab
                   id={TAB.Code}
-                  title={<T en="Code" fr="Code" ja="コード" zh-Hant="程式碼" />}
+                  title={
+                    <a href={`#${TAB.Code}`}>
+                      <T en="Code" fr="Code" ja="コード" zh-Hant="程式碼" />
+                    </a>
+                  }
                   panel={ver ? <FileView package={id} /> : skeleton}
                 />
                 <Tab
                   id={TAB.Dependencies}
                   title={
-                    <>
+                    <a href={`#${TAB.Dependencies}`}>
                       <T
                         en="Dependencies"
                         fr="Dépendances"
@@ -227,18 +248,26 @@ export default function PackagePage({
                         zh-Hant="依賴關係"
                       />
                       {depCount != null && <sup>{depCount}</sup>}
-                    </>
+                    </a>
                   }
                   panel={data ? <Dependencies data={data} version={ver!} /> : skeleton}
                 />
                 <Tab
                   id={TAB.Dependents}
-                  title={<T en="Dependents" fr="Dépendants" zh-Hant="相依" />}
+                  title={
+                    <a href={`#${TAB.Dependents}`}>
+                      <T en="Dependents" fr="Dépendants" zh-Hant="相依" />
+                    </a>
+                  }
                   panel={<Dependents package={id} />}
                 />
                 <Tab
                   id={TAB.Versions}
-                  title={<T en="Versions" fr="Versions" ja="バージョン" zh-Hant="版本" />}
+                  title={
+                    <a href={`#${TAB.Versions}`}>
+                      <T en="Versions" fr="Versions" ja="バージョン" zh-Hant="版本" />
+                    </a>
+                  }
                   panel={data ? <VersionList data={data} /> : skeleton}
                 />
                 {false && (
@@ -254,7 +283,10 @@ export default function PackagePage({
                       />
                     }
                     panel={
-                      <Playground package={id} active={activeTab === TAB.Playground} />
+                      <Playground
+                        package={id}
+                        // active={activeTab === TAB.Playground} />
+                      />
                     }
                   />
                 )}

@@ -1,17 +1,19 @@
 import { basename, dirname, extname } from "path"
-import { memo, useEffect, useMemo, useState } from "react"
+import { memo, useEffect, useMemo } from "react"
 import { useQuery } from "@tanstack/react-query"
 import { css } from "@emotion/css"
 import { Document, FolderClose } from "@blueprintjs/icons"
 import styled from "@emotion/styled"
 import Icon from "@aet/icons/macro"
+import { useFirstMountState } from "@react-hookz/web"
 import { getFileSize } from "~/utils/fileSize"
 import { getPackageFiles } from "~/remote"
 import { CodeView } from "./CodeView"
 import { PathNavigation } from "./PathNavigation"
 import { ErrorView, LoadingView } from "../NonIdeal"
-import type { PackageIdentifier } from "../package"
+import { type PackageIdentifier, TAB } from "../package"
 import type { FileResult } from "~/remote/npmFile"
+import { useHash } from "~/hooks/useHash"
 
 function mapFile(files?: FileResult["files"]) {
   return Object.values(files ?? {}).map(file => ({
@@ -24,11 +26,19 @@ export type MappedFile = ReturnType<typeof mapFile>[number]
 
 export function FileView({ package: { name, version } }: { package: PackageIdentifier }) {
   const { data, isLoading, isError, error } = useQuery(getPackageFiles(name, version))
+  const [hash, setHash] = useHash()
+  const path = "/" + (hash[1] ?? "")
+  const isFirstMount = useFirstMountState()
 
-  const [path, setPath] = useState("/")
+  function setPath(path: string) {
+    setHash(`${TAB.Code}${path}`)
+  }
 
   useEffect(() => {
-    setPath("/")
+    if (!isFirstMount) {
+      setPath("/")
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [name, version])
 
   const files = useMemo(() => mapFile(data?.files), [data?.files])
@@ -60,7 +70,7 @@ export function FileView({ package: { name, version } }: { package: PackageIdent
   if (activeFile) {
     return (
       <Container>
-        <PathNavigation path={path} setPath={setPath} package={name} />
+        <PathNavigation path={path} setPath={setPath} package={name} file={activeFile} />
         <CodeView package={name} file={activeFile} files={files} setPath={setPath} />
       </Container>
     )
