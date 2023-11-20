@@ -1,5 +1,7 @@
 # npm-browser
 
+![npm-browser](./assets/demo.png)
+
 ## Build
 
 ```sh
