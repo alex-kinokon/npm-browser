@@ -20,6 +20,11 @@ export default /* @__PURE__ */ defineConfig(({ command }) => ({
     __DEV__: String(command === "serve"),
     __PROD__: String(command === "build"),
   },
+  resolve: {
+    alias: {
+      "node:path": "@jspm/core/nodelibs/path",
+    },
+  },
   plugins: [
     react({
       jsxImportSource: "@emotion/react",

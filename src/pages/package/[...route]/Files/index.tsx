@@ -24,7 +24,8 @@ function mapFile(files?: FileResult["files"]) {
 }
 export type MappedFile = ReturnType<typeof mapFile>[number]
 
-export function FileView({ package: { name, version } }: { package: PackageIdentifier }) {
+export function FileView({ package: pkg }: { package: PackageIdentifier }) {
+  const { name, version } = pkg
   const { data, isLoading, isError, error } = useQuery(getPackageFiles(name, version))
   const [hash, setHash] = useHash()
   const path = "/" + (hash[1] ?? "")
@@ -71,7 +72,7 @@ export function FileView({ package: { name, version } }: { package: PackageIdent
     return (
       <Container>
         <PathNavigation path={path} setPath={setPath} package={name} file={activeFile} />
-        <CodeView package={name} file={activeFile} files={files} setPath={setPath} />
+        <CodeView package={pkg} file={activeFile} files={files} setPath={setPath} />
       </Container>
     )
   }

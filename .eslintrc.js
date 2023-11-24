@@ -1,7 +1,7 @@
 const { extendConfig } = require("@aet/eslint-rules")
 
 module.exports = extendConfig({
-  plugins: ["react", "react-hooks"],
+  plugins: ["react", "react-hooks", "unicorn"],
   rules: {
     "@typescript-eslint/no-misused-promises": ["error", { checksVoidReturn: false }],
     "@typescript-eslint/no-unsafe-argument": "off",

@@ -1,12 +1,29 @@
 import { css } from "@emotion/css"
+import { tags } from "@lezer/highlight"
 import { javascript } from "@codemirror/lang-javascript"
 import { useMemo, useState } from "react"
 import ReactCodeMirror from "@uiw/react-codemirror"
 import type { Extension } from "@codemirror/state"
 import { Button, Intent } from "@blueprintjs/core"
+import { githubDarkInit, githubLightInit } from "@uiw/codemirror-theme-github"
 import type { PackageIdentifier } from "../package"
-import { useCodeMirrorTheme } from "../Files/CodeView"
+import { useDarkMode } from "~/hooks/useDarkMode"
 import { T } from "~/contexts/Locale"
+
+function useCodeMirrorTheme() {
+  const dark = useDarkMode()
+  return useMemo(
+    () =>
+      dark
+        ? githubDarkInit({
+            styles: [{ tag: tags.variableName, color: "inherit" }],
+          })
+        : githubLightInit({
+            styles: [{ tag: tags.variableName, color: "inherit" }],
+          }),
+    [dark]
+  )
+}
 
 export function Playground({
   package: { name, version },

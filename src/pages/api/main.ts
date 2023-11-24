@@ -38,7 +38,7 @@ export async function main() {
     const fastifyVite = await import("~/vendor/fastify-vite")
     await app.register(fastifyVite.default, {
       root: ".",
-      getConfig: () => import("../../../vite.config"),
+      getConfig: () => import("../../../vite.config.mts"),
     })
 
     app.get("/*", (_req, reply) => {
@@ -62,7 +62,7 @@ export async function main() {
 
   await app.listen({ port })
 
-  console.log(`Server listening on port ${port}`)
+  console.log(`Server listening on http://localhost:${port}`)
 }
 
 async function proxy(url: string, req: FastifyRequest, reply: FastifyReply) {

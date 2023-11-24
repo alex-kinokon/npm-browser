@@ -1,4 +1,5 @@
 import invariant from "tiny-invariant"
+import { StrictMode } from "react"
 import PackagePage from "./package"
 import NotFoundPage from "~/pages/404.page"
 
@@ -33,5 +34,10 @@ export default function Package({ params }: { params: PageParams }) {
   if (!route) {
     return <NotFoundPage />
   }
-  return <PackagePage name={route.name} version={route.version || undefined} />
+  return (
+    <StrictMode>
+      {" "}
+      <PackagePage name={route.name} version={route.version || undefined} />
+    </StrictMode>
+  )
 }

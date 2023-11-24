@@ -13,7 +13,6 @@ export function useHash() {
   const [hash, setHash] = useState(getHash)
 
   const update = useCallback((hash: string) => {
-    debugger
     location.hash = `#${hash}`
   }, [])
 

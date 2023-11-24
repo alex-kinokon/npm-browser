@@ -2,6 +2,7 @@ import { Classes, H4 } from "@blueprintjs/core"
 import { memo } from "react"
 import { Link } from "wouter"
 import { useQuery } from "@tanstack/react-query"
+import { uniq } from "~/utils/uniq"
 import type { Packument } from "~/vendor/node-query-registry"
 import { type PackageIdentifier, skeleton } from "./package"
 import { getPackageInfo } from "~/remote"
@@ -22,7 +23,7 @@ function DepList({
       </H4>
       <ul className={Classes.LIST}>
         {deps.map(dep => (
-          <li key={dep}>
+          <li key={dep} data-key={dep}>
             <Link href={`/package/${dep}`}>{dep}</Link>
           </li>
         ))}
@@ -62,7 +63,7 @@ export const Dependents = memo(
         <DepList
           title="Dependents"
           count={npm.dependents.dependentsCount}
-          deps={npm.dependents.dependentsTruncated}
+          deps={uniq(npm.dependents.dependentsTruncated)}
         />
       </div>
     )

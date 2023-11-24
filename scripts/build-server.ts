@@ -16,7 +16,7 @@ const external = new Set([
 ])
 
 async function main() {
-  const outfile = "dist/server/index.js"
+  const outfile = "dist/server/index.mjs"
 
   const context = await esbuild.context({
     bundle: true,
@@ -33,7 +33,7 @@ async function main() {
       `,
     },
     external: Array.from(external),
-    format: "iife",
+    format: "esm",
     legalComments: "none",
     metafile: PROD,
     minify: PROD && !process.env.DEBUG,

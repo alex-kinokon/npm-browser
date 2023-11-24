@@ -1,12 +1,13 @@
 #!/usr/bin/env tsx
-import fs from "fs"
-import { resolve } from "path"
+import fs from "node:fs"
+import { resolve } from "node:path"
 // import { dependencies } from "../package.json"
 
 const vendorDir = resolve(__dirname, "../src/vendor")
 
 const packages = ([] as string[])
   .concat([
+    "@aet/icons",
     "@blueprintjs/core",
     "@blueprintjs/icons",
     "@emotion/css",
@@ -16,9 +17,9 @@ const packages = ([] as string[])
     "@tanstack/react-query",
     "@uiw/react-markdown-preview",
     "json5",
+    "monaco-editor-auto-typings",
     "normalize.css",
     "react-dom",
-    "@aet/icons",
     "react-paginate",
     "react",
     "wouter",
@@ -59,10 +60,10 @@ const licenses = Object.fromEntries(
 )
 
 const licenseDir = resolve(__dirname, "../licenses")
-fs.readdirSync(licenseDir).forEach(name => {
+for (const name of fs.readdirSync(licenseDir)) {
   const content = fs.readFileSync(resolve(licenseDir, name), "utf8")
   licenses[name.replace(/\.\w+$/, "")] = content
-})
+}
 
 fs.writeFileSync(
   resolve(__dirname, "../src/licenses.generated.json"),

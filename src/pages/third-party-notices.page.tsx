@@ -1,6 +1,4 @@
-import styled from "@emotion/styled"
-import { Card, Classes, Divider, H2, H5, HTMLSelect } from "@blueprintjs/core"
-import { Link } from "wouter"
+import { Divider, H2, HTMLSelect } from "@blueprintjs/core"
 import { useEffect, useMemo, useState } from "react"
 import { Head } from "~/components/Head"
 import { PageHeader } from "~/components/Header"
@@ -15,7 +13,7 @@ export default function Home() {
   const keys = useMemo(() => Array.from(license?.keys() ?? []), [license])
 
   useEffect(() => {
-    import("../licenses.generated.json").then(({ default: licenses }) => {
+    void import("../licenses.generated.json").then(({ default: licenses }) => {
       const entries = Object.entries(licenses)
       setLicense(new Map(entries))
       setSelected(entries[0][0])

@@ -40,7 +40,7 @@ export function setupLinks({
         prevPrev?.classList.contains("function") &&
         prevPrev.textContent === "require")
     ) {
-      const path = JSON5.parse(text!)
+      const path = JSON5.parse(text)
       const packageNameSegments = path.split("/")
       const packageName =
         packageNameSegments[0][0] === "@"

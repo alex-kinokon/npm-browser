@@ -1,157 +1,75 @@
-import { extname } from "path"
 import { useQuery } from "@tanstack/react-query"
-import { memo, useEffect, useMemo, useRef } from "react"
-import CodeMirror from "@uiw/react-codemirror"
-import { githubDarkInit, githubLightInit } from "@uiw/codemirror-theme-github"
-import { EditorView, keymap } from "@codemirror/view"
-import { EditorState, type Extension } from "@codemirror/state"
-import { openSearchPanel, search, searchKeymap } from "@codemirror/search"
-import { javascript } from "@codemirror/lang-javascript"
-import { json } from "@codemirror/lang-json"
-import { indentUnit } from "@codemirror/language"
-import { tags } from "@lezer/highlight"
-import { css, cx } from "@emotion/css"
-import { useLocation } from "wouter"
+import { memo, useMemo, useRef } from "react"
+import { css } from "@emotion/css"
+import { Editor } from "@monaco-editor/react"
+// import { useLocation } from "wouter"
+import type * as monaco from "monaco-editor"
 import { Markdown, markdownStyle } from "~/components/Markdown"
 import { ErrorView, LoadingView } from "../NonIdeal"
 import { getPackageFile } from "~/remote"
 import type { MappedFile } from "./index"
+import "./Monaco"
 import { useDarkMode } from "~/hooks/useDarkMode"
-import { setupLinks } from "./utils"
-
-const basicTheme = EditorView.theme({
-  ".cm-scroller": {
-    backgroundColor: "var(--color-canvas-subtle)",
-    borderRadius: "6px",
-    padding: "16px",
-  },
-  ".cm-content, .cm-scroller": {
-    fontFamily: "var(--monospace)",
-    fontSize: "13.6px",
-    lineHeight: "21px",
-  },
-  ".cm-gutters": {
-    background: "transparent !important",
-    borderRight: "none",
-  },
-})
+import type { PackageIdentifier } from "../package"
+import { intellisense } from "./fetchType"
+import type { ICodeEditorService } from "./monaco-def/codeEditorService"
 
 interface CodeViewProps {
   file: MappedFile
   files: MappedFile[]
   setPath: (path: string) => void
-  package: string
-}
-
-export function useCodeMirrorTheme() {
-  const dark = useDarkMode()
-  return useMemo(
-    () =>
-      dark
-        ? githubDarkInit({
-            styles: [{ tag: tags.variableName, color: "inherit" }],
-          })
-        : githubLightInit({
-            styles: [{ tag: tags.variableName, color: "inherit" }],
-          }),
-    [dark]
-  )
+  package: PackageIdentifier
 }
 
 const CodeViewInternal = memo<
   CodeViewProps & {
     data: string
   }
->(({ file, files, setPath, data }) => {
-  const [, setLocation] = useLocation()
-  const theme = useCodeMirrorTheme()
+>(({ file, files, setPath, data, package: pkg }) => {
+  // const [, setLocation] = useLocation()
+  const dark = useDarkMode()
 
   const ref = useRef<HTMLDivElement>(null)
-  const ext = extname(file.basename)
 
-  const mode: Extension | undefined = useMemo(() => {
-    switch (ext) {
-      case ".mjs":
-      case ".js":
-        return javascript()
-      case ".jsx":
-        return javascript({ jsx: true })
-      case ".ts":
-        return javascript({ typescript: true })
-      case ".tsx":
-        return javascript({ typescript: true, jsx: true })
-      case ".json":
-        return json()
-    }
-  }, [ext])
+  const cjkFont = file.path.includes("ja") ? "Noto Sans CJK JP" : "Noto Sans CJK SC"
 
-  const extensions: Extension[] = useMemo(
-    () => [
-      mode!,
-      basicTheme,
-      keymap.of(searchKeymap),
-      keymap.of([
-        {
-          key: "Mod-k",
-          run: openSearchPanel,
-        },
-      ]),
-      // indentationMarkers({
-      //   hideFirstIndent: true,
-      // }),
-      EditorView.editable.of(false),
-      EditorState.tabSize.of(2),
-      search({
-        top: true,
-      }),
-      indentUnit.of("  "),
-    ],
-    [mode]
+  const options = useMemo(
+    (): monaco.editor.IStandaloneEditorConstructionOptions => ({
+      fontFamily: `ui-monospace, SFMono-Regular, SF Mono, Menlo, Consolas, Liberation Mono, ${cjkFont}, monospace`,
+      fontSize: 14,
+      readOnly: true,
+      minimap: {
+        enabled: false,
+      },
+    }),
+    [cjkFont]
   )
-
-  useEffect(() => {
-    setupLinks({
-      node: ref.current,
-      file,
-      files,
-      setPath,
-      navigate: setLocation,
-    })
-  }, [file, setPath, files, setLocation])
-
-  if (!data.includes("```") && (!mode || data.length < 10000)) {
-    let mdExt = ext.slice(1)
-    if (mdExt === "mjs") {
-      mdExt = "js"
-    }
-    const code = "```" + mdExt + "\n" + data
-    return (
-      <div ref={ref}>
-        <Markdown className={markdownStyle} source={code} />
-      </div>
-    )
-  }
 
   return (
     <div ref={ref}>
-      <CodeMirror
-        extensions={extensions}
-        value={data.replace(/\n$/g, "")}
-        basicSetup={{
-          highlightActiveLine: false,
-          highlightActiveLineGutter: false,
-          lineNumbers: false,
-          foldGutter: false,
+      <Editor
+        value={data}
+        theme={dark ? "github-dark" : "github-light"}
+        path={file.path}
+        onChange={() => {}}
+        className={css`
+          height: 100%;
+          min-height: calc(100vh - 110px);
+          .monaco-scrollable-element > .scrollbar > .slider {
+            border-radius: 10px;
+          }
+        `}
+        options={options}
+        onMount={editor => {
+          intellisense(editor, pkg, files, file)
+          const editorService = (editor as any)
+            ._codeEditorService as StandaloneCodeEditorService
+          const openEditorBase = editorService.openCodeEditor.bind(editorService)
+          editorService.openCodeEditor = (input, source) => {
+            setPath(input.resource.path)
+            return openEditorBase(input, source)
+          }
         }}
-        theme={theme}
-        readOnly
-        className={cx(
-          "wmde-markdown-var",
-          css`
-            max-height: 100vh;
-            overflow: scroll;
-          `
-        )}
       />
     </div>
   )
@@ -160,7 +78,7 @@ const CodeViewInternal = memo<
 export function CodeView(props: CodeViewProps) {
   const { package: pkg, file } = props
   const { data, isLoading, isError, error, refetch } = useQuery(
-    getPackageFile(pkg, file.hex)
+    getPackageFile(pkg.name, file.hex)
   )
 
   if (isError) {
@@ -171,9 +89,13 @@ export function CodeView(props: CodeViewProps) {
     return null
   }
 
-  if (file.basename.endsWith(".md")) {
-    return <Markdown className={markdownStyle} source={data} />
-  } else {
-    return <CodeViewInternal {...props} data={data} />
-  }
+  return file.basename.endsWith(".md") ? (
+    <Markdown className={markdownStyle} source={data} />
+  ) : (
+    <CodeViewInternal {...props} data={data} />
+  )
+}
+
+interface StandaloneCodeEditorService extends ICodeEditorService {
+  setActiveCodeEditor(activeCodeEditor: monaco.editor.ICodeEditor | null): void
 }

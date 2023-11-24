@@ -1,5 +1,5 @@
 import "~/styles/globals.css"
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
+import { QueryClientProvider } from "@tanstack/react-query"
 import { Router, Switch } from "wouter"
 import { Suspense } from "react"
 import { FocusStyleManager } from "@blueprintjs/core"
@@ -8,20 +8,13 @@ import { LocaleProvider } from "~/contexts/Locale"
 import routes from "./routes.generated"
 import { Head } from "~/components/Head"
 import favicon from "~/assets/favicon.svg"
+import { queryClient } from "./fetch-client"
 
 FocusStyleManager.onlyShowFocusOnTabs()
 
-const client = new QueryClient({
-  defaultOptions: {
-    queries: {
-      cacheTime: 1000 * 60 * 60 * 24, // 24 hours
-    },
-  },
-})
-
 export default function App() {
   return (
-    <QueryClientProvider client={client}>
+    <QueryClientProvider client={queryClient}>
       <Head>
         <link rel="icon" href={favicon} />
       </Head>
