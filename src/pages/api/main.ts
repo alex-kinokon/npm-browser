@@ -1,9 +1,13 @@
 import { resolve } from "node:path"
 import { promises as fs } from "node:fs"
+import * as url from "node:url"
 import createFastify, { type FastifyReply, type FastifyRequest } from "fastify"
 import fastifyStatic from "@fastify/static"
 import fastifyHelmet from "@fastify/helmet"
 import fastifyRateLimit from "@fastify/rate-limit"
+
+// const __filename = url.fileURLToPath(import.meta.url)
+const __dirname = url.fileURLToPath(new URL(".", import.meta.url))
 
 const port = parseInt(process.env.PORT || "3008")
 
