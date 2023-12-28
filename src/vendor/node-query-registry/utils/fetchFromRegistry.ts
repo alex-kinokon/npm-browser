@@ -32,7 +32,7 @@ export async function fetchFromRegistry<T>({
       return json as T
     } catch (err) {
       // Keep last fetch error
-      lastError = err as any
+      lastError = err
     }
   }
 

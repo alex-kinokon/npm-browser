@@ -16,7 +16,10 @@ export function Readme({
   const { data: readme } = useQuery(getPackageFile(name, readmeHex))
 
   const code = readme || fallback
-  if (typeof code !== "string") return null
+  // registry.npmjs.org can return the string "[object Object]"
+  if (typeof code !== "string" || !code || code === "[object Object]") {
+    return null
+  }
 
   return (
     <div
