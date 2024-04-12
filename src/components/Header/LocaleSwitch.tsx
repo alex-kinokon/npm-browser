@@ -1,7 +1,7 @@
 import { Button, Menu, MenuItem, Popover } from "@blueprintjs/core"
 import { GlobeNetwork } from "@blueprintjs/icons"
-import type { Locale } from "~/contexts/Locale"
-import { useLocaleContext } from "~/contexts/Locale"
+import type { Locale } from "~/Locale"
+import { useLocaleContext } from "~/Locale"
 
 const localeList: {
   text: string

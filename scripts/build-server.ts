@@ -1,14 +1,15 @@
 #!/usr/bin/env tsx
+/* eslint-disable unicorn/string-content */
 import { promises as fs } from "node:fs"
 import esbuild from "esbuild"
 import nodemon from "nodemon"
 import { dependencies, devDependencies } from "../package.json"
 
-const args = process.argv.slice(2)
+const args = new Set(process.argv.slice(2))
 const ENV = process.env.NODE_ENV || "development"
 const EXECUTE = Boolean(process.env.EXECUTE)
 const PROD = ENV === "production"
-const WATCH = args.includes("-w") || args.includes("--watch") || EXECUTE
+const WATCH = args.has("-w") || args.has("--watch") || EXECUTE
 
 const external = new Set([
   ...Object.keys(dependencies),
@@ -24,7 +25,7 @@ async function main() {
       loader: "js",
       resolveDir: ".",
       contents: /* js */ `
-        import { main } from "./src/pages/api/main";
+        import { main } from "./src/server";
 
         main().catch(err => {
           console.error(err)
@@ -69,6 +70,7 @@ async function main() {
 
   await fs.chmod(outfile, 0o755)
 
+  // eslint-disable-next-line unicorn/prefer-ternary
   if (WATCH) {
     await context.watch()
   } else {

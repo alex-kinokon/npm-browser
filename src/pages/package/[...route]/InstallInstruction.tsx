@@ -3,7 +3,7 @@ import { FormGroup } from "@blueprintjs/core"
 import styled from "@emotion/styled"
 import { memo, useMemo, useState } from "react"
 import { Markdown, markdownStyle } from "~/components/Markdown"
-import { T } from "~/contexts/Locale"
+import { T } from "~/Locale"
 
 type PkgMan = "npm" | "yarn" | "pnpm"
 

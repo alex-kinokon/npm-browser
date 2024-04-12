@@ -1,23 +1,13 @@
 import { Classes } from "@blueprintjs/core"
 import Icon from "@aet/icons/macro"
-import { css, cx } from "@emotion/css"
+import { css } from "@emotion/css"
 import { Link } from "wouter"
-import { T, useT } from "~/contexts/Locale"
+import { T, useT } from "~/Locale"
 
 export default function Footer() {
   const t = useT()
   return (
-    <footer
-      className={cx(
-        Classes.RUNNING_TEXT,
-        css`
-          display: flex;
-          align-items: center;
-          margin-top: 20px;
-          margin-bottom: 40px;
-        `
-      )}
-    >
+    <footer css="mb-10 mt-5 flex items-center" className={Classes.RUNNING_TEXT}>
       <div
         className={css`
           flex: 1%;
@@ -37,9 +27,8 @@ export default function Footer() {
         <Link
           href="https://github.com"
           target="_blank"
+          css="flex items-center"
           className={css`
-            display: flex;
-            align-items: center;
             &:not(:hover) {
               color: #24292f;
               .bp5-dark & {
@@ -48,12 +37,7 @@ export default function Footer() {
             }
           `}
         >
-          <Icon
-            icon="SiGithub"
-            className={css`
-              margin-right: 5px;
-            `}
-          />
+          <Icon icon="SiGithub" css="mr-1" />
           GitHub
         </Link>
       </div>

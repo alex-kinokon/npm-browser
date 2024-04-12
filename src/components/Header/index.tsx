@@ -8,43 +8,21 @@ import { LocaleSwitch } from "./LocaleSwitch"
 
 export function PageHeader({ defaultQuery }: { defaultQuery?: string }) {
   return (
-    <Navbar
-      className={css`
-        position: sticky;
-        top: 0;
-      `}
-    >
-      <div
-        className={css`
-          display: flex;
-          align-items: center;
-        `}
-      >
+    <Navbar css="sticky top-0">
+      <div css="flex items-center">
         <Navbar.Group align={Alignment.LEFT}>
           <Link href="/">
-            <Navbar.Heading
-              className={css`
-                margin-right: 0;
-              `}
-            >
+            <Navbar.Heading css="mr-0">
               <Icon
                 icon="SiNpm"
                 fill="#cb3837"
-                className={css`
-                  display: block;
-                  font-size: 1.5em;
-                  cursor: pointer;
-                `}
+                css="block cursor-pointer text-[1.5em]"
               />
             </Navbar.Heading>
           </Link>
           <Navbar.Divider />
         </Navbar.Group>
-        <Navbar.Group
-          className={css`
-            flex: 1;
-          `}
-        >
+        <Navbar.Group css="flex-1">
           <div
             className={css`
               width: 50%;
@@ -60,10 +38,8 @@ export function PageHeader({ defaultQuery }: { defaultQuery?: string }) {
         <Navbar.Group align={Alignment.RIGHT}>
           <LocaleSwitch />
           <div
+            css="ml-1 mr-2 opacity-80"
             className={css`
-              opacity: 0.8;
-              margin-left: 5px;
-              margin-right: 10px;
               @media (max-width: 768px) {
                 display: none;
               }

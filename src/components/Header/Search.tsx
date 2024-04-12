@@ -8,7 +8,7 @@ import { Search } from "@blueprintjs/icons"
 import { getSearchSuggestions } from "~/remote"
 import { useDebouncedValue } from "~/hooks/useDebouncedValue"
 import type { SearchResult } from "~/vendor/node-query-registry"
-import { useT } from "~/contexts/Locale"
+import { useT } from "~/Locale"
 
 export function SearchView({ defaultQuery }: { defaultQuery?: string }) {
   const t = useT()
@@ -22,7 +22,7 @@ export function SearchView({ defaultQuery }: { defaultQuery?: string }) {
   }, [query, setLocation])
 
   const { data, isLoading } = useQuery(
-    getSearchSuggestions({ text: debouncedQuery, size: 25 })
+    getSearchSuggestions({ text: debouncedQuery, size: 25 }),
   )
 
   const list = data?.objects ?? []
@@ -43,8 +43,8 @@ export function SearchView({ defaultQuery }: { defaultQuery?: string }) {
           setLocation(`/package/${item.package.name}`)
         }
       }}
-      activeItem={list.find(item => item.package.name === activeItem)}
-      onActiveItemChange={item => setActiveItem(item?.package.name)}
+      activeItem={list.find((item) => item.package.name === activeItem)}
+      onActiveItemChange={(item) => setActiveItem(item?.package.name)}
       className={css`
         width: 100%;
       `}
@@ -71,11 +71,16 @@ export function SearchView({ defaultQuery }: { defaultQuery?: string }) {
           "zh-Hant": "搜尋",
         }),
         rightElement: (
-          <Button icon={<Search />} minimal disabled={!query} onClick={goToSearch} />
+          <Button
+            icon={<Search />}
+            minimal
+            disabled={!query}
+            onClick={goToSearch}
+          />
         ),
       }}
       noResults={<MenuItem disabled={true} text="No results." />}
-      inputValueRenderer={item => item.package.name}
+      inputValueRenderer={(item) => item.package.name}
       itemRenderer={(item, { handleClick, handleFocus, modifiers, ref }) => (
         <MenuItem
           key={item.package.name}

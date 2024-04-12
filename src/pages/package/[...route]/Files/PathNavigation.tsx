@@ -4,7 +4,7 @@ import { css } from "@emotion/css"
 import styled from "@emotion/styled"
 import { useQuery } from "@tanstack/react-query"
 import { memo } from "react"
-import { useT } from "~/contexts/Locale"
+import { useT } from "~/Locale"
 import { getPackageFile } from "~/remote"
 import { toaster } from "~/utils/toast"
 
@@ -28,7 +28,7 @@ export const PathNavigation = memo<{
           <>
             <a
               href="#"
-              onClick={event => {
+              onClick={(event) => {
                 event.preventDefault()
                 setPath(path.slice(0, path.indexOf(segment) + segment.length))
               }}
@@ -45,14 +45,14 @@ export const PathNavigation = memo<{
     <a
       key="/"
       href="#"
-      onClick={event => {
+      onClick={(event) => {
         event.preventDefault()
         setPath("/")
       }}
     >
       {name}
     </a>,
-    " / "
+    " / ",
   )
 
   return (
@@ -89,7 +89,9 @@ export const PathNavigation = memo<{
               })
             } catch (e) {
               toaster.show({
-                message: "Failed to copy to clipboard: " + (e.message ?? "Unknown error"),
+                message:
+                  "Failed to copy to clipboard: " +
+                  (e.message ?? "Unknown error"),
                 intent: Intent.DANGER,
               })
             }

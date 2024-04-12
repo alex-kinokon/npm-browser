@@ -5,7 +5,7 @@ import { Head } from "~/components/Head"
 import { PageHeader } from "~/components/Header"
 import Footer from "~/components/Footer"
 import { Container } from "~/components/Container"
-import { T } from "~/contexts/Locale"
+import { T } from "~/Locale"
 import { parseRoute } from "./package/[...route]/index.page"
 
 export default function NotFoundPage() {

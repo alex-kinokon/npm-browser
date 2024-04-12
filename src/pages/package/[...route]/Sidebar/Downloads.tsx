@@ -1,9 +1,9 @@
-import { css, cx } from "@emotion/css"
+import { cx } from "@emotion/css"
 import { Classes, FormGroup } from "@blueprintjs/core"
 import { useQuery } from "@tanstack/react-query"
 import { memo } from "react"
 import { getPackageDownloads } from "~/vendor/node-query-registry"
-import { T } from "~/contexts/Locale"
+import { T } from "~/Locale"
 
 export const DownloadsView = memo(({ package: name }: { package: string }) => {
   const { data: downloads } = useQuery({

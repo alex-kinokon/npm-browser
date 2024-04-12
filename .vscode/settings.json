@@ -1,5 +1,16 @@
 {
   "eslint.runtime": "node",
-  "cSpell.words": ["packument"],
-  "typescript.tsdk": "node_modules/typescript/lib"
+  "cSpell.words": [
+    "packument"
+  ],
+  "typescript.tsdk": "node_modules/typescript/lib",
+  "tailwindCSS.experimental.classRegex": [
+    "css=\"([^\"]*)",
+    "css={([^}]*)}",
+    "tw`([^`]*)`"
+  ],
+  "tailwindCSS.includeLanguages": {
+    "typescript": "javascript",
+    "typescriptreact": "javascript"
+  }
 }

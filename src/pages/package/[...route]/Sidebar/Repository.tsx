@@ -4,26 +4,28 @@ import { memo } from "react"
 import { useQuery } from "@tanstack/react-query"
 import Icon from "@aet/icons/macro"
 import type { Packument } from "~/vendor/node-query-registry"
-import { T } from "~/contexts/Locale"
+import { T } from "~/Locale"
 import { getGitHubRepo, getPulls } from "~/remote"
 import { parseRepo } from "~/utils/parseRepo"
 
 export const RepositoryView = memo(({ data }: { data?: Packument }) => {
   const repo =
-    typeof data?.repository === "object" ? data?.repository?.url : data?.repository
+    typeof data?.repository === "object"
+      ? data?.repository?.url
+      : data?.repository
 
   if (!repo) return null
 
   return (
-    <FormGroup label={<T en="Repository" fr="Dépôt" ja="リポジトリ" zh-Hant="儲存庫" />}>
+    <FormGroup
+      label={<T en="Repository" fr="Dépôt" ja="リポジトリ" zh-Hant="儲存庫" />}
+    >
       <div>
         <a
           href={repo.replace(/^git\+https/, "https")}
           target="_blank"
           rel="noopener noreferrer"
-          className={css`
-            word-wrap: break-word;
-          `}
+          css="break-words"
         >
           {repo}
         </a>

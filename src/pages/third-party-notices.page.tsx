@@ -4,7 +4,7 @@ import { Head } from "~/components/Head"
 import { PageHeader } from "~/components/Header"
 import Footer, { thirdPartyNoticeLabel } from "~/components/Footer"
 import { Container } from "~/components/Container"
-import { useT } from "~/contexts/Locale"
+import { useT } from "~/Locale"
 
 export default function Home() {
   const t = useT()
@@ -30,8 +30,11 @@ export default function Home() {
 
       <Container>
         <H2>{t(thirdPartyNoticeLabel)}</H2>
-        <HTMLSelect value={selected} onChange={e => setSelected(e.target.value)}>
-          {keys.map(key => (
+        <HTMLSelect
+          value={selected}
+          onChange={(e) => setSelected(e.target.value)}
+        >
+          {keys.map((key) => (
             <option key={key}>{key}</option>
           ))}
         </HTMLSelect>

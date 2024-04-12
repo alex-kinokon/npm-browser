@@ -5,7 +5,7 @@ import { Head } from "~/components/Head"
 import { PageHeader } from "~/components/Header"
 import Footer from "~/components/Footer"
 import { Container } from "~/components/Container"
-import { T } from "~/contexts/Locale"
+import { T } from "~/Locale"
 
 const Grid = styled.div`
   display: grid;
@@ -39,10 +39,14 @@ export default function Home() {
         <Grid>
           <Card>
             <H5>
-              <T en="Common Packages" fr="Paquets communs" ja="一般的なパッケージ" />
+              <T
+                en="Common Packages"
+                fr="Paquets communs"
+                ja="一般的なパッケージ"
+              />
             </H5>
             <ol className={Classes.LIST}>
-              {commonPackages.map(pkg => (
+              {commonPackages.map((pkg) => (
                 <li key={pkg}>
                   <Link href={`/package/${pkg}`}>{pkg}</Link>
                 </li>

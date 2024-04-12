@@ -2,6 +2,13 @@ import { execSync } from "node:child_process"
 import { defineConfig } from "vite"
 import tsconfigPaths from "vite-tsconfig-paths"
 import react from "@vitejs/plugin-react"
+import { getTailwindPlugins } from "@aet/babel-tailwind"
+import tailwindConfig from "./tailwind.config"
+
+const tailwind = getTailwindPlugins({
+  tailwindConfig,
+  clsx: "emotion"
+})
 
 const commit = execSync("git rev-parse --short HEAD").toString().trim()
 
@@ -9,7 +16,7 @@ const commit = execSync("git rev-parse --short HEAD").toString().trim()
 export default /* @__PURE__ */ defineConfig(({ command }) => ({
   root: process.cwd(),
   build: {
-    target: ["chrome120"],
+    target: ["chrome122"],
   },
   // server: {
   //   proxy: {},
@@ -29,11 +36,12 @@ export default /* @__PURE__ */ defineConfig(({ command }) => ({
     react({
       jsxImportSource: "@emotion/react",
       babel: {
-        plugins: ["babel-plugin-macros", "@emotion/babel-plugin"],
+        plugins: ["babel-plugin-macros", "@emotion/babel-plugin", tailwind.babel()],
       },
     }),
     tsconfigPaths({
       projects: ["./tsconfig.json"],
     }),
+    tailwind.vite()
   ],
 }))

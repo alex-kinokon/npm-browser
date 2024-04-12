@@ -14,7 +14,13 @@ import { css, cx } from "@emotion/css"
 import { memo, useCallback, useMemo } from "react"
 import { Link } from "wouter"
 import Icon from "@aet/icons/macro"
-import { ChevronLeft, ChevronRight, GitRepo, Home, Unlock } from "@blueprintjs/icons"
+import {
+  ChevronLeft,
+  ChevronRight,
+  GitRepo,
+  Home,
+  Unlock,
+} from "@blueprintjs/icons"
 import ReactPaginate from "react-paginate"
 import { Head } from "~/components/Head"
 import { PageHeader } from "~/components/Header"
@@ -23,7 +29,7 @@ import { useSearchParams } from "~/hooks/useSearchParams"
 import { getSearchSuggestions } from "~/remote"
 import { useDebouncedValue } from "~/hooks/useDebouncedValue"
 import { RelativeTime } from "~/utils/relativeTime"
-import { T, useT } from "~/contexts/Locale"
+import { T, useT } from "~/Locale"
 import { uniq } from "~/utils/uniq"
 import { Container } from "~/components/Container"
 import { parseRepo } from "~/utils/parseRepo"
@@ -48,20 +54,24 @@ const PER_PAGE = 25
 
 export default function SearchPage() {
   const t = useT()
-  const [{ query, ranking = SortBy.SearchScore, page = 0 }, setQuery] = useSearchParams<{
-    query: string
-    ranking: SortBy
-    page: number
-  }>({ query: "" }, { page: Number })
+  const [{ query, ranking = SortBy.SearchScore, page = 0 }, setQuery] =
+    useSearchParams<{
+      query: string
+      ranking: SortBy
+      page: number
+    }>({ query: "" }, { page: Number })
 
   const debouncedQuery = useDebouncedValue(query, 500)
   const from = page * PER_PAGE
 
   const { data, isLoading } = useQuery(
-    getSearchSuggestions({ text: debouncedQuery, size: 25, from })
+    getSearchSuggestions({ text: debouncedQuery, size: 25, from }),
   )
 
-  const updateQuery = useCallback((query: string) => setQuery({ query }), [setQuery])
+  const updateQuery = useCallback(
+    (query: string) => setQuery({ query }),
+    [setQuery],
+  )
 
   const sorted = useMemo(() => {
     const objects = data?.objects
@@ -72,13 +82,15 @@ export default function SearchPage() {
         return objects.sort((a, b) => b.searchScore - a.searchScore)
       case SortBy.Popularity:
         return objects.sort(
-          (a, b) => b.score.detail.popularity - a.score.detail.popularity
+          (a, b) => b.score.detail.popularity - a.score.detail.popularity,
         )
       case SortBy.Quality:
-        return objects.sort((a, b) => b.score.detail.quality - a.score.detail.quality)
+        return objects.sort(
+          (a, b) => b.score.detail.quality - a.score.detail.quality,
+        )
       case SortBy.Maintenance:
         return objects.sort(
-          (a, b) => b.score.detail.maintenance - a.score.detail.maintenance
+          (a, b) => b.score.detail.maintenance - a.score.detail.maintenance,
         )
       case SortBy.Optimal:
         return objects.sort((a, b) => b.score.final - a.score.final)
@@ -101,7 +113,7 @@ export default function SearchPage() {
                 css`
                   margin-bottom: 5px;
                 `,
-                isLoading && Classes.SKELETON
+                isLoading && Classes.SKELETON,
               )}
             >
               {data?.total.toLocaleString()}{" "}
@@ -134,7 +146,7 @@ export default function SearchPage() {
                         Classes.INTENT_DANGER,
                         css`
                           margin-right: 7px;
-                        `
+                        `,
                       )}
                     />
                   )}
@@ -157,7 +169,11 @@ export default function SearchPage() {
                         opacity: 0.8;
                       `}
                     >
-                      <T en="exact match" fr="correspondance exacte" zh-Hant="完全匹配" />
+                      <T
+                        en="exact match"
+                        fr="correspondance exacte"
+                        zh-Hant="完全匹配"
+                      />
                     </span>
                   )}
 
@@ -210,7 +226,7 @@ export default function SearchPage() {
                       margin-bottom: 5px;
                     `}
                   >
-                    {uniq(pkg.keywords).map(keyword => (
+                    {uniq(pkg.keywords).map((keyword) => (
                       <Tag
                         key={keyword}
                         minimal
@@ -243,8 +259,8 @@ export default function SearchPage() {
                   >
                     {pkg.publisher?.username ?? "Unknown user"}
                   </a>{" "}
-                  <T en="published" fr="a publié" zh-Hant="發佈了" /> {pkg.version} •{" "}
-                  <RelativeTime date={pkg.date} />
+                  <T en="published" fr="a publié" zh-Hant="發佈了" />{" "}
+                  {pkg.version} • <RelativeTime date={pkg.date} />
                 </div>
               </div>
             ))}
@@ -276,7 +292,7 @@ export default function SearchPage() {
                       &.selected {
                         font-weight: 500;
                       }
-                    `
+                    `,
                   )}
                 />
               </div>
@@ -296,36 +312,57 @@ export default function SearchPage() {
               <FormGroup>
                 <RadioGroup
                   label={
-                    <T en="Sort by" fr="Trier par" ja="並び替え" zh-Hant="排序方式" />
+                    <T
+                      en="Sort by"
+                      fr="Trier par"
+                      ja="並び替え"
+                      zh-Hant="排序方式"
+                    />
                   }
-                  onChange={e => setQuery({ ranking: e.currentTarget.value as SortBy })}
+                  onChange={(e) =>
+                    setQuery({ ranking: e.currentTarget.value as SortBy })
+                  }
                   selectedValue={ranking}
                 >
                   <Radio
                     label={
                       (
-                        <T en="Default" fr="Défaut" ja="デフォルト" zh-Hant="默認" />
+                        <T
+                          en="Default"
+                          fr="Défaut"
+                          ja="デフォルト"
+                          zh-Hant="默認"
+                        />
                       ) as any
                     }
                     value={SortBy.SearchScore}
                   />
                   <Radio
                     label={
-                      (<T en="Optimal" fr="Optimal" ja="最適" zh-Hant="最佳" />) as any
+                      (
+                        <T en="Optimal" fr="Optimal" ja="最適" zh-Hant="最佳" />
+                      ) as any
                     }
                     value={SortBy.Optimal}
                   />
                   <Radio
                     label={
                       (
-                        <T en="Popularity" fr="Popularité" ja="人気" zh-Hant="流行度" />
+                        <T
+                          en="Popularity"
+                          fr="Popularité"
+                          ja="人気"
+                          zh-Hant="流行度"
+                        />
                       ) as any
                     }
                     value={SortBy.Popularity}
                   />
                   <Radio
                     label={
-                      (<T en="Quality" fr="Qualité" ja="品質" zh-Hant="質量" />) as any
+                      (
+                        <T en="Quality" fr="Qualité" ja="品質" zh-Hant="質量" />
+                      ) as any
                     }
                     value={SortBy.Quality}
                   />

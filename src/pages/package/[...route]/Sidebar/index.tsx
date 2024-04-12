@@ -4,7 +4,7 @@ import styled from "@emotion/styled"
 import { getFileSize } from "~/utils/fileSize"
 import { Install } from "../InstallInstruction"
 import type { Packument } from "~/vendor/node-query-registry"
-import { T } from "~/contexts/Locale"
+import { T } from "~/Locale"
 import { RepositoryView } from "./Repository"
 import { MaintainersView } from "./Maintainers"
 import { DownloadsView } from "./Downloads"
@@ -34,7 +34,14 @@ export function Sidebar({
       <RepositoryView data={data} />
 
       <FormGroup
-        label={<T en="Homepage" fr="Page d’accueil" ja="ホームページ" zh-Hant="首頁" />}
+        label={
+          <T
+            en="Homepage"
+            fr="Page d’accueil"
+            ja="ホームページ"
+            zh-Hant="首頁"
+          />
+        }
       >
         <a
           href={data?.homepage}
@@ -44,7 +51,7 @@ export function Sidebar({
             !data && Classes.SKELETON,
             css`
               word-wrap: break-word;
-            `
+            `,
           )}
         >
           {data?.homepage}
@@ -53,12 +60,16 @@ export function Sidebar({
 
       <DownloadsView package={name} />
 
-      <FormGroup label={<T en="Version" fr="Version" ja="バージョン" zh-Hant="版本" />}>
+      <FormGroup
+        label={<T en="Version" fr="Version" ja="バージョン" zh-Hant="版本" />}
+      >
         {version}
       </FormGroup>
 
       <FormGroup
-        label={<T en="License" fr="Licence" ja="ライセンス" zh-Hant="授權條款" />}
+        label={
+          <T en="License" fr="Licence" ja="ライセンス" zh-Hant="授權條款" />
+        }
       >
         <span className={cx(!data && Classes.SKELETON)}>
           {data?.license ?? "Unknown"}

@@ -45,7 +45,7 @@ export async function main() {
     const fastifyVite = await import("~/vendor/fastify-vite")
     await app.register(fastifyVite.default, {
       root: ".",
-      getConfig: () => import("../../../vite.config.mts"),
+      getConfig: () => import("../vite.config.mts"),
     })
 
     app.get("/*", (_req, reply) => {

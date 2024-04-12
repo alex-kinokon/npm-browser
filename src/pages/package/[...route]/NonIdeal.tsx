@@ -1,6 +1,6 @@
 import { Button, Card, NonIdealState, Spinner } from "@blueprintjs/core"
 import { Error, Refresh } from "@blueprintjs/icons"
-import { T } from "~/contexts/Locale"
+import { T } from "~/Locale"
 
 export function ErrorView({
   error,
@@ -17,11 +17,17 @@ export function ErrorView({
         icon={<Error size={64} />}
         title="Error"
         description={
-          (error as Error)?.message ?? <T en="Unknown error" fr="Erreur inconnue" />
+          (error as Error)?.message ?? (
+            <T en="Unknown error" fr="Erreur inconnue" />
+          )
         }
         action={
           retry ? (
-            <Button icon={<Refresh />} onClick={() => retry()} loading={isLoading}>
+            <Button
+              icon={<Refresh />}
+              onClick={() => retry()}
+              loading={isLoading}
+            >
               Retry
             </Button>
           ) : undefined
@@ -36,7 +42,9 @@ export function LoadingView() {
     <Card>
       <NonIdealState
         icon={<Spinner />}
-        title={<T en="Loading" fr="Chargement" ja="読み込み中" zh-Hant="載入中" />}
+        title={
+          <T en="Loading" fr="Chargement" ja="読み込み中" zh-Hant="載入中" />
+        }
       />
     </Card>
   )

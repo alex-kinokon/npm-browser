@@ -27,7 +27,7 @@ import { VersionList } from "./Versions"
 import { Dependencies, Dependents } from "./Dependencies"
 import Footer from "~/components/Footer"
 import { Sidebar } from "./Sidebar"
-import { T } from "~/contexts/Locale"
+import { T } from "~/Locale"
 import { Container } from "~/components/Container"
 import { Playground } from "./Playground"
 import { useHash } from "~/hooks/useHash"
@@ -68,7 +68,9 @@ export const enum TAB {
   Playground = "playground",
 }
 
-export const skeleton = <div className={Classes.SKELETON} style={{ height: 500 }} />
+export const skeleton = (
+  <div className={Classes.SKELETON} style={{ height: 500 }} />
+)
 
 export default function PackagePage({
   name,
@@ -77,10 +79,15 @@ export default function PackagePage({
   name: string
   version?: string
 }) {
-  const { data, isLoading, error, isError } = useQuery(getRegistryPackageInfo(name))
+  const { data, isLoading, error, isError } = useQuery(
+    getRegistryPackageInfo(name),
+  )
 
   const ver = version ?? data?.["dist-tags"].latest
-  const id: PackageIdentifier = useMemo(() => ({ name, version: ver! }), [name, ver])
+  const id: PackageIdentifier = useMemo(
+    () => ({ name, version: ver! }),
+    [name, ver],
+  )
 
   const [[activeTab], setHash] = useHash()
 
@@ -91,8 +98,10 @@ export default function PackagePage({
 
   const depCount = useMemo(
     () =>
-      currentVersion ? Object.keys(currentVersion.dependencies ?? {}).length : undefined,
-    [currentVersion]
+      currentVersion
+        ? Object.keys(currentVersion.dependencies ?? {}).length
+        : undefined,
+    [currentVersion],
   )
 
   const isFirstMount = useFirstMountState()
@@ -157,7 +166,7 @@ export default function PackagePage({
                     flex,
                     css`
                       margin-bottom: 7px;
-                    `
+                    `,
                   )}
                 >
                   <H2
@@ -218,12 +227,17 @@ export default function PackagePage({
                     // eslint-disable-next-line jsx-a11y/anchor-is-valid
                     <a
                       href="#"
-                      onClick={e => {
+                      onClick={(e) => {
                         e.preventDefault()
                         setHash("")
                       }}
                     >
-                      <T en="Readme" fr="Description" ja="説明" zh-Hant="說明" />
+                      <T
+                        en="Readme"
+                        fr="Description"
+                        ja="説明"
+                        zh-Hant="說明"
+                      />
                     </a>
                   }
                   panel={<Readme package={id} fallback={data?.readme} />}
@@ -250,7 +264,13 @@ export default function PackagePage({
                       {depCount != null && <sup>{depCount}</sup>}
                     </a>
                   }
-                  panel={data ? <Dependencies data={data} version={ver!} /> : skeleton}
+                  panel={
+                    data ? (
+                      <Dependencies data={data} version={ver!} />
+                    ) : (
+                      skeleton
+                    )
+                  }
                 />
                 <Tab
                   id={TAB.Dependents}
@@ -265,7 +285,12 @@ export default function PackagePage({
                   id={TAB.Versions}
                   title={
                     <a href={`#${TAB.Versions}`}>
-                      <T en="Versions" fr="Versions" ja="バージョン" zh-Hant="版本" />
+                      <T
+                        en="Versions"
+                        fr="Versions"
+                        ja="バージョン"
+                        zh-Hant="版本"
+                      />
                     </a>
                   }
                   panel={data ? <VersionList data={data} /> : skeleton}
