@@ -26,7 +26,10 @@ export async function main() {
   app.all("/api/npm/*", async (req, reply) => {
     const pathname = req.url.slice("/api/npm/".length)
 
-    if (!pathname.startsWith("package/") && !/^(@[\w-]+\/)?[\w-]+$/.test(pathname)) {
+    if (
+      !pathname.startsWith("package/") &&
+      !/^(@[\w-]+\/)?[\w-]+$/.test(pathname)
+    ) {
       return reply.code(400).send("Invalid route")
     }
 
@@ -34,7 +37,7 @@ export async function main() {
   })
 
   await app.register(fastifyRateLimit, {
-    max: 70,
+    max: 45,
     timeWindow: "1 minute",
   })
 
@@ -83,9 +86,11 @@ async function proxy(url: string, req: FastifyRequest, reply: FastifyReply) {
     return reply.code(res.status).send(await res.text())
   }
 
-  const contentType = res.headers.get("content-type") ?? "application/octet-stream"
+  const contentType =
+    res.headers.get("content-type") ?? "application/octet-stream"
   if (contentType?.includes("application/json")) {
     const data = await res.json()
+
     delete data.csrftoken
     delete data.npmExpansions
     return reply.code(res.status).type(contentType).send(data)

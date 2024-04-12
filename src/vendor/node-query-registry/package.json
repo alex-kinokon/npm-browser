@@ -51,7 +51,7 @@
     "sources": {
       "main": {
         "repository": "https://github.com/velut/node-query-registry.git",
-        "commit": "90e00e00b9fc8dbbbfc40b7c1152f350e0215851",
+        "commit": "9600c6eb7197edb926bc3c3c434e7d9a84630fdc",
         "branch": "main"
       }
     }

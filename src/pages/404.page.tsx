@@ -11,8 +11,9 @@ import { parseRoute } from "./package/[...route]/index.page"
 export default function NotFoundPage() {
   const maybe = parseRoute(location.pathname.slice(1).split("/"))
   const href =
-    maybe != null && `/package/${maybe.name}${maybe.version ? `/v/${maybe.version}` : ""}`
-  const link = href && <Link href={href!}>{href}</Link>
+    maybe != null &&
+    `/package/${maybe.name}${maybe.version ? `/v/${maybe.version}` : ""}`
+  const link = href && <Link href={href}>{href}</Link>
 
   return (
     <div>

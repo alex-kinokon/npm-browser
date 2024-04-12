@@ -29,28 +29,30 @@ export function useLocale() {
   return useLocaleContext().locale
 }
 
-export const LocaleProvider = memo(({ children }: { children: React.ReactNode }) => {
-  // Always render with the fallback locale first to prevent hydration mismatch
-  const [locale, setLocale] = useState<Locale>(DEFAULT_LOCALE)
+export const LocaleProvider = memo(
+  ({ children }: { children: React.ReactNode }) => {
+    // Always render with the fallback locale first to prevent hydration mismatch
+    const [locale, setLocale] = useState<Locale>(DEFAULT_LOCALE)
 
-  const updateLocale = useCallback((locale: Locale) => {
-    setLocale(locale)
-    try {
-      localStorage.setItem(LOCALE_KEY, locale)
-    } catch {}
-  }, [])
+    const updateLocale = useCallback((locale: Locale) => {
+      setLocale(locale)
+      try {
+        localStorage.setItem(LOCALE_KEY, locale)
+      } catch {}
+    }, [])
 
-  useEffect(() => {
-    setLocale(getLocale())
-  }, [])
+    useEffect(() => {
+      setLocale(getLocale())
+    }, [])
 
-  const value = useMemo(
-    () => ({ locale, setLocale: updateLocale }),
-    [locale, updateLocale]
-  )
+    const value = useMemo(
+      () => ({ locale, setLocale: updateLocale }),
+      [locale, updateLocale],
+    )
 
-  return <Provider value={value}>{children}</Provider>
-})
+    return <Provider value={value}>{children}</Provider>
+  },
+)
 
 function getLocale(): Locale {
   try {
@@ -65,16 +67,16 @@ function getLocale(): Locale {
     return "fr"
   }
 
-  const exactMatch = navigator.languages.find(lang =>
-    SUPPORTED_LOCALES.includes(lang as Locale)
+  const exactMatch = navigator.languages.find((lang) =>
+    SUPPORTED_LOCALES.includes(lang as Locale),
   )
   if (exactMatch) {
     return exactMatch as Locale
   }
 
   const match = navigator.languages
-    .map(lang => lang.split("-")[0])
-    .find(lang => SUPPORTED_LOCALES.includes(lang as Locale))
+    .map((lang) => lang.split("-")[0])
+    .find((lang) => SUPPORTED_LOCALES.includes(lang as Locale))
 
   if (match) {
     return match as Locale
@@ -86,10 +88,10 @@ function getLocale(): Locale {
 export function useT() {
   const locale = useLocale()
   const callback = useCallback(
-    (record: {
-      [locale in Locale]?: React.ReactNode
+    <T extends React.ReactNode = string>(record: {
+      [locale in Locale]?: T
     }) => record[locale] ?? record[DEFAULT_LOCALE],
-    [locale]
+    [locale],
   )
 
   return callback
