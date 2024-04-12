@@ -26,11 +26,11 @@ export function parseRoute(routes: string[]) {
 }
 
 interface PageParams {
-  route: string
+  "*": string
 }
 
 export default function Package({ params }: { params: PageParams }) {
-  const route = parseRoute(params.route.split("/"))
+  const route = parseRoute(params["*"].split("/"))
   if (!route) {
     return <NotFoundPage />
   }
