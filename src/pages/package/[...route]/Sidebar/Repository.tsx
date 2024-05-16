@@ -30,9 +30,7 @@ export const RepositoryView = memo(({ data }: { data?: Packument }) => {
           {repo}
         </a>
       </div>
-      {false && process.env.NODE_ENV !== "production" && (
-        <GitHubDataWrapper repo={repo} />
-      )}
+      <GitHubDataWrapper repo={repo} />
     </FormGroup>
   )
 })
@@ -63,7 +61,7 @@ const GitHubData = memo(({ owner, repo }: { owner: string; repo: string }) => {
         font-size: 0.95em;
         margin-top: 6px;
         > div {
-          margin-right: 1rem;
+          margin-right: 0.5rem;
           display: flex;
           align-items: center;
         }
@@ -80,13 +78,19 @@ const GitHubData = memo(({ owner, repo }: { owner: string; repo: string }) => {
       {!repoData.isError && (
         <div className={cx(repoData.isLoading && Classes.SKELETON)}>
           <Icon icon="VscIssues" />
-          {repoData.data?.open_issues_count} issues
+          {repoData.data?.open_issues_count}
+        </div>
+      )}
+      {!repoData.isError && (
+        <div className={cx(repoData.isLoading && Classes.SKELETON)}>
+          <Icon icon="VscStarFull" />
+          {repoData.data?.stargazers_count}
         </div>
       )}
       {!pulls.isError && (
         <div className={cx(pulls.isLoading && Classes.SKELETON)}>
           <Icon icon="BiGitPullRequest" />
-          {pulls.data?.length} pull requests
+          {pulls.data?.length}
         </div>
       )}
     </div>

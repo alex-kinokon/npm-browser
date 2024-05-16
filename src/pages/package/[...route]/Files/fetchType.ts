@@ -12,30 +12,36 @@ export function intellisense(
   editor: monaco.editor.IStandaloneCodeEditor,
   pkg: PackageIdentifier,
   files: MappedFile[],
-  file: MappedFile
+  file: MappedFile,
 ) {
-  const pathMap = new Map(files.map(file => [file.path, file]))
+  const pathMap = new Map(files.map((file) => [file.path, file]))
   const nodeResolve = getResolver(pkg, files, pathMap)
 
   const fetchTypes = debounce(async () => {
     const model = editor.getModel()!
-    const imports = getImportedModules(model.getValue()).filter(p => p.startsWith("."))
+    const imports = getImportedModules(model.getValue()).filter((p) =>
+      p.startsWith("."),
+    )
 
     const dir = dirname(file.path)
-    const importedPaths = await Promise.all(imports.map(path => nodeResolve(path, dir)))
+    const importedPaths = await Promise.all(
+      imports.map((path) => nodeResolve(path, dir)),
+    )
 
     await Promise.all(
-      importedPaths.map(async path => {
+      importedPaths.map(async (path) => {
         const hex = pathMap.get(path)?.hex
         if (!hex) return
 
-        const source = await queryClient.fetchQuery(getPackageFile(pkg.name, hex))
+        const source = await queryClient.fetchQuery(
+          getPackageFile(pkg.name, hex),
+        )
 
         const uri = monaco.Uri.parse(path)
         if (!monaco.editor.getModel(uri)) {
           monaco.editor.createModel(source, undefined, uri)
         }
-      })
+      }),
     )
   }, 100)
 
@@ -59,17 +65,26 @@ function getNodeModulesDirs(absoluteStart: string) {
     parsed = parse(parsed.dir)
   }
 
-  return paths.map(p => resolve(prefix, p, "node_modules"))
+  return paths.map((p) => resolve(prefix, p, "node_modules"))
 }
 
-const extensions = [".js", ".ts", ".d.ts", ".tsx", ".cjs", ".mts", ".mjs", ".cjs"]
+const extensions = [
+  ".js",
+  ".ts",
+  ".d.ts",
+  ".tsx",
+  ".cjs",
+  ".mts",
+  ".mjs",
+  ".cjs",
+]
 
 function getResolver(
   pkg: PackageIdentifier,
   files: MappedFile[],
-  pathMap: Map<string, MappedFile>
+  pathMap: Map<string, MappedFile>,
 ) {
-  const dirs = new Set<string>(files.map(file => dirname(file.path)))
+  const dirs = new Set<string>(files.map((file) => dirname(file.path)))
 
   async function readFile(file: string) {
     const { hex } = pathMap.get(file)!
@@ -111,17 +126,17 @@ function getResolver(
         throw new Error(
           `Cannot find module '${resolve(
             x,
-            pkg.main
-          )}'. Please verify that the package.json has a valid "main" entry`
+            pkg.main,
+          )}'. Please verify that the package.json has a valid "main" entry`,
         )
       }
     }
 
-    return loadAsFileSync(join(x, "/index"))
+    return loadAsFileSync(join(x, "index"))
   }
 
   async function loadNodeModulesSync(x: string, start: string) {
-    for (const dir of getNodeModulesDirs(start).map(dir => join(dir, x))) {
+    for (const dir of getNodeModulesDirs(start).map((dir) => join(dir, x))) {
       if (dirs.has(dirname(dir))) {
         const m = loadAsFileSync(dir)
         if (m) return m
@@ -136,7 +151,7 @@ function getResolver(
 
     if (basedir && !dirs.has(absoluteStart)) {
       throw new TypeError(
-        `Provided basedir "${basedir}" is not a directory, or a symlink to a directory`
+        `Provided basedir "${basedir}" is not a directory, or a symlink to a directory`,
       )
     }
 

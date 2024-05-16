@@ -1,4 +1,4 @@
-import { basename, dirname, extname } from "path"
+import { basename, dirname, extname } from "node:path"
 import { memo, useEffect, useMemo } from "react"
 import { useQuery } from "@tanstack/react-query"
 import { css } from "@emotion/css"
@@ -16,7 +16,7 @@ import type { FileResult } from "~/remote/npmFile"
 import { useHash } from "~/hooks/useHash"
 
 function mapFile(files?: FileResult["files"]) {
-  return Object.values(files ?? {}).map(file => ({
+  return Object.values(files ?? {}).map((file) => ({
     ...file,
     basename: basename(file.path),
     dirname: dirname(file.path),
@@ -26,7 +26,9 @@ export type MappedFile = ReturnType<typeof mapFile>[number]
 
 export function FileView({ package: pkg }: { package: PackageIdentifier }) {
   const { name, version } = pkg
-  const { data, isLoading, isError, error } = useQuery(getPackageFiles(name, version))
+  const { data, isLoading, isError, error } = useQuery(
+    getPackageFiles(name, version),
+  )
   const [hash, setHash] = useHash()
   const path = "/" + (hash[1] ?? "")
   const isFirstMount = useFirstMountState()
@@ -53,7 +55,7 @@ export function FileView({ package: pkg }: { package: PackageIdentifier }) {
         name = dirname(name)
       }
     }
-    return Array.from(set).map(dir => ({
+    return Array.from(set).map((dir) => ({
       dirname: dir,
       parent: dir === "/" ? undefined : dirname(dir),
     }))
@@ -67,20 +69,30 @@ export function FileView({ package: pkg }: { package: PackageIdentifier }) {
     return null
   }
 
-  const activeFile = files.find(file => file.path === path)
+  const activeFile = files.find((file) => file.path === path)
   if (activeFile) {
     return (
       <Container>
-        <PathNavigation path={path} setPath={setPath} package={name} file={activeFile} />
-        <CodeView package={pkg} file={activeFile} files={files} setPath={setPath} />
+        <PathNavigation
+          path={path}
+          setPath={setPath}
+          package={name}
+          file={activeFile}
+        />
+        <CodeView
+          package={pkg}
+          file={activeFile}
+          files={files}
+          setPath={setPath}
+        />
       </Container>
     )
   }
 
   const list = files
-    .filter(file => file.dirname === path)
+    .filter((file) => file.dirname === path)
     .sort((a, b) => a.basename.localeCompare(b.basename))
-  const childDirs = directories.filter(dir => dir.parent === path)
+  const childDirs = directories.filter((dir) => dir.parent === path)
 
   return (
     <Container>
@@ -103,8 +115,12 @@ export function FileView({ package: pkg }: { package: PackageIdentifier }) {
           </Li>
         )}
 
-        {childDirs.map(dir => (
-          <Li className={grid} key={dir.dirname} onClick={() => setPath(dir.dirname)}>
+        {childDirs.map((dir) => (
+          <Li
+            className={grid}
+            key={dir.dirname}
+            onClick={() => setPath(dir.dirname)}
+          >
             <IconDiv>
               <FolderClose />
             </IconDiv>
@@ -115,11 +131,12 @@ export function FileView({ package: pkg }: { package: PackageIdentifier }) {
                 text-align: right;
               `}
             >
-              {files.filter(file => file.dirname === dir.dirname).length} files
+              {files.filter((file) => file.dirname === dir.dirname).length}{" "}
+              files
             </Size>
           </Li>
         ))}
-        {list.map(file => (
+        {list.map((file) => (
           <FileItem key={file.path} file={file} setPath={setPath} />
         ))}
       </ul>
