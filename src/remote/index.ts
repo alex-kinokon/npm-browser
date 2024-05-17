@@ -2,6 +2,7 @@ import type { IssuesResult } from "./githubIssues"
 import type { PullsResult } from "./githubPull"
 import type { FileResult } from "./npmFile"
 import type { NpmPackage } from "./npmPackage"
+import type { NpmUser } from "./npmUser"
 import { queryOptions } from "~/utils/queryType"
 import * as npm from "~/vendor/node-query-registry"
 import type { GithubRepo } from "./githubRepo"
@@ -80,6 +81,16 @@ export function getPackageInfo(name: string) {
   return queryOptions({
     queryKey: ["getPackageInfo", name],
     queryFn: () => get<NpmPackage>(`${npmMirror}/${name}`),
+  })
+}
+
+/**
+ * @deprecated This is private API.
+ */
+export function getUserInfo(name: string) {
+  return queryOptions({
+    queryKey: ["getUserInfo", name],
+    queryFn: () => get<NpmUser>(`${npmMirror}/~${name}`),
   })
 }
 

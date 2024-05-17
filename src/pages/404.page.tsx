@@ -1,15 +1,38 @@
+import invariant from "tiny-invariant"
 import { Classes, Divider, H3 } from "@blueprintjs/core"
-import { Link } from "wouter"
+import { Link, Redirect } from "wouter"
 import { css, cx } from "@emotion/css"
 import { Head } from "~/components/Head"
 import { PageHeader } from "~/components/Header"
 import Footer from "~/components/Footer"
 import { Container } from "~/components/Container"
 import { T } from "~/Locale"
-import { parseRoute } from "./package/[...route]/index.page"
+
+function parseRoute(routes: string[]) {
+  switch (routes.length) {
+    case 4:
+      invariant(routes[2] === "v", "invalid route")
+      return { name: routes.slice(0, 2).join("/"), version: routes[3] }
+    case 3:
+      invariant(routes[1] === "v", "invalid route")
+      return { name: routes[0], version: routes[2] }
+    case 2:
+      return { name: routes.join("/"), version: undefined }
+    case 1:
+      return { name: routes[0], version: undefined }
+    case 0:
+      return undefined
+  }
+}
 
 export default function NotFoundPage() {
-  const maybe = parseRoute(location.pathname.slice(1).split("/"))
+  const pathname = location.pathname.slice(1)
+  const userMatch = /^~([^/]+)$/.exec(pathname)
+  if (userMatch) {
+    return <Redirect to={`/user/${userMatch[1]}`} />
+  }
+
+  const maybe = parseRoute(pathname.split("/"))
   const href =
     maybe != null &&
     `/package/${maybe.name}${maybe.version ? `/v/${maybe.version}` : ""}`

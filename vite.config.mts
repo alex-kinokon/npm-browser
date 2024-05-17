@@ -2,12 +2,13 @@ import { execSync } from "node:child_process"
 import { defineConfig } from "vite"
 import tsconfigPaths from "vite-tsconfig-paths"
 import react from "@vitejs/plugin-react"
-import { getTailwindPlugins } from "@aet/babel-tailwind"
+import { getTailwindPlugins } from "@aet/tailwind"
 import tailwindConfig from "./tailwind.config"
+import { assetsDir } from "./src/constants"
 
 const tailwind = getTailwindPlugins({
   tailwindConfig,
-  clsx: "emotion"
+  clsx: "emotion",
 })
 
 const commit = execSync("git rev-parse --short HEAD").toString().trim()
@@ -17,10 +18,8 @@ export default /* @__PURE__ */ defineConfig(({ command }) => ({
   root: process.cwd(),
   build: {
     target: ["chrome122"],
+    assetsDir,
   },
-  // server: {
-  //   proxy: {},
-  // },
   define: {
     "process.env.GIT_COMMIT": `"${commit}"`,
     "process.platform": '"linux"',
@@ -30,18 +29,23 @@ export default /* @__PURE__ */ defineConfig(({ command }) => ({
   resolve: {
     alias: {
       "node:path": "@jspm/core/nodelibs/path",
+      module: "@jspm/core/nodelibs/module",
     },
   },
   plugins: [
     react({
       jsxImportSource: "@emotion/react",
       babel: {
-        plugins: ["babel-plugin-macros", "@emotion/babel-plugin", tailwind.babel()],
+        plugins: [
+          "babel-plugin-macros",
+          "@emotion/babel-plugin",
+          tailwind.babel(),
+        ],
       },
     }),
     tsconfigPaths({
       projects: ["./tsconfig.json"],
     }),
-    tailwind.vite()
+    tailwind.vite(),
   ],
 }))

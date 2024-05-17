@@ -5,6 +5,7 @@ import createFastify, { type FastifyReply, type FastifyRequest } from "fastify"
 import fastifyStatic from "@fastify/static"
 import fastifyHelmet from "@fastify/helmet"
 import fastifyRateLimit from "@fastify/rate-limit"
+import { assetsDir } from "./constants"
 
 // const __filename = url.fileURLToPath(import.meta.url)
 const __dirname = url.fileURLToPath(new URL(".", import.meta.url))
@@ -28,7 +29,8 @@ export async function main() {
 
     if (
       !pathname.startsWith("package/") &&
-      !/^(@[\w-]+\/)?[\w-]+$/.test(pathname)
+      !/^(@[\w-]+\/)?[\w-]+$/.test(pathname) &&
+      !pathname.startsWith("~")
     ) {
       return reply.code(400).send("Invalid route")
     }
@@ -58,8 +60,8 @@ export async function main() {
     const html = await fs.readFile(resolve(root, "index.html"))
 
     await app.register(fastifyStatic, {
-      root: resolve(root, "assets"),
-      prefix: "/assets",
+      root: resolve(root, assetsDir),
+      prefix: "/" + assetsDir,
       wildcard: false,
     })
     app.setNotFoundHandler(async (_req, reply) => {

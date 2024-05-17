@@ -1,4 +1,4 @@
-import type { Author, Capsule, DateClass } from "./npmPackage"
+import type { Author, Avatars, Capsule, DateClass } from "./npmPackage"
 
 export interface NpmSite {
   showMFABanner: boolean
@@ -21,7 +21,7 @@ export interface NpmSite {
 export interface RecentlyUpdatedPackage extends Capsule {
   publisher: {
     name: string
-    avatars: {}
+    avatars: Avatars
   }
   date: DateClass
   version: string

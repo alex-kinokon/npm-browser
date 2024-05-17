@@ -1,4 +1,4 @@
-import { resolve } from "path"
+import { resolve } from "node:path"
 import JSON5 from "json5"
 import { css } from "@emotion/css"
 import type { MappedFile } from "./index"
@@ -18,9 +18,9 @@ export function setupLinks({
 }) {
   if (!node) return
 
-  node.querySelectorAll(".token.string").forEach(el => {
+  for (const el of node.querySelectorAll(".token.string")) {
     const text = el.textContent
-    if (!text) return
+    if (!text) continue
 
     const prev = el.previousElementSibling
     const prevPrev = el.previousElementSibling?.previousElementSibling
@@ -28,10 +28,10 @@ export function setupLinks({
     if (isRelativeImport(text)) {
       const path = JSON5.parse(text)
       const resolved = resolveLink(file, path, files)
-      if (!resolved) return
+      if (!resolved) continue
       el.classList.add(link)
       ;(el as HTMLElement).onclick = () => setPath(resolved)
-      return
+      continue
     }
 
     if (
@@ -47,12 +47,12 @@ export function setupLinks({
           ? packageNameSegments.slice(0, 2).join("/")
           : packageNameSegments[0]
 
-      if (builtinModules.includes(path) || path[0] === "#") return
+      if (builtinModules.has(path) || path[0] === "#") continue
       el.classList.add(link)
       ;(el as HTMLElement).onclick = () => navigate(`/package/${packageName}`)
-      return
+      continue
     }
-  })
+  }
 }
 
 function isRelativeImport(text: string) {
@@ -60,7 +60,7 @@ function isRelativeImport(text: string) {
     (text[0] === '"' || text[0] === "'") &&
     text[1] === "." &&
     (text[2] === "/" || (text[2] === "." && text[3] === "/")) &&
-    text[0] === text[text.length - 1]
+    text[0] === text.at(-1)
   )
 }
 
@@ -79,7 +79,7 @@ function resolveLink(source: MappedFile, target: string, files: MappedFile[]) {
     case "javascript":
     case "typescript":
       const native = resolve(source.dirname, target)
-      const paths = new Set(files.map(file => file.path))
+      const paths = new Set(files.map((file) => file.path))
 
       for (const candidate of [
         native,
@@ -97,7 +97,7 @@ function resolveLink(source: MappedFile, target: string, files: MappedFile[]) {
   }
 }
 
-const builtinModules = [
+const builtinModules = new Set([
   "_http_agent",
   "_http_client",
   "_http_common",
@@ -166,4 +166,4 @@ const builtinModules = [
   "wasi",
   "worker_threads",
   "zlib",
-]
+])

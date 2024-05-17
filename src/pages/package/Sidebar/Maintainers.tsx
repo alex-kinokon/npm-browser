@@ -30,7 +30,7 @@ export const MaintainersView = memo(
               `}
             >
               <Link
-                href={`https://www.npmjs.com/~${maintainer.name}`}
+                href={`/user/${maintainer.name}`}
                 title={maintainer.name}
                 className={css`
                   display: flex;
