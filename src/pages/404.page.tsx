@@ -1,7 +1,7 @@
 import invariant from "tiny-invariant"
 import { Classes, Divider, H3 } from "@blueprintjs/core"
-import { Link, Redirect } from "wouter"
 import { css, cx } from "@emotion/css"
+import { Link, Redirect } from "~/vendor/wouter"
 import { Head } from "~/components/Head"
 import { PageHeader } from "~/components/Header"
 import Footer from "~/components/Footer"

@@ -2,7 +2,7 @@ import { useQuery } from "@tanstack/react-query"
 import { memo, useMemo, useRef } from "react"
 import { css } from "@emotion/css"
 import { Editor } from "@monaco-editor/react"
-// import { useLocation } from "wouter"
+// import { useLocation } from "~/vendor/wouter"
 import type * as monaco from "monaco-editor"
 import { Markdown, markdownStyle } from "~/components/Markdown"
 import { ErrorView, LoadingView } from "../NonIdeal"
@@ -31,7 +31,9 @@ const CodeViewInternal = memo<
 
   const ref = useRef<HTMLDivElement>(null)
 
-  const cjkFont = file.path.includes("ja") ? "Noto Sans CJK JP" : "Noto Sans CJK SC"
+  const cjkFont = file.path.includes("ja")
+    ? "Noto Sans CJK JP"
+    : "Noto Sans CJK SC"
 
   const options = useMemo(
     (): monaco.editor.IStandaloneEditorConstructionOptions => ({
@@ -42,7 +44,7 @@ const CodeViewInternal = memo<
         enabled: false,
       },
     }),
-    [cjkFont]
+    [cjkFont],
   )
 
   return (
@@ -60,11 +62,12 @@ const CodeViewInternal = memo<
           }
         `}
         options={options}
-        onMount={editor => {
+        onMount={(editor) => {
           intellisense(editor, pkg, files, file)
           const editorService = (editor as any)
             ._codeEditorService as StandaloneCodeEditorService
-          const openEditorBase = editorService.openCodeEditor.bind(editorService)
+          const openEditorBase =
+            editorService.openCodeEditor.bind(editorService)
           editorService.openCodeEditor = (input, source) => {
             setPath(input.resource.path)
             return openEditorBase(input, source)
@@ -78,7 +81,7 @@ const CodeViewInternal = memo<
 export function CodeView(props: CodeViewProps) {
   const { package: pkg, file } = props
   const { data, isLoading, isError, error, refetch } = useQuery(
-    getPackageFile(pkg.name, file.hex)
+    getPackageFile(pkg.name, file.hex),
   )
 
   if (isError) {

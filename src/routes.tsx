@@ -1,6 +1,6 @@
 import { lazy } from "react"
-import { Redirect, Route, Switch } from "wouter"
 import type { RouteParams } from "regexparam"
+import { Route, Switch } from "~/vendor/wouter"
 
 const PackagePage = lazy(() => import("./pages/package/package"))
 const UserPage = lazy(() => import("./pages/user/index.page"))

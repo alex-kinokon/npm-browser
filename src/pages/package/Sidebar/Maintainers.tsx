@@ -1,8 +1,8 @@
 import { css } from "@emotion/css"
 import { Classes, FormGroup } from "@blueprintjs/core"
-import { Link } from "wouter"
 import { memo } from "react"
 import { useQuery } from "@tanstack/react-query"
+import { Link } from "~/vendor/wouter"
 import { T } from "~/Locale"
 import { getPackageInfo } from "~/remote"
 

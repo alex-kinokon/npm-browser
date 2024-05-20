@@ -1,11 +1,15 @@
 import { css } from "@emotion/css"
 import { useQuery } from "@tanstack/react-query"
-import { Link } from "wouter"
 import Icon from "@aet/icons/macro"
+import { Link } from "~/vendor/wouter"
 import { getPackageInfo } from "~/remote"
 import type { PackageIdentifier } from "./package"
 
-export function TypeScriptStatus({ package: { name } }: { package: PackageIdentifier }) {
+export function TypeScriptStatus({
+  package: { name },
+}: {
+  package: PackageIdentifier
+}) {
   const { data } = useQuery(getPackageInfo(name))
   const t = data?.capsule?.types?.typescript
 
@@ -15,7 +19,9 @@ export function TypeScriptStatus({ package: { name } }: { package: PackageIdenti
 
   if (t.bundled) {
     if (name.startsWith("@types/")) {
-      const pkgName = name.slice("@types/".length).replace(/^(\w+)__(.+)$/, "$1/$2")
+      const pkgName = name
+        .slice("@types/".length)
+        .replace(/^(\w+)__(.+)$/, "$1/$2")
       return (
         <Link href={`/package/${pkgName}`}>
           <Icon

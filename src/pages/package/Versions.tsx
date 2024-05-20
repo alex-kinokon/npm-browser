@@ -1,13 +1,16 @@
 import { Button, Classes, Code, H4 } from "@blueprintjs/core"
 import { ChevronDown, ChevronUp } from "@blueprintjs/icons"
 import { memo, useMemo, useState } from "react"
-import { Link } from "wouter"
 import { css } from "@emotion/css"
+import { Link } from "~/vendor/wouter"
 import { RelativeTime } from "~/utils/relativeTime"
 import type { Packument } from "~/vendor/node-query-registry"
 
 export const VersionList = memo(({ data }: { data: Packument }) => {
-  const versions = useMemo(() => Object.keys(data.versions).reverse(), [data.versions])
+  const versions = useMemo(
+    () => Object.keys(data.versions).reverse(),
+    [data.versions],
+  )
   const distTags = useMemo(() => Object.entries(data.distTags), [data.distTags])
   const [showAll, setShowAll] = useState(false)
 
@@ -45,7 +48,7 @@ export const VersionList = memo(({ data }: { data: Packument }) => {
       </H4>
 
       <ul className={Classes.LIST}>
-        {versions.slice(0, showAll ? versions.length : 20).map(version => (
+        {versions.slice(0, showAll ? versions.length : 20).map((version) => (
           <li key={version}>
             <Link href={`/package/${data.name}/v/${version}`}>{version}</Link> (
             <RelativeTime date={new Date(data.time[version])} />)

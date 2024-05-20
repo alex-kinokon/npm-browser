@@ -12,7 +12,6 @@ import {
 import { useQuery } from "@tanstack/react-query"
 import { css, cx } from "@emotion/css"
 import { memo, useCallback, useMemo } from "react"
-import { Link } from "wouter"
 import Icon from "@aet/icons/macro"
 import {
   ChevronLeft,
@@ -22,6 +21,7 @@ import {
   Unlock,
 } from "@blueprintjs/icons"
 import ReactPaginate from "react-paginate"
+import { Link } from "~/vendor/wouter"
 import { Head } from "~/components/Head"
 import { PageHeader } from "~/components/Header"
 import Footer from "~/components/Footer"

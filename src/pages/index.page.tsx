@@ -1,6 +1,6 @@
 import styled from "@emotion/styled"
 import { Card, Classes, Divider, H2, H5 } from "@blueprintjs/core"
-import { Link } from "wouter"
+import { Link } from "~/vendor/wouter"
 import { Head } from "~/components/Head"
 import { PageHeader } from "~/components/Header"
 import Footer from "~/components/Footer"

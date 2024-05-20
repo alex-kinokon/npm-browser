@@ -1,7 +1,7 @@
 import { Classes } from "@blueprintjs/core"
 import Icon from "@aet/icons/macro"
 import { css } from "@emotion/css"
-import { Link } from "wouter"
+import { Link } from "~/vendor/wouter"
 import { T, useT } from "~/Locale"
 
 export default function Footer() {

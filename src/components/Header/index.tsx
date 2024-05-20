@@ -2,7 +2,7 @@ import { css } from "@emotion/css"
 import { Alignment, Button, Navbar } from "@blueprintjs/core"
 import { Menu } from "@blueprintjs/icons"
 import Icon from "@aet/icons/macro"
-import { Link } from "wouter"
+import { Link } from "~/vendor/wouter"
 import { SearchView } from "./Search"
 import { LocaleSwitch } from "./LocaleSwitch"
 
