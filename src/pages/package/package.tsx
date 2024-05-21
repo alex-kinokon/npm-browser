@@ -113,7 +113,7 @@ function PackagePageGrid({
                 <T en="Readme" fr="Description" ja="説明" zh-Hant="說明" />
               </a>
             }
-            panel={<Readme package={id} fallback={data?.readme} />}
+            panel={<Readme package={id} data={data} />}
           />
           <Tab
             id={TAB.Code}

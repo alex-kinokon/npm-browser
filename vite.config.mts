@@ -11,20 +11,23 @@ const tailwind = getTailwindPlugins({
   clsx: "emotion",
 })
 
-const commit = execSync("git rev-parse --short HEAD").toString().trim()
-
 // https://vitejs.dev/config/
-export default /* @__PURE__ */ defineConfig(({ command }) => ({
+export default /* @__PURE__ */ defineConfig(({ command, mode }) => ({
   root: process.cwd(),
   build: {
     target: ["chrome122"],
     assetsDir,
   },
   define: {
-    "process.env.GIT_COMMIT": `"${commit}"`,
-    "process.platform": '"linux"',
+    "process.env.GIT_COMMIT":
+      mode === "test"
+        ? '""'
+        : `"${execSync("git rev-parse --short HEAD").toString().trim()}"`,
     __DEV__: String(command === "serve"),
     __PROD__: String(command === "build"),
+    ...(mode !== "test" && {
+      "process.platform": '"linux"',
+    }),
   },
   resolve: {
     alias: {

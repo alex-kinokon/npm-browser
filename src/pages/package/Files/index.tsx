@@ -29,6 +29,8 @@ export function FileView({ package: pkg }: { package: PackageIdentifier }) {
   const { data, isLoading, isError, error } = useQuery(
     getPackageFiles(name, version),
   )
+  const files = useMemo(() => mapFile(data?.files), [data?.files])
+
   const [hash, setHash] = useHash()
   const path = "/" + (hash[1] ?? "")
   const isFirstMount = useFirstMountState()
@@ -43,8 +45,6 @@ export function FileView({ package: pkg }: { package: PackageIdentifier }) {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [name, version])
-
-  const files = useMemo(() => mapFile(data?.files), [data?.files])
 
   const directories = useMemo(() => {
     const set = new Set<string>()

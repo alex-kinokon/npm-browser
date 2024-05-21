@@ -4,7 +4,7 @@ import { useQuery } from "@tanstack/react-query"
 import { Button, MenuItem } from "@blueprintjs/core"
 import { css } from "@emotion/css"
 import { Search } from "@blueprintjs/icons"
-import { useLocation } from "~/vendor/wouter"
+import { useNavigate } from "~/vendor/wouter"
 import { getSearchSuggestions } from "~/remote"
 import { useDebouncedValue } from "~/hooks/useDebouncedValue"
 import type { SearchResult } from "~/vendor/node-query-registry"
@@ -12,7 +12,7 @@ import { useT } from "~/Locale"
 
 export function SearchView({ defaultQuery }: { defaultQuery?: string }) {
   const t = useT()
-  const [, setLocation] = useLocation()
+  const setLocation = useNavigate()
   const [query, setQuery] = useState<string | undefined>(defaultQuery)
   const debouncedQuery = useDebouncedValue(query, 500)
 
@@ -50,7 +50,7 @@ export function SearchView({ defaultQuery }: { defaultQuery?: string }) {
       `}
       initialContent={
         isLoading && debouncedQuery ? (
-          <MenuItem disabled={true} text="Loading..." />
+          <MenuItem disabled={true} text="Loading…" />
         ) : null
       }
       popoverProps={{

@@ -102,15 +102,3 @@ export function getPackageFile(name: string, hex?: string) {
       fetch(`${npmjs}/package/${name}/file/${hex}`).then((res) => res.text()),
   })
 }
-
-export function getReadmeFileHex(result?: FileResult) {
-  if (!result) return
-
-  const files = new Map(
-    Object.values(result.files).map((f) => [f.path.toLowerCase(), f.hex]),
-  )
-
-  return (
-    files.get("/readme.md") ?? files.get("/readme") ?? files.get("/readme.txt")
-  )
-}

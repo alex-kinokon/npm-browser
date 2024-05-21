@@ -13,6 +13,14 @@ export function parseRepo(repo: string): {
     return {}
   }
 
-  const [owner, repoName] = url.pathname.slice(1).split("/")
-  return { owner, repoName, host: url.hostname === "github.com" ? "github" : "gitlab" }
+  let [owner, repoName] = url.pathname.slice(1).split("/")
+  if (repoName.endsWith(".git")) {
+    repoName = repoName.slice(0, -4)
+  }
+
+  return {
+    owner,
+    repoName,
+    host: url.hostname === "github.com" ? "github" : "gitlab",
+  }
 }

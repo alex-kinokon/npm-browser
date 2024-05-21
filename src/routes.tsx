@@ -25,37 +25,48 @@ export default (
     {route("/package/:name", ({ name }) => (
       <PackagePage name={name} />
     ))}
-    {route("/package/@:scope/:name", ({ scope, name }) => (
-      <PackagePage name={`${scope}/${name}`} />
-    ))}
+    {route2(
+      "/package/:scope/:name",
+      ({ scope }) => scope.startsWith("@"),
+      ({ scope, name }) => (
+        <PackagePage name={`${scope}/${name}`} />
+      ),
+    )}
     {route("/package/:name/v/:version", ({ name, version }) => (
       <PackagePage name={name} version={version} />
     ))}
-    {route("/package/@:scope/:name/v/:version", ({ name, version, scope }) => (
-      <PackagePage name={`${scope}/${name}`} version={version} />
-    ))}
+    {route2(
+      "/package/:scope/:name/v/:version",
+      ({ scope }) => scope.startsWith("@"),
+      ({ name, version, scope }) => (
+        <PackagePage name={`${scope}/${name}`} version={version} />
+      ),
+    )}
     <Route key={404} component={lazy(() => import("./pages/404.page"))} />
   </Switch>
 )
 
 function route<RoutePath extends string>(
   path: RoutePath,
-  Component: (props: RouteParams<RoutePath>) => JSX.Element,
-): JSX.Element
-function route<RoutePath extends string>(
-  path: RoutePath,
-  Component: React.LazyExoticComponent<
-    (props: RouteParams<RoutePath>) => JSX.Element
-  >,
-): JSX.Element
-
-function route<RoutePath extends string>(
-  path: RoutePath,
-  Component: React.FunctionComponent,
+  Component: React.ComponentType<RouteParams<RoutePath>>,
 ): JSX.Element {
   return (
     <Route
       path={path}
+      component={({ params }) => <Component {...(params as any)} />}
+    />
+  )
+}
+
+function route2<RoutePath extends string>(
+  path: RoutePath,
+  predicate: (params: RouteParams<RoutePath>, location: string) => boolean,
+  Component: (props: RouteParams<RoutePath>) => JSX.Element,
+): JSX.Element {
+  return (
+    <Route
+      path={path}
+      predicate={predicate}
       component={({ params }) => <Component {...(params as any)} />}
     />
   )

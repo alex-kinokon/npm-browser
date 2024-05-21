@@ -1,9 +1,8 @@
 {
   "eslint.runtime": "node",
-  "cSpell.words": [
-    "packument"
-  ],
+  "cSpell.words": ["packument"],
   "typescript.tsdk": "node_modules/typescript/lib",
+  "editor.inlayHints.enabled": "on",
   "tailwindCSS.experimental.classRegex": [
     "css=\"([^\"]*)",
     "css={([^}]*)}",

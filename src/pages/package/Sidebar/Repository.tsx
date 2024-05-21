@@ -8,12 +8,18 @@ import { T } from "~/Locale"
 import { getGitHubRepo, getPulls } from "~/remote"
 import { parseRepo } from "~/utils/parseRepo"
 
-export const RepositoryView = memo(({ data }: { data?: Packument }) => {
-  const repo =
+export function getRepoURL(data?: Packument) {
+  const repoURL =
     typeof data?.repository === "object"
       ? data?.repository?.url
       : data?.repository
+  if (repoURL) {
+    return { repoURL, ...parseRepo(repoURL) }
+  }
+}
 
+export const RepositoryView = memo(({ data }: { data?: Packument }) => {
+  const repo = getRepoURL(data)
   if (!repo) return null
 
   return (
@@ -22,12 +28,12 @@ export const RepositoryView = memo(({ data }: { data?: Packument }) => {
     >
       <div>
         <a
-          href={repo.replace(/^git\+https/, "https")}
+          href={repo.repoURL.replace(/^git\+https/, "https")}
           target="_blank"
           rel="noopener noreferrer"
           css="break-words"
         >
-          {repo}
+          {repo.repoURL}
         </a>
       </div>
       <GitHubDataWrapper repo={repo} />
@@ -35,12 +41,14 @@ export const RepositoryView = memo(({ data }: { data?: Packument }) => {
   )
 })
 
-const GitHubDataWrapper = memo(({ repo }: { repo: string }) => {
-  const { owner, repoName } = parseRepo(repo)
-  if (!owner || !repoName) return null
+const GitHubDataWrapper = memo(
+  ({ repo }: { repo: ReturnType<typeof parseRepo> }) => {
+    const { owner, repoName } = repo
+    if (!owner || !repoName) return null
 
-  return <GitHubData owner={owner} repo={repoName.replace(/\.git$/, "")} />
-})
+    return <GitHubData owner={owner} repo={repoName.replace(/\.git$/, "")} />
+  },
+)
 
 const GitHubData = memo(({ owner, repo }: { owner: string; repo: string }) => {
   const pulls = useQuery({
