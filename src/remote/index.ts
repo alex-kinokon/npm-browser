@@ -13,7 +13,7 @@ if (typeof window !== "undefined") {
 
 // Endpoints
 /** @deprecated */
-const npmMirror = "/api/npm"
+const npmMirror = "/npm"
 const npmjs = "https://www.npmjs.com"
 const github = "https://api.github.com"
 

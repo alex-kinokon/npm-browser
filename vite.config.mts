@@ -30,6 +30,11 @@ export default /* @__PURE__ */ defineConfig(({ command, mode }) => ({
       "process.platform": '"linux"',
     }),
   },
+  server: {
+    proxy: {
+      "/npm": "http://localhost:5174",
+    },
+  },
   resolve: {
     alias: {
       "node:path": "@jspm/core/nodelibs/path",
