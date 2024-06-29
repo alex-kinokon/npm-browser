@@ -30,6 +30,7 @@ const Grid = styled.div`
   grid-template-columns: 1fr 300px;
   grid-template-columns: minmax(0, 1fr) 300px;
   grid-gap: 30px;
+  position: relative;
   margin-left: -4px;
 
   @media (max-width: 768px) {
@@ -66,6 +67,7 @@ function PackagePageGrid({
 }) {
   const { name, version } = id
   const [[activeTab], setHash] = useHash()
+
   const currentVersion = getCurrentVersion(data, version)
   const isFirstMount = useFirstMountState()
 
@@ -177,7 +179,9 @@ function PackagePageGrid({
         </Tabs>
       </div>
 
-      <Sidebar data={data} package={id} />
+      <div>
+        <Sidebar css="sticky top-20" data={data} package={id} />
+      </div>
     </Grid>
   )
 }

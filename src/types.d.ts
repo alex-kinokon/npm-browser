@@ -3,8 +3,8 @@ declare module "@uiw/react-markdown-preview" {
   export { default } from "@uiw/react-markdown-preview/lib/index"
 }
 
-declare namespace JSX {
-  interface IntrinsicAttributes {
+declare namespace React {
+  interface Attributes {
     css?: string
   }
 }

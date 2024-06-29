@@ -9,6 +9,7 @@ import { assetsDir } from "./src/constants"
 const tailwind = getTailwindPlugins({
   tailwindConfig,
   clsx: "emotion",
+  vite: true,
 })
 
 // https://vitejs.dev/config/

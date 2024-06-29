@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from "react"
+import { useLocation } from "~/vendor/wouter"
 
 function getHash() {
   const { hash } = location
@@ -12,17 +13,23 @@ function getHash() {
 export function useHash() {
   const [hash, setHash] = useState(getHash)
 
+  const handler = useCallback(() => {
+    setHash(getHash())
+  }, [])
+
+  const loc = useLocation()
+  useEffect(handler, [loc])
+
   const update = useCallback((hash: string) => {
     location.hash = `#${hash}`
   }, [])
 
   useEffect(() => {
-    const handler = () => {
-      setHash(getHash())
-    }
     window.addEventListener("hashchange", handler)
+    window.addEventListener("popstate", handler)
     return () => {
       window.removeEventListener("hashchange", handler)
+      window.removeEventListener("popstate", handler)
     }
   }, [])
 

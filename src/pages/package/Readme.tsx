@@ -2,6 +2,7 @@ import { css } from "@emotion/css"
 import { useQuery } from "@tanstack/react-query"
 import { Markdown, markdownStyle } from "~/components/Markdown"
 import { getPackageFile, getPackageFiles } from "~/remote"
+import type { RehypeRewriteOptions } from "rehype-rewrite"
 import type { Packument } from "~/vendor/node-query-registry"
 import type { PackageIdentifier } from "./package"
 import type { FileResult } from "~/remote/npmFile"
@@ -27,10 +28,27 @@ export function Readme({
     return null
   }
 
+  const rehypeRewrite: RehypeRewriteOptions["rewrite"] = (node) => {
+    if (repoUrl?.host === "github") {
+      if (
+        node.type === "element" &&
+        node.tagName === "img" &&
+        typeof node.properties.src === "string" &&
+        !/^https?:\/\//.test(node.properties.src)
+      ) {
+        const url = new URL(
+          node.properties.src,
+          `https://raw.githubusercontent.com/${repoUrl.owner}/${repoUrl.repoName}/HEAD/`,
+        ).href
+        node.properties.src = url
+      }
+    }
+  }
+
   return (
     <div
+      css="overflow-hidden"
       className={css`
-        overflow: hidden;
         pre {
           overflow: scroll;
         }
@@ -39,24 +57,11 @@ export function Readme({
       <Markdown
         className={markdownStyle}
         source={code}
-        rehypeRewrite={
-          repoUrl?.host === "github"
-            ? (node) => {
-                if (
-                  node.type === "element" &&
-                  node.tagName === "img" &&
-                  typeof node.properties.src === "string" &&
-                  !/^https?:\/\//.test(node.properties.src)
-                ) {
-                  const url = new URL(
-                    node.properties.src,
-                    `https://raw.githubusercontent.com/${repoUrl.owner}/${repoUrl.repoName}/HEAD/`,
-                  ).href
-                  node.properties.src = url
-                }
-              }
-            : undefined
-        }
+        rehypeRewrite={(node) => {
+          try {
+            rehypeRewrite(node)
+          } catch {}
+        }}
       />
     </div>
   )

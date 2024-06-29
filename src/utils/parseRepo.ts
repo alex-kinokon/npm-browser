@@ -3,6 +3,11 @@ export function parseRepo(repo: string): {
   repoName?: string
   host?: "github" | "gitlab"
 } {
+  if (repo.startsWith("git@github.com:")) {
+    const [owner, repoName] = repo.slice("git@github.com:".length).split("/")
+    return { owner, repoName, host: "github" }
+  }
+
   let copy = repo
   if (copy.startsWith("git+")) {
     copy = copy.slice(4)

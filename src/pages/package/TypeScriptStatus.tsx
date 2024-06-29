@@ -40,36 +40,24 @@ export function TypeScriptStatus({
     }
 
     return (
-      <Icon
-        icon="SiTypescript"
-        fill="#3178C6"
-        className={css`
-          margin-left: 5px;
-          font-size: 1.3em;
-        `}
-      />
+      <Icon icon="SiTypescript" fill="#3178C6" css="ml-[5px] text-[1.3em]" />
     )
   }
 
   return (
     <Link href={`/package/${t.package}`}>
       <div
+        css="ml-[5px] cursor-pointer font-semibold hover:underline"
         className={css`
           border: 1px solid #3178c6;
           color: #3178c6;
-          cursor: pointer;
           font-family:
             "Segoe UI",
             -apple-system,
             BlinkMacSystemFont,
             Roboto;
           font-size: 0.8em;
-          font-weight: 600;
-          margin-left: 5px;
           padding: 1px;
-          &:hover {
-            text-decoration: underline;
-          }
         `}
       >
         DT

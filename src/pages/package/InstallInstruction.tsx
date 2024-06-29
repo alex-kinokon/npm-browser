@@ -39,12 +39,7 @@ export const Install = memo(({ name }: { name: string }) => {
   return (
     <FormGroup
       label={
-        <div
-          className={css`
-            display: flex;
-            align-items: center;
-          `}
-        >
+        <div css="flex items-center">
           <div className={css({ flex: 1 })}>
             <T en="Install" fr="Installer" ja="インストール" zh-Hant="安裝" />
           </div>

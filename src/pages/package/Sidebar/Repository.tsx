@@ -64,10 +64,9 @@ const GitHubData = memo(({ owner, repo }: { owner: string; repo: string }) => {
 
   return (
     <div
+      css="mt-1.5 flex"
       className={css`
-        display: flex;
         font-size: 0.95em;
-        margin-top: 6px;
         > div {
           margin-right: 0.5rem;
           display: flex;

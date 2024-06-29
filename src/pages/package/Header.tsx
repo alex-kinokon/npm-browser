@@ -45,16 +45,7 @@ export function Header({
       )}
 
       <div css="mb-2.5 flex items-center">
-        <H2
-          className={css`
-            margin: 0;
-            padding: 0;
-            margin-right: 3px;
-          `}
-        >
-          {name}
-        </H2>{" "}
-        <TypeScriptStatus package={id} />
+        <H2 css="m-0 mr-[3px] p-0">{name}</H2> <TypeScriptStatus package={id} />
       </div>
       <div
         css="flex items-center"

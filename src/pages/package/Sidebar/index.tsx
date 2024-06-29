@@ -13,15 +13,17 @@ import type { PackageIdentifier } from "../package"
 export function Sidebar({
   data,
   package: pkg,
+  className,
 }: {
   data?: Packument
   package: PackageIdentifier
+  className?: string
 }) {
   const { name, version } = pkg
   const cur = data?.versions[version]
 
   return (
-    <SidebarContainer>
+    <SidebarContainer className={className}>
       <Divider
         className={css`
           margin-bottom: 20px;

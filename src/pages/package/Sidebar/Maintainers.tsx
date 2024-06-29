@@ -1,4 +1,3 @@
-import { css } from "@emotion/css"
 import { Classes, FormGroup } from "@blueprintjs/core"
 import { memo } from "react"
 import { useQuery } from "@tanstack/react-query"
@@ -23,19 +22,11 @@ export const MaintainersView = memo(
       >
         <ul className={Classes.LIST_UNSTYLED}>
           {npm?.packument?.maintainers.map((maintainer) => (
-            <li
-              key={maintainer.name}
-              className={css`
-                margin-bottom: 5px;
-              `}
-            >
+            <li key={maintainer.name} css="mb-1.5">
               <Link
                 href={`/user/${maintainer.name}`}
                 title={maintainer.name}
-                className={css`
-                  display: flex;
-                  align-items: center;
-                `}
+                css="flex items-center"
               >
                 <img
                   src={`https://www.npmjs.com${maintainer.avatars.small}`}
@@ -44,10 +35,7 @@ export const MaintainersView = memo(
                   alt={maintainer.name}
                   crossOrigin="anonymous"
                   referrerPolicy="no-referrer"
-                  className={css`
-                    border-radius: 5px;
-                    margin-right: 6px;
-                  `}
+                  css="mr-1.5 rounded"
                 />
                 <span>{maintainer.name}</span>
               </Link>
