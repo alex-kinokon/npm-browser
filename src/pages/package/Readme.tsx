@@ -1,4 +1,5 @@
 import { css } from "@emotion/css"
+import { Classes } from "@blueprintjs/core"
 import { useQuery } from "@tanstack/react-query"
 import { ExcludeRow } from "@blueprintjs/icons"
 import { Markdown, markdownStyle } from "~/components/Markdown"
@@ -8,7 +9,6 @@ import type { Packument } from "~/vendor/node-query-registry"
 import type { PackageIdentifier } from "./package"
 import type { FileResult } from "~/remote/npmFile"
 import { getRepoURL } from "./Sidebar/Repository"
-import { Card, NonIdealState } from "@blueprintjs/core"
 import { T } from "~/Locale"
 
 export function Readme({
@@ -19,15 +19,19 @@ export function Readme({
   data?: Packument
 }) {
   const fallback = data?.readme
-  const { data: files } = useQuery(getPackageFiles(name, version))
-  const readmeHex = getReadmeFileHex(files)
-  const { data: readme } = useQuery(getPackageFile(name, readmeHex))
-
+  const files = useQuery(getPackageFiles(name, version))
+  const readmeHex = getReadmeFileHex(files.data)
+  const readme = useQuery(getPackageFile(name, readmeHex))
   const repoUrl = getRepoURL(data)
 
-  const code = readme || fallback
+  const code = readme.data || fallback
+
   // registry.npmjs.org can return the string "[object Object]"
   if (typeof code !== "string" || !code || code === "[object Object]") {
+    if (files.isLoading || readme.isLoading || !readmeHex) {
+      return <div className={Classes.SKELETON} css="h-40 rounded"></div>
+    }
+
     return (
       <div css="mx-auto my-8 max-w-[40rem] rounded-lg border border-solid border-gray-200 bg-gray-50 px-5 py-4 dark:border-none dark:bg-gray-800">
         <div css="flex gap-2 text-gray-600 dark:text-gray-100">
