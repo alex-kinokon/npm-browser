@@ -31,7 +31,7 @@ export const RepositoryView = memo(({ data }: { data?: Packument }) => {
           href={repo.repoURL.replace(/^git\+https/, "https")}
           target="_blank"
           rel="noopener noreferrer"
-          css="break-words"
+          css="font-narrow break-words"
         >
           {repo.repoURL}
         </a>
@@ -85,19 +85,19 @@ const GitHubData = memo(({ owner, repo }: { owner: string; repo: string }) => {
       {!repoData.isError && (
         <div className={cx(repoData.isLoading && Classes.SKELETON)}>
           <Icon icon="VscIssues" />
-          {repoData.data?.open_issues_count}
+          <span css="font-narrow">{repoData.data?.open_issues_count}</span>
         </div>
       )}
       {!repoData.isError && (
         <div className={cx(repoData.isLoading && Classes.SKELETON)}>
           <Icon icon="VscStarFull" />
-          {repoData.data?.stargazers_count}
+          <span css="font-narrow">{repoData.data?.stargazers_count}</span>
         </div>
       )}
       {!pulls.isError && (
         <div className={cx(pulls.isLoading && Classes.SKELETON)}>
           <Icon icon="BiGitPullRequest" />
-          {pulls.data?.length}
+          <span css="font-narrow">{pulls.data?.length}</span>
         </div>
       )}
     </div>

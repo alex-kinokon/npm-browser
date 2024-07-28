@@ -13,6 +13,7 @@ import { T } from "~/Locale"
 import { TypeScriptStatus } from "./TypeScriptStatus"
 import { RelativeTime } from "~/utils/relativeTime"
 import type { Packument } from "~/vendor/node-query-registry"
+import { Link } from "~/vendor/wouter"
 
 export function Header({
   id,
@@ -45,7 +46,7 @@ export function Header({
       )}
 
       <div css="mb-2.5 flex items-center">
-        <H2 css="m-0 mr-[3px] p-0">{name}</H2> <TypeScriptStatus package={id} />
+        <PackageName name={name} /> <TypeScriptStatus package={id} />
       </div>
       <div
         css="flex items-center"
@@ -68,6 +69,29 @@ export function Header({
         <PublicationTime isLoading={isLoading} time={data?.time[version]} />
       </div>
     </div>
+  )
+}
+
+function splitPkgName(name: string) {
+  const [scope, pkgName] = name.split("/")
+  return (
+    <>
+      <Link
+        href={`/user/${scope.slice(1)}`}
+        css="[&:not(:hover):not(:focus)]:text-[inherit]"
+      >
+        {scope}
+      </Link>
+      /{pkgName}
+    </>
+  )
+}
+
+function PackageName({ name }: { name: string }) {
+  return (
+    <H2 css="m-0 mr-[3px] p-0">
+      {name.includes("/") ? splitPkgName(name) : name}
+    </H2>
   )
 }
 

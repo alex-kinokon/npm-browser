@@ -10,21 +10,22 @@ import { getPackageInfo } from "~/remote"
 function DepList({
   title,
   deps,
-  count = deps.length,
 }: {
   title: string
-  deps: string[]
+  deps: Record<string, string>
   count?: number
 }) {
+  const entries = Object.entries(deps)
   return (
-    <div>
+    <div className="wmde-markdown-var">
       <H4>
-        {title} ({count})
+        {title} ({entries.length})
       </H4>
       <ul className={Classes.LIST}>
-        {deps.map((dep) => (
+        {entries.map(([dep, version]) => (
           <li key={dep} data-key={dep}>
-            <Link href={`/package/${dep}`}>{dep}</Link>
+            <Link href={`/package/${dep}`}>{dep}</Link>{" "}
+            <span css="text-[var(--color-fg-muted)]">{version}</span>
           </li>
         ))}
       </ul>
@@ -34,16 +35,25 @@ function DepList({
 
 export const Dependencies = memo(
   ({ data, version }: { data: Packument; version: string }) => {
-    const cur = data.versions[version]
-    const deps = Object.keys(cur.dependencies ?? {})
-    const devDeps = Object.keys(cur.devDependencies ?? {})
+    const {
+      dependencies = {},
+      devDependencies = {},
+      peerDependencies = {},
+    } = data.versions[version]
+
+    const hasDeps = hasKey(dependencies)
+    const hasDevDeps = hasKey(devDependencies)
+    const hasPeerDeps = hasKey(peerDependencies)
 
     return (
-      <div>
-        {!deps.length && !devDeps.length && <p>No dependencies.</p>}
-        {deps.length ? <DepList title="Dependencies" deps={deps} /> : null}
-        {devDeps.length ? (
-          <DepList title="Dev Dependencies" deps={devDeps} />
+      <div css="flex flex-col gap-2">
+        {!hasDeps && !hasDevDeps && !hasPeerDeps && <p>No dependencies.</p>}
+        {hasDeps ? <DepList title="Dependencies" deps={dependencies} /> : null}
+        {hasDevDeps ? (
+          <DepList title="Dev Dependencies" deps={devDependencies} />
+        ) : null}
+        {hasPeerDeps ? (
+          <DepList title="Peer Dependencies" deps={peerDependencies} />
         ) : null}
       </div>
     )
@@ -62,12 +72,24 @@ export const Dependents = memo(
 
     return (
       <div>
-        <DepList
-          title="Dependents"
-          count={npm.dependents.dependentsCount}
-          deps={uniq(npm.dependents.dependentsTruncated)}
-        />
+        <div>
+          <H4>Dependents (npm.dependents.dependentsCount)</H4>
+          <ul className={Classes.LIST}>
+            {uniq(npm.dependents.dependentsTruncated).map((dep) => (
+              <li key={dep} data-key={dep}>
+                <Link href={`/package/${dep}`}>{dep}</Link>
+              </li>
+            ))}
+          </ul>
+        </div>
       </div>
     )
   },
 )
+
+function hasKey(obj: object) {
+  for (const _ in obj) {
+    return true
+  }
+  return false
+}

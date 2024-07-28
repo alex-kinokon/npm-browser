@@ -1,4 +1,5 @@
-import "~/styles/globals.css"
+import "@fontsource-variable/inter"
+import "@fontsource-variable/roboto-condensed"
 import { QueryClientProvider } from "@tanstack/react-query"
 import { StrictMode, Suspense } from "react"
 import { FocusStyleManager } from "@blueprintjs/core"
@@ -15,10 +16,10 @@ FocusStyleManager.onlyShowFocusOnTabs()
 export default function App() {
   return (
     <StrictMode>
+      <Head>
+        <link rel="icon" href={favicon} />
+      </Head>
       <QueryClientProvider client={queryClient}>
-        <Head>
-          <link rel="icon" href={favicon} />
-        </Head>
         <LocaleProvider>
           <SideEffect />
           <Router>

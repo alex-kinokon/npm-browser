@@ -3,13 +3,16 @@
 @import "@blueprintjs/icons/lib/css/blueprint-icons.css";
 
 body {
-  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", Inter, "Noto Sans CJK SC",
-    sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", Inter,
+    "Noto Sans CJK SC", sans-serif;
   font-size: 15px;
-  --monospace: ui-monospace, SFMono-Regular, SF Mono, Menlo, Consolas, Liberation Mono,
-    monospace;
+  --monospace: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas,
+    "Liberation Mono", monospace;
 }
 
+a {
+  color: var(--color-accent-fg);
+}
 body.bp5-dark {
   background-color: #0d1117;
 }

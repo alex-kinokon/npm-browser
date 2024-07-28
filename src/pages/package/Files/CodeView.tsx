@@ -43,6 +43,7 @@ const CodeViewInternal = memo<
       minimap: {
         enabled: false,
       },
+      wordWrap: "on",
     }),
     [cjkFont],
   )

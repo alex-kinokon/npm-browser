@@ -8,6 +8,7 @@ import { T } from "~/Locale"
 import { RepositoryView } from "./Repository"
 import { MaintainersView } from "./Maintainers"
 import { DownloadsView } from "./Downloads"
+import { LinksView } from "./Links"
 import type { PackageIdentifier } from "../package"
 
 export function Sidebar({
@@ -49,18 +50,15 @@ export function Sidebar({
           href={data?.homepage}
           target="_blank"
           rel="noopener noreferrer"
-          className={cx(
-            !data && Classes.SKELETON,
-            css`
-              word-wrap: break-word;
-            `,
-          )}
+          css="break-words"
+          className={cx(!data && Classes.SKELETON)}
         >
           {data?.homepage}
         </a>
       </FormGroup>
 
       <DownloadsView package={name} />
+      <LinksView package={name} />
 
       <FormGroup
         label={<T en="Version" fr="Version" ja="バージョン" zh-Hant="版本" />}
