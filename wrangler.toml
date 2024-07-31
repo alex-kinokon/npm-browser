@@ -1,3 +1,4 @@
 name = "npm-browser"
 pages_build_output_dir = "dist"
 dev.port = 5174
+compatibility_date = "2024-07-31"

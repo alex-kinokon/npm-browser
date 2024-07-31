@@ -16,6 +16,11 @@ a {
 body.bp5-dark {
   background-color: #0d1117;
 }
-.bp5-dark .bp5-navbar {
-  background-color: #161b22;
+
+.bp5-navbar {
+  background-color: #fffc;
+  backdrop-filter: blur(10px);
+  .bp5-dark & {
+    background-color: rgba(22, 27, 34, 0.6);
+  }
 }
