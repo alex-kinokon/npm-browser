@@ -5,6 +5,6 @@ declare module "@uiw/react-markdown-preview" {
 
 declare namespace React {
   interface Attributes {
-    css?: string
+    css?: string | (string | false)[]
   }
 }

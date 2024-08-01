@@ -6,11 +6,15 @@ const is = (interval: number, cycle: number) =>
 
 export function relativeTime(
   time: Date | number,
-  now = Date.now(),
-  locale?: string,
+  {
+    now = Date.now(),
+    locale,
+    ...options
+  }: Intl.RelativeTimeFormatOptions & { now?: number; locale?: string },
 ) {
   const formatter = new Intl.RelativeTimeFormat(locale, {
     style: "long",
+    ...options,
   })
 
   if (time instanceof Date) {
@@ -55,7 +59,7 @@ export const RelativeTime = memo(
     const t = useMemo(() => new Date(date), [date])
     return (
       <time dateTime={t.toISOString()} title={t.toLocaleString()}>
-        {relativeTime(t, undefined, locale)}
+        {relativeTime(t, { locale })}
       </time>
     )
   },

@@ -6,35 +6,18 @@ import { uniq } from "~/utils/uniq"
 import type { Packument } from "~/vendor/node-query-registry"
 import { type PackageIdentifier, skeleton } from "./package"
 import { getPackageInfo } from "~/remote"
-
-function DepList({
-  title,
-  deps,
-}: {
-  title: string
-  deps: Record<string, string>
-  count?: number
-}) {
-  const entries = Object.entries(deps)
-  return (
-    <div className="wmde-markdown-var">
-      <H4>
-        {title} ({entries.length})
-      </H4>
-      <ul className={Classes.LIST}>
-        {entries.map(([dep, version]) => (
-          <li key={dep} data-key={dep}>
-            <Link href={`/package/${dep}`}>{dep}</Link>{" "}
-            <span css="text-[var(--color-fg-muted)]">{version}</span>
-          </li>
-        ))}
-      </ul>
-    </div>
-  )
-}
+import { DepList } from "./DepTree"
 
 export const Dependencies = memo(
-  ({ data, version }: { data: Packument; version: string }) => {
+  ({
+    data,
+    version,
+    isActiveTab,
+  }: {
+    data: Packument
+    version: string
+    isActiveTab: boolean
+  }) => {
     const {
       dependencies = {},
       devDependencies = {},
@@ -48,12 +31,26 @@ export const Dependencies = memo(
     return (
       <div css="flex flex-col gap-2">
         {!hasDeps && !hasDevDeps && !hasPeerDeps && <p>No dependencies.</p>}
-        {hasDeps ? <DepList title="Dependencies" deps={dependencies} /> : null}
+        {hasDeps ? (
+          <DepList
+            title="Dependencies"
+            deps={dependencies}
+            isActiveTab={isActiveTab}
+          />
+        ) : null}
         {hasDevDeps ? (
-          <DepList title="Dev Dependencies" deps={devDependencies} />
+          <DepList
+            title="Dev Dependencies"
+            deps={devDependencies}
+            isActiveTab={isActiveTab}
+          />
         ) : null}
         {hasPeerDeps ? (
-          <DepList title="Peer Dependencies" deps={peerDependencies} />
+          <DepList
+            title="Peer Dependencies"
+            deps={peerDependencies}
+            isActiveTab={isActiveTab}
+          />
         ) : null}
       </div>
     )

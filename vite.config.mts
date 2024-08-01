@@ -2,7 +2,7 @@ import { execSync } from "node:child_process"
 import { defineConfig } from "vite"
 import tsconfigPaths from "vite-tsconfig-paths"
 import react from "@vitejs/plugin-react"
-import { getTailwindPlugins } from "@aet/tailwind"
+import { getTailwindPlugins, isMacrosName } from "@aet/tailwind"
 import tailwindConfig from "./tailwind.config"
 import { assetsDir } from "./src/constants"
 
@@ -42,19 +42,15 @@ export default /* @__PURE__ */ defineConfig(({ command, mode }) => ({
     },
   },
   plugins: [
+    tailwind.vite(),
     react({
       jsxImportSource: "@emotion/react",
       babel: {
-        plugins: [
-          "babel-plugin-macros",
-          "@emotion/babel-plugin",
-          tailwind.babel(),
-        ],
+        plugins: [["babel-plugin-macros", { isMacrosName }], tailwind.babel()],
       },
     }),
     tsconfigPaths({
       projects: ["./tsconfig.json"],
     }),
-    tailwind.vite(),
   ],
 }))

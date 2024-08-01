@@ -17,7 +17,7 @@ const npmMirror = "/npm"
 const npmjs = "https://www.npmjs.com"
 const github = "https://api.github.com"
 
-async function get<T>(url: string) {
+async function get<T>(url: string): Promise<T> {
   const res = await fetch(url, {
     method: "GET",
     headers: { Accept: "application/json" },
@@ -30,7 +30,7 @@ async function get<T>(url: string) {
       `Request failed with status ${res.status} ${res.statusText}`,
     )
   }
-  return res.json() as Promise<T>
+  return res.json()
 }
 
 export function getSearchSuggestions(params: npm.SearchCriteria) {

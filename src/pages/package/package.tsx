@@ -56,6 +56,19 @@ export const skeleton = (
   <div className={Classes.SKELETON} style={{ height: 500 }} />
 )
 
+const README_LABEL = <T en="Readme" fr="Description" ja="説明" zh-Hant="說明" />
+const CODE_LABEL = <T en="Code" fr="Code" ja="コード" zh-Hant="程式碼" />
+const DEPENDENCIES_LABEL = (
+  <T en="Dependencies" fr="Dépendances" ja="依存関係" zh-Hant="依賴關係" />
+)
+const DEPENDENTS_LABEL = <T en="Dependents" fr="Dépendants" zh-Hant="相依" />
+const VERSIONS_LABEL = (
+  <T en="Versions" fr="Versions" ja="バージョン" zh-Hant="版本" />
+)
+const PLAYGROUND_LABEL = (
+  <T en="Playground" fr="Playground" ja="プレイグラウンド" zh-Hant="遊樂場" />
+)
+
 function PackagePageGrid({
   id,
   data,
@@ -112,67 +125,51 @@ function PackagePageGrid({
                   setHash("")
                 }}
               >
-                <T en="Readme" fr="Description" ja="説明" zh-Hant="說明" />
+                {README_LABEL}
               </a>
             }
             panel={<Readme package={id} data={data} />}
           />
           <Tab
             id={TAB.Code}
-            title={
-              <a href={`#${TAB.Code}`}>
-                <T en="Code" fr="Code" ja="コード" zh-Hant="程式碼" />
-              </a>
-            }
+            title={<a href={`#${TAB.Code}`}>{CODE_LABEL}</a>}
             panel={version ? <FileView package={id} /> : skeleton}
           />
           <Tab
             id={TAB.Dependencies}
             title={
               <a href={`#${TAB.Dependencies}`}>
-                <T
-                  en="Dependencies"
-                  fr="Dépendances"
-                  ja="依存関係"
-                  zh-Hant="依賴關係"
-                />
+                {DEPENDENCIES_LABEL}
                 {depCount != null && <sup>{depCount}</sup>}
               </a>
             }
             panel={
-              data ? <Dependencies data={data} version={version} /> : skeleton
+              data ? (
+                <Dependencies
+                  data={data}
+                  version={version}
+                  isActiveTab={activeTab === (TAB.Dependencies as string)}
+                />
+              ) : (
+                skeleton
+              )
             }
           />
           <Tab
             id={TAB.Dependents}
-            title={
-              <a href={`#${TAB.Dependents}`}>
-                <T en="Dependents" fr="Dépendants" zh-Hant="相依" />
-              </a>
-            }
+            title={<a href={`#${TAB.Dependents}`}>{DEPENDENTS_LABEL}</a>}
             panel={<Dependents package={id} />}
           />
           <Tab
             id={TAB.Versions}
-            title={
-              <a href={`#${TAB.Versions}`}>
-                <T en="Versions" fr="Versions" ja="バージョン" zh-Hant="版本" />
-              </a>
-            }
+            title={<a href={`#${TAB.Versions}`}>{VERSIONS_LABEL}</a>}
             panel={data ? <VersionList data={data} /> : skeleton}
           />
           {false && (
             <Tab
               id={TAB.Playground}
               disabled
-              title={
-                <T
-                  en="Playground"
-                  fr="Playground"
-                  ja="プレイグラウンド"
-                  zh-Hant="遊樂場"
-                />
-              }
+              title={PLAYGROUND_LABEL}
               panel={<Playground package={id} />}
             />
           )}

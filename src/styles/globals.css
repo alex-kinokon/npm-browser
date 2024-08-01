@@ -24,3 +24,15 @@ body.bp5-dark {
     background-color: rgba(22, 27, 34, 0.6);
   }
 }
+
+.bp5-light {
+  .bp5-popover.intent-none {
+    .bp5-popover-content {
+      background-color: #fff;
+      color: #000;
+    }
+    .bp5-popover-arrow-fill {
+      fill: #fff;
+    }
+  }
+}
