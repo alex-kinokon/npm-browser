@@ -59,7 +59,7 @@ export function Playground({
             intent={Intent.PRIMARY}
             onClick={() => {
               try {
-                import(
+                void import(
                   /* @vite-ignore */ `data:text/javascript;charset=utf-8,${encodeURIComponent(
                     code,
                   )}`

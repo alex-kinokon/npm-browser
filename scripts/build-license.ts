@@ -7,7 +7,6 @@ const vendorDir = resolve(__dirname, "../src/vendor")
 
 const packages = ([] as string[])
   .concat([
-    "@aet/icons",
     "@blueprintjs/core",
     "@blueprintjs/icons",
     "@emotion/css",
@@ -22,28 +21,27 @@ const packages = ([] as string[])
     "react-dom",
     "react-paginate",
     "react",
-    "wouter",
   ])
   .sort()
-  .map(name => ({
+  .map((name) => ({
     name,
     dir: resolve(__dirname, "../node_modules", name),
   }))
   .concat(
     fs
       .readdirSync(vendorDir)
-      .filter(name => !/\.\w+$/.test(name))
-      .map(name => ({
+      .filter((name) => !/\.\w+$/.test(name))
+      .map((name) => ({
         name,
         dir: resolve(vendorDir, name),
-      }))
+      })),
   )
 
 const licenses = Object.fromEntries(
   packages.map(({ name, dir }) => {
     const files = fs
       .readdirSync(dir)
-      .filter(name => name.toLowerCase().includes("license"))
+      .filter((name) => name.toLowerCase().includes("license"))
 
     if (files.length) {
       const text = fs.readFileSync(resolve(dir, files[0]), "utf8")
@@ -56,7 +54,7 @@ const licenses = Object.fromEntries(
     }
 
     return [name, null]
-  })
+  }),
 )
 
 const licenseDir = resolve(__dirname, "../licenses")
@@ -67,5 +65,5 @@ for (const name of fs.readdirSync(licenseDir)) {
 
 fs.writeFileSync(
   resolve(__dirname, "../src/licenses.generated.json"),
-  JSON.stringify(licenses, null, 2)
+  JSON.stringify(licenses, null, 2),
 )

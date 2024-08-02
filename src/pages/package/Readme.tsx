@@ -2,9 +2,9 @@ import { css } from "@emotion/css"
 import { Classes } from "@blueprintjs/core"
 import { useQuery } from "@tanstack/react-query"
 import { ExcludeRow } from "@blueprintjs/icons"
+import type { RehypeRewriteOptions } from "rehype-rewrite"
 import { Markdown, markdownStyle } from "~/components/Markdown"
 import { getPackageFile, getPackageFiles } from "~/remote"
-import type { RehypeRewriteOptions } from "rehype-rewrite"
 import type { Packument } from "~/vendor/node-query-registry"
 import type { PackageIdentifier } from "./package"
 import type { FileResult } from "~/remote/npmFile"
@@ -28,7 +28,7 @@ export function Readme({
 
   // registry.npmjs.org can return the string "[object Object]"
   if (typeof code !== "string" || !code || code === "[object Object]") {
-    if (files.isLoading || readme.isLoading || !readmeHex) {
+    if (!files.data || files.isLoading || readme.isLoading) {
       return <div className={Classes.SKELETON} css="h-40 rounded"></div>
     }
 
