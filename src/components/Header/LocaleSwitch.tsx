@@ -1,5 +1,5 @@
 import { Button, Menu, MenuItem, Popover } from "@blueprintjs/core"
-import { GlobeNetwork } from "@blueprintjs/icons"
+
 import type { Locale } from "~/Locale"
 import { useLocaleContext } from "~/Locale"
 
@@ -45,7 +45,7 @@ export function LocaleSwitch() {
       }
       placement="bottom"
     >
-      <Button icon={<GlobeNetwork />} minimal />
+      <Button icon="globe-network" minimal />
     </Popover>
   )
 }

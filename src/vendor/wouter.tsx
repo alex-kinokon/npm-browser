@@ -1,5 +1,4 @@
 // https://github.com/molefrog/wouter/commit/e106a9dd27cde242b139e27fa8ac2fdb218fc523
-import { type RouteParams, parse } from "regexparam"
 import {
   Fragment,
   cloneElement,
@@ -14,6 +13,7 @@ import {
   useRef,
   useSyncExternalStore,
 } from "react"
+import { type RouteParams, parse } from "regexparam"
 
 // the base useLocation hook type. Any custom hook (including the
 // default one) should inherit from it.

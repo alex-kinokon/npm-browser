@@ -84,12 +84,12 @@ function PackagePageGrid({
   const currentVersion = getCurrentVersion(data, version)
   const isFirstMount = useFirstMountState()
 
-  useEffect(() => {
-    if (!isFirstMount) {
-      setHash("")
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [name, version])
+  // useEffect(() => {
+  //   if (!isFirstMount) {
+  //     setHash("")
+  //   }
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [name, version])
 
   const depCount = useMemo(
     () =>

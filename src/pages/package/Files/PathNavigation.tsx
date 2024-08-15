@@ -1,19 +1,20 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import { Button, Intent } from "@blueprintjs/core"
-import { css } from "@emotion/css"
 import styled from "@emotion/styled"
 import { useQuery } from "@tanstack/react-query"
 import { memo } from "react"
+
 import { useT } from "~/Locale"
 import { getPackageFile } from "~/remote"
 import { toaster } from "~/utils/toast"
 
 export const PathNavigation = memo<{
+  className?: string
   package: string
   path: string
   setPath: (path: string) => void
   file?: { hex: string }
-}>(({ package: name, path, setPath, file }) => {
+}>(({ className, package: name, path, setPath, file }) => {
   const t = useT()
   const { data } = useQuery(getPackageFile(name, file?.hex))
 
@@ -56,52 +57,37 @@ export const PathNavigation = memo<{
   )
 
   return (
-    <Header
-      className={css`
-        display: flex;
-      `}
-    >
-      <div
-        className={css`
-          flex: 1;
-        `}
-      >
-        {pathSegments}
-      </div>
-      {file != null && (
-        <Button
-          small
-          icon="duplicate"
-          minimal
-          onClick={async () => {
-            if (!data) return
+    <header css="flex" className={className}>
+      <div css="grow">{pathSegments}</div>
+      <Button
+        small
+        icon="duplicate"
+        minimal
+        disabled={!data}
+        onClick={async () => {
+          if (!data) return
 
-            try {
-              await navigator.clipboard.writeText(data)
-              toaster.show({
-                message: t({
-                  en: "Copied to clipboard",
-                  fr: "Copié dans le presse-papier",
-                  ja: "クリップボードにコピーしました",
-                  "zh-Hant": "已複製到剪貼簿",
-                }),
-                intent: Intent.SUCCESS,
-              })
-            } catch (e) {
-              toaster.show({
-                message:
-                  "Failed to copy to clipboard: " +
-                  (e.message ?? "Unknown error"),
-                intent: Intent.DANGER,
-              })
-            }
-          }}
-        />
-      )}
-    </Header>
+          try {
+            await navigator.clipboard.writeText(data)
+            toaster.show({
+              message: t({
+                en: "Copied to clipboard",
+                fr: "Copié dans le presse-papier",
+                ja: "クリップボードにコピーしました",
+                "zh-Hant": "已複製到剪貼簿",
+              }),
+              intent: Intent.SUCCESS,
+            })
+          } catch (e) {
+            toaster.show({
+              message:
+                "Failed to copy to clipboard: " +
+                (e.message ?? "Unknown error"),
+              intent: Intent.DANGER,
+            })
+          }
+        }}
+      />
+    </header>
   )
 })
-
-const Header = styled.header`
-  margin-bottom: 10px;
-`

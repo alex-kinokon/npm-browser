@@ -1,5 +1,4 @@
 {
-  "eslint.runtime": "node",
   "cSpell.words": ["packument"],
   "typescript.tsdk": "node_modules/typescript/lib",
   "editor.inlayHints.enabled": "on",

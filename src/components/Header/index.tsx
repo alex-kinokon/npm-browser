@@ -1,10 +1,13 @@
-import { css } from "@emotion/css"
+import Icon from "@aet/icons/macro"
 import { Alignment, Button, Navbar } from "@blueprintjs/core"
 import { Menu } from "@blueprintjs/icons"
-import Icon from "@aet/icons/macro"
+import { css } from "@emotion/css"
+
 import { Link } from "~/vendor/wouter"
-import { SearchView } from "./Search"
+
 import { LocaleSwitch } from "./LocaleSwitch"
+import { SearchView } from "./Search"
+import { ThemeSwitch } from "./ThemeSwitch"
 
 export function PageHeader({ defaultQuery }: { defaultQuery?: string }) {
   return (
@@ -37,6 +40,7 @@ export function PageHeader({ defaultQuery }: { defaultQuery?: string }) {
 
         <Navbar.Group align={Alignment.RIGHT}>
           <LocaleSwitch />
+          <ThemeSwitch />
           <div
             css="ml-1 mr-2 opacity-80"
             className={css`

@@ -1,5 +1,6 @@
 import { Button, Card, NonIdealState, Spinner } from "@blueprintjs/core"
 import { Error, Refresh } from "@blueprintjs/icons"
+
 import { T } from "~/Locale"
 
 export function ErrorView({

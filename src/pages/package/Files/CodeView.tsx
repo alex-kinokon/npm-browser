@@ -1,20 +1,26 @@
-import { useQuery } from "@tanstack/react-query"
-import { memo, useMemo, useRef } from "react"
-import { css } from "@emotion/css"
+import "./Monaco"
+
+import { css, cx } from "@emotion/css"
 import { Editor } from "@monaco-editor/react"
+import { useQuery } from "@tanstack/react-query"
 // import { useLocation } from "~/vendor/wouter"
 import type * as monaco from "monaco-editor"
+import { memo, useMemo, useRef } from "react"
+
 import { Markdown, markdownStyle } from "~/components/Markdown"
-import { ErrorView, LoadingView } from "../NonIdeal"
-import { getPackageFile } from "~/remote"
-import type { MappedFile } from "./index"
-import "./Monaco"
 import { useDarkMode } from "~/hooks/useDarkMode"
+import { getPackageFile } from "~/remote"
+
+import { ErrorView, LoadingView } from "../NonIdeal"
 import type { PackageIdentifier } from "../package"
+
 import { intellisense } from "./fetchType"
 import type { ICodeEditorService } from "./monaco-def/codeEditorService"
 
+import type { MappedFile } from "./index"
+
 interface CodeViewProps {
+  className?: string
   file: MappedFile
   files: MappedFile[]
   setPath: (path: string) => void
@@ -23,9 +29,10 @@ interface CodeViewProps {
 
 const CodeViewInternal = memo<
   CodeViewProps & {
+    className?: string
     data: string
   }
->(({ file, files, setPath, data, package: pkg }) => {
+>(({ className, file, files, setPath, data, package: pkg }) => {
   // const [, setLocation] = useLocation()
   const dark = useDarkMode()
 
@@ -49,7 +56,7 @@ const CodeViewInternal = memo<
   )
 
   return (
-    <div ref={ref}>
+    <div className={className} ref={ref}>
       <Editor
         value={data}
         theme={dark ? "github-dark" : "github-light"}
@@ -80,7 +87,7 @@ const CodeViewInternal = memo<
 })
 
 export function CodeView(props: CodeViewProps) {
-  const { package: pkg, file } = props
+  const { package: pkg, file, className } = props
   const { data, isLoading, isError, error, refetch } = useQuery(
     getPackageFile(pkg.name, file.hex),
   )
@@ -94,7 +101,7 @@ export function CodeView(props: CodeViewProps) {
   }
 
   return file.basename.endsWith(".md") ? (
-    <Markdown className={markdownStyle} source={data} />
+    <Markdown className={cx(markdownStyle, className)} source={data} />
   ) : (
     <CodeViewInternal {...props} data={data} />
   )

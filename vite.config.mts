@@ -1,10 +1,12 @@
 import { execSync } from "node:child_process"
+
+import { getTailwindPlugins, isMacrosName } from "@aet/tailwind"
+import react from "@vitejs/plugin-react"
 import { defineConfig } from "vite"
 import tsconfigPaths from "vite-tsconfig-paths"
-import react from "@vitejs/plugin-react"
-import { getTailwindPlugins, isMacrosName } from "@aet/tailwind"
-import tailwindConfig from "./tailwind.config"
+
 import { assetsDir } from "./src/constants"
+import tailwindConfig from "./tailwind.config"
 
 const tailwind = getTailwindPlugins({
   tailwindConfig,

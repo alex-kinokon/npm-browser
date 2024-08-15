@@ -31,9 +31,9 @@
     ]
   },
   "devDependencies": {
-    "@aet/eslint-rules": "^1.0.1-beta.12",
+    "@aet/eslint-rules": "^1.0.1-beta.31",
     "@aet/icons": "^0.0.1-beta.10",
-    "@aet/tailwind": "^1.0.3",
+    "@aet/tailwind": "^1.0.10",
     "@blueprintjs/core": "^5.11.0",
     "@blueprintjs/icons": "^5.11.0",
     "@blueprintjs/select": "^5.2.2",

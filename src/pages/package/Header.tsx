@@ -8,12 +8,15 @@ import {
   Intent,
 } from "@blueprintjs/core"
 import { css, cx } from "@emotion/css"
-import { type PackageIdentifier, getCurrentVersion } from "./package"
+
 import { T } from "~/Locale"
-import { TypeScriptStatus } from "./TypeScriptStatus"
+
 import { RelativeTime } from "~/utils/relativeTime"
 import type { Packument } from "~/vendor/node-query-registry"
 import { Link } from "~/vendor/wouter"
+
+import { type PackageIdentifier, getCurrentVersion } from "./package"
+import { TypeScriptStatus } from "./TypeScriptStatus"
 
 export function Header({
   id,

@@ -1,5 +1,6 @@
 import { NonIdealState } from "@blueprintjs/core"
 import { Error } from "@blueprintjs/icons"
+
 import { T } from "~/Locale"
 
 export function PageError({ error }: { error: Error }) {
