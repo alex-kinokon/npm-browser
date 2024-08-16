@@ -1,0 +1,14 @@
+{
+  "private": true,
+  "upstream": {
+    "version": 1,
+    "sources": {
+      "main": {
+        "repository": "https://github.com/uiwjs/react-markdown-preview.git",
+        "commit": "aa3b0d118e4340af9c7805c5666c03931e832298",
+        "branch": "master",
+        "date": "2024-08-03T02:22:25+08:00"
+      }
+    }
+  }
+}

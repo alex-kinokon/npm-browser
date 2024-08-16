@@ -1,12 +1,13 @@
-import "@uiw/react-markdown-preview"
-import styled from "@emotion/styled"
+import "../vendor/react-markdown"
 import { Card, Classes, Divider, H2, H5 } from "@blueprintjs/core"
-import { Link } from "~/vendor/wouter"
+import styled from "@emotion/styled"
+
+import { Container } from "~/components/Container"
+import Footer from "~/components/Footer"
 import { Head } from "~/components/Head"
 import { PageHeader } from "~/components/Header"
-import Footer from "~/components/Footer"
-import { Container } from "~/components/Container"
 import { T } from "~/Locale"
+import { Link } from "~/vendor/wouter"
 
 const Grid = styled.div`
   display: grid;

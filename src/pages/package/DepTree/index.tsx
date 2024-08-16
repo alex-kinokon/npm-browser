@@ -154,7 +154,7 @@ export function DepList({
 }) {
   const entries = Object.entries(deps)
   return (
-    <div className="wmde-markdown-var">
+    <div>
       <H4>
         {title} ({entries.length})
       </H4>

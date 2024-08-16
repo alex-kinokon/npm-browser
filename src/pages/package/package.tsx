@@ -1,24 +1,26 @@
-import { useQuery } from "@tanstack/react-query"
-import { css } from "@emotion/css"
-import { useFirstMountState } from "@react-hookz/web"
 import { Classes, Divider, Tab, Tabs } from "@blueprintjs/core"
+import { css } from "@emotion/css"
 import styled from "@emotion/styled"
-import { useEffect, useMemo } from "react"
-import { getRegistryPackageInfo } from "~/remote"
-import { Readme } from "./Readme"
-import { FileView } from "./Files"
-import { PageHeader } from "~/components/Header"
-import { VersionList } from "./Versions"
-import { Dependencies, Dependents } from "./Dependencies"
-import Footer from "~/components/Footer"
-import { Sidebar } from "./Sidebar"
-import { T } from "~/Locale"
+import { useQuery } from "@tanstack/react-query"
+import { useMemo } from "react"
+
 import { Container } from "~/components/Container"
-import { Playground } from "./Playground"
-import { useHash } from "~/hooks/useHash"
+import Footer from "~/components/Footer"
+import { PageHeader } from "~/components/Header"
 import { PageError } from "~/components/PageError"
+import { useHash } from "~/hooks/useHash"
+import { T } from "~/Locale"
+import { getRegistryPackageInfo } from "~/remote"
 import type { Packument } from "~/vendor/node-query-registry"
+
+import { Dependencies, Dependents } from "./Dependencies"
+import { FileView } from "./Files"
+
 import { Header } from "./Header"
+import { Playground } from "./Playground"
+import { Readme } from "./Readme"
+import { Sidebar } from "./Sidebar"
+import { VersionList } from "./Versions"
 
 export interface PackageIdentifier {
   name: string
@@ -78,18 +80,10 @@ function PackagePageGrid({
   data?: Packument
   isLoading: boolean
 }) {
-  const { name, version } = id
+  const { version } = id
   const [[activeTab], setHash] = useHash()
 
   const currentVersion = getCurrentVersion(data, version)
-  const isFirstMount = useFirstMountState()
-
-  // useEffect(() => {
-  //   if (!isFirstMount) {
-  //     setHash("")
-  //   }
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [name, version])
 
   const depCount = useMemo(
     () =>

@@ -1,5 +1,5 @@
 import { css } from "@emotion/css"
-export { default as Markdown } from "@uiw/react-markdown-preview"
+export { default as Markdown } from "../vendor/react-markdown"
 
 export const markdownStyle = css`
   &.wmde-markdown {

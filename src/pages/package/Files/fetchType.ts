@@ -1,11 +1,16 @@
 import { dirname, join, parse, resolve } from "node:path"
-import { debounce } from "lodash"
+
 import isCore from "is-core-module"
+import { debounce } from "lodash"
 import * as monaco from "monaco-editor"
-import { getImportedModules } from "./getImports"
-import type { PackageIdentifier } from "../package"
+
 import { queryClient } from "~/fetch-client"
 import { getPackageFile } from "~/remote"
+
+import type { PackageIdentifier } from "../package"
+
+import { getImportedModules } from "./getImports"
+
 import type { MappedFile } from "./index"
 
 export function intellisense(

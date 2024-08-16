@@ -1,13 +1,14 @@
-import "@uiw/react-markdown-preview"
-import invariant from "tiny-invariant"
+import "../vendor/react-markdown"
 import { Classes, Divider, H3 } from "@blueprintjs/core"
 import { css, cx } from "@emotion/css"
-import { Link, Redirect } from "~/vendor/wouter"
+import invariant from "tiny-invariant"
+
+import { Container } from "~/components/Container"
+import Footer from "~/components/Footer"
 import { Head } from "~/components/Head"
 import { PageHeader } from "~/components/Header"
-import Footer from "~/components/Footer"
-import { Container } from "~/components/Container"
 import { T } from "~/Locale"
+import { Link, Redirect } from "~/vendor/wouter"
 
 function parseRoute(routes: string[]) {
   switch (routes.length) {
@@ -22,7 +23,7 @@ function parseRoute(routes: string[]) {
     case 1:
       return { name: routes[0], version: undefined }
     case 0:
-      return undefined
+      return
   }
 }
 

@@ -1,15 +1,17 @@
 import "@fontsource-variable/inter"
 import "@fontsource-variable/roboto-condensed"
+import { FocusStyleManager } from "@blueprintjs/core"
 import { QueryClientProvider } from "@tanstack/react-query"
 import { StrictMode, Suspense } from "react"
-import { FocusStyleManager } from "@blueprintjs/core"
-import { Router } from "~/vendor/wouter"
+
+import favicon from "~/assets/favicon.svg"
+import { Head } from "~/components/Head"
 import { SideEffect } from "~/components/SideEffect"
 import { LocaleProvider } from "~/Locale"
-import routes from "./routes"
-import { Head } from "~/components/Head"
-import favicon from "~/assets/favicon.svg"
+import { Router } from "~/vendor/wouter"
+
 import { queryClient } from "./fetch-client"
+import routes from "./routes"
 
 FocusStyleManager.onlyShowFocusOnTabs()
 
