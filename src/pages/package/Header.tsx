@@ -10,11 +10,11 @@ import {
 import { css, cx } from "@emotion/css"
 
 import { T } from "~/Locale"
-
 import { RelativeTime } from "~/utils/relativeTime"
 import type { Packument } from "~/vendor/node-query-registry"
 import { Link } from "~/vendor/wouter"
 
+import { ESMStatus } from "./ESMStatus"
 import { type PackageIdentifier, getCurrentVersion } from "./package"
 import { TypeScriptStatus } from "./TypeScriptStatus"
 
@@ -49,7 +49,8 @@ export function Header({
       )}
 
       <div css="mb-2.5 flex items-center">
-        <PackageName name={name} /> <TypeScriptStatus package={id} />
+        <PackageName name={name} /> <TypeScriptStatus package={id} />{" "}
+        {data && <ESMStatus data={data} package={id} />}
       </div>
       <div
         css="flex items-center"

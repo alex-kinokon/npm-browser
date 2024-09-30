@@ -1,4 +1,4 @@
-import type { PackageJSON } from "./package-json"
+import type { PackageJson } from "./package-json"
 import type { Person } from "./person"
 
 /**
@@ -13,9 +13,9 @@ import type { Person } from "./person"
  * @see {@link https://github.com/npm/registry/blob/master/docs/responses/package-metadata.md#abbreviated-version-object}
  * @see {@link https://github.com/npm/registry/blob/master/docs/responses/package-metadata.md#full-metadata-format}
  * @see {@link https://github.com/npm/registry/blob/master/docs/REGISTRY-API.md#version}
- * @see {@link PackageJSON}
+ * @see {@link PackageJson}
  */
-export interface RawPackageManifest extends PackageJSON {
+export interface RawPackageManifest extends PackageJson {
   /** Package version ID (for example, `foo@1.0.0` or `@bar/baz@1.0.0`) */
   readonly _id: string
 

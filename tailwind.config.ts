@@ -7,7 +7,13 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        narrow: ["Roboto Condensed Variable", "system-ui", "sans-serif"],
+        narrow: [
+          "SF Compact",
+          "Chaloult Condensed",
+          "Roboto Condensed Variable",
+          "system-ui",
+          "sans-serif",
+        ],
       },
     },
   },

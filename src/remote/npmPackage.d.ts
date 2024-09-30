@@ -9,8 +9,8 @@ export interface NpmPackage {
   package: string
   packageLinkingCallToActionHref: null
   packageUrl: string
-  packageVersion: Packument
-  packument: Packument
+  packageVersion: PackageVersion
+  packument: PackageVersion
   private: boolean
   isSecurityPlaceholder: boolean
   provenance: Provenance
@@ -66,7 +66,7 @@ interface Download {
   label: string
 }
 
-interface Packument {
+interface PackageVersion {
   author: Author
   description: string
   homepage: string

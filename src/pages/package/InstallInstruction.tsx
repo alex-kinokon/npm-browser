@@ -10,6 +10,7 @@ type PkgMan = "npm" | "yarn" | "pnpm"
 
 const PkgSwitcher = styled.a`
   font-weight: normal;
+  user-select: none;
   &:not(:last-child) {
     margin-right: 4px;
     &:after {
@@ -40,46 +41,63 @@ export const Install = memo(({ name }: { name: string }) => {
     }
   }, [name, pkgMan, dev])
 
+  const renderPackageName = (name: PkgMan, label: string) =>
+    pkgMan !== name && (
+      <PkgSwitcher
+        title={t({
+          en: `Switch to ${label}`,
+          fr: `Changer pour ${label}`,
+          ja: `${label} に切り替える`,
+          "zh-Hant": `切換到 ${label}`,
+        })}
+        onClick={(e) => {
+          e.preventDefault()
+          setPkgMan(name)
+        }}
+      >
+        {label}
+      </PkgSwitcher>
+    )
+
+  const devLabel = t({
+    en: "Install as a development dependency",
+    fr: "Installer en tant que dépendance de développement",
+    ja: "開発依存関係としてインストール",
+    "zh-Hant": "安裝為開發依賴",
+  })
+
   return (
     <FormGroup
       label={
         <div css="flex items-center">
           <div className={css({ flex: 1 })}>
-            <T en="Install" fr="Installer" ja="インストール" zh-Hant="安裝" />
+            <T
+              en="Install"
+              fr="Installation"
+              ja="インストール"
+              zh-Hant="安裝"
+            />
           </div>
           <div css="flex items-center">
-            <Switch
-              checked={dev}
-              onChange={() => setDev(!dev)}
-              innerLabelChecked="dev"
-              css="mb-0 [transform:translate(0,-3px)]"
-              aria-label={t({
-                en: "Install as a development dependency",
-                fr: "Installer en tant que dépendance de développement",
-                ja: "開発依存関係としてインストール",
-                "zh-Hant": "安裝為開發依賴",
-              })}
-              className={css`
-                .bp5-switch-inner-text {
-                  margin-left: -4px;
-                  margin-right: -4px;
-                }
-              `}
-            />
+            <div title={devLabel}>
+              <Switch
+                checked={dev}
+                onChange={(e) => setDev(e.currentTarget.checked)}
+                innerLabelChecked="dev"
+                css="mb-0 [transform:translate(0,-3px)]"
+                aria-label={devLabel}
+                className={css`
+                  .bp5-switch-inner-text {
+                    margin-left: -4px;
+                    margin-right: -4px;
+                  }
+                `}
+              />
+            </div>
             <div>
-              {pkgMan !== "npm" && (
-                <PkgSwitcher onClick={() => setPkgMan("npm")}>NPM</PkgSwitcher>
-              )}
-              {pkgMan !== "yarn" && (
-                <PkgSwitcher onClick={() => setPkgMan("yarn")}>
-                  Yarn
-                </PkgSwitcher>
-              )}
-              {pkgMan !== "pnpm" && (
-                <PkgSwitcher onClick={() => setPkgMan("pnpm")}>
-                  PNPM
-                </PkgSwitcher>
-              )}
+              {renderPackageName("npm", "NPM")}
+              {renderPackageName("yarn", "Yarn")}
+              {renderPackageName("pnpm", "PNPM")}
             </div>
           </div>
         </div>

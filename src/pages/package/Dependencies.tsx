@@ -1,12 +1,14 @@
 import { Classes, H4 } from "@blueprintjs/core"
-import { memo } from "react"
 import { useQuery } from "@tanstack/react-query"
-import { Link } from "~/vendor/wouter"
+import { memo } from "react"
+
+import { getPackageInfo } from "~/remote"
 import { uniq } from "~/utils/uniq"
 import type { Packument } from "~/vendor/node-query-registry"
-import { type PackageIdentifier, skeleton } from "./package"
-import { getPackageInfo } from "~/remote"
+import { Link } from "~/vendor/wouter"
+
 import { DepList } from "./DepTree"
+import { type PackageIdentifier, skeleton } from "./package"
 
 export const Dependencies = memo(
   ({

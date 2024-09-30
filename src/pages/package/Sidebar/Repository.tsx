@@ -1,12 +1,13 @@
-import { css, cx } from "@emotion/css"
-import { Classes, FormGroup } from "@blueprintjs/core"
-import { memo } from "react"
-import { useQuery } from "@tanstack/react-query"
 import Icon from "@aet/icons/macro"
-import type { Packument } from "~/vendor/node-query-registry"
+import { Classes, FormGroup } from "@blueprintjs/core"
+import { css, cx } from "@emotion/css"
+import { useQuery } from "@tanstack/react-query"
+import { memo } from "react"
+
 import { T } from "~/Locale"
 import { getGitHubRepo, getPulls } from "~/remote"
 import { parseRepo } from "~/utils/parseRepo"
+import type { Packument } from "~/vendor/node-query-registry"
 
 export function getRepoURL(data?: Packument) {
   const repoURL =
@@ -31,7 +32,7 @@ export const RepositoryView = memo(({ data }: { data?: Packument }) => {
           href={repo.repoURL.replace(/^git\+https/, "https")}
           target="_blank"
           rel="noopener noreferrer"
-          css="font-narrow break-words"
+          css="break-words font-narrow tracking-tight"
         >
           {repo.repoURL}
         </a>
@@ -65,39 +66,24 @@ const GitHubData = memo(({ owner, repo }: { owner: string; repo: string }) => {
   return (
     <div
       css="mt-1.5 flex"
-      className={css`
-        font-size: 0.95em;
-        > div {
-          margin-right: 0.5rem;
-          display: flex;
-          align-items: center;
-        }
-        svg {
-          margin-right: 0.2rem;
-          font-size: 1.2em;
-          fill: #1f2328;
-          .bp5-dark & {
-            fill: #7d8590;
-          }
-        }
-      `}
+      className={css`font-size: 0.95em; > div { margin-right: 0.5rem; display: flex; align-items: center; } svg { margin-right: 0.2rem; font-size: 1.2em; fill: #1f2328; & { fill: #7d8590; } } .bp5-dark`}
     >
       {!repoData.isError && (
         <div className={cx(repoData.isLoading && Classes.SKELETON)}>
           <Icon icon="VscIssues" />
-          <span css="font-narrow">{repoData.data?.open_issues_count}</span>
+          <span>{repoData.data?.open_issues_count.toLocaleString()}</span>
         </div>
       )}
       {!repoData.isError && (
         <div className={cx(repoData.isLoading && Classes.SKELETON)}>
           <Icon icon="VscStarFull" />
-          <span css="font-narrow">{repoData.data?.stargazers_count}</span>
+          <span>{repoData.data?.stargazers_count.toLocaleString()}</span>
         </div>
       )}
       {!pulls.isError && (
         <div className={cx(pulls.isLoading && Classes.SKELETON)}>
           <Icon icon="BiGitPullRequest" />
-          <span css="font-narrow">{pulls.data?.length}</span>
+          <span>{pulls.data?.length.toLocaleString()}</span>
         </div>
       )}
     </div>

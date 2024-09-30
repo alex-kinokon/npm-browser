@@ -20,7 +20,7 @@ const localeList: {
     locale: "ja",
   },
   {
-    text: "中文 (繁體)",
+    text: "中文",
     locale: "zh-Hant",
   },
 ]

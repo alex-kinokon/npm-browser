@@ -1,15 +1,18 @@
-import { css, cx } from "@emotion/css"
 import { Classes, Divider, FormGroup } from "@blueprintjs/core"
+import { css, cx } from "@emotion/css"
 import styled from "@emotion/styled"
-import { getFileSize } from "~/utils/fileSize"
-import { Install } from "../InstallInstruction"
-import type { Packument } from "~/vendor/node-query-registry"
+
 import { T } from "~/Locale"
-import { RepositoryView } from "./Repository"
-import { MaintainersView } from "./Maintainers"
+import { getFileSize } from "~/utils/fileSize"
+import type { Packument } from "~/vendor/node-query-registry"
+
+import { Install } from "../InstallInstruction"
+import type { PackageIdentifier } from "../package"
+
 import { DownloadsView } from "./Downloads"
 import { LinksView } from "./Links"
-import type { PackageIdentifier } from "../package"
+import { MaintainersView } from "./Maintainers"
+import { RepositoryView } from "./Repository"
 
 export function Sidebar({
   data,
@@ -88,7 +91,7 @@ export function Sidebar({
       >
         <span className={cx(!data && Classes.SKELETON)}>
           {cur?.dist.unpackedSize != null
-            ? getFileSize(cur.dist.unpackedSize!)
+            ? getFileSize(cur.dist.unpackedSize)
             : "Unknown"}
         </span>
       </FormGroup>
