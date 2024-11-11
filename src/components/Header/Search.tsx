@@ -1,14 +1,15 @@
-import { Suggest } from "@blueprintjs/select"
-import { useCallback, useState } from "react"
-import { useQuery } from "@tanstack/react-query"
 import { Button, MenuItem } from "@blueprintjs/core"
-import { css } from "@emotion/css"
 import { Search } from "@blueprintjs/icons"
-import { useNavigate } from "~/vendor/wouter"
-import { getSearchSuggestions } from "~/remote"
+import { Suggest } from "@blueprintjs/select"
+import { css } from "@emotion/css"
+import { useQuery } from "@tanstack/react-query"
+import { useCallback, useState } from "react"
+
 import { useDebouncedValue } from "~/hooks/useDebouncedValue"
-import type { SearchResult } from "~/vendor/node-query-registry"
 import { useT } from "~/Locale"
+import { getSearchSuggestions } from "~/remote"
+import type { SearchResult } from "~/vendor/node-query-registry"
+import { useNavigate } from "~/vendor/wouter"
 
 export function SearchView({ defaultQuery }: { defaultQuery?: string }) {
   const t = useT()
@@ -29,22 +30,11 @@ export function SearchView({ defaultQuery }: { defaultQuery?: string }) {
 
   return (
     <Suggest<SearchResult>
-      query={query}
-      onQueryChange={setQuery}
-      items={list}
-      onItemSelect={(item, e) => {
-        if (
-          e?.type === "keyup" &&
-          (e as React.KeyboardEvent<HTMLElement>).key === "Enter"
-        ) {
-          goToSearch()
-        } else {
-          setQuery(item.package.name)
-          setLocation(`/package/${item.package.name}`)
-        }
-      }}
       activeItem={list.find((item) => item.package.name === activeItem)}
-      onActiveItemChange={(item) => setActiveItem(item?.package.name)}
+      inputValueRenderer={(item) => item.package.name}
+      items={list}
+      noResults={<MenuItem disabled={true} text="No results." />}
+      query={query}
       className={css`
         width: 100%;
       `}
@@ -53,16 +43,6 @@ export function SearchView({ defaultQuery }: { defaultQuery?: string }) {
           <MenuItem disabled={true} text="Loading…" />
         ) : null
       }
-      popoverProps={{
-        matchTargetWidth: true,
-        minimal: true,
-      }}
-      menuProps={{
-        className: css`
-          max-height: max(50vh, 400px);
-          overflow: scroll;
-        `,
-      }}
       inputProps={{
         placeholder: t({
           en: "Search",
@@ -72,22 +52,18 @@ export function SearchView({ defaultQuery }: { defaultQuery?: string }) {
         }),
         rightElement: (
           <Button
-            icon={<Search />}
             minimal
             disabled={!query}
+            icon={<Search />}
             onClick={goToSearch}
           />
         ),
       }}
-      noResults={<MenuItem disabled={true} text="No results." />}
-      inputValueRenderer={(item) => item.package.name}
       itemRenderer={(item, { handleClick, handleFocus, modifiers, ref }) => (
         <MenuItem
-          key={item.package.name}
-          onClick={handleClick}
-          onMouseEnter={handleFocus}
           active={modifiers.active}
           disabled={modifiers.disabled}
+          key={item.package.name}
           ref={ref}
           text={
             <>
@@ -110,8 +86,33 @@ export function SearchView({ defaultQuery }: { defaultQuery?: string }) {
               </div>
             </>
           }
+          onClick={handleClick}
+          onMouseEnter={handleFocus}
         />
       )}
+      menuProps={{
+        className: css`
+          max-height: max(50vh, 400px);
+          overflow: scroll;
+        `,
+      }}
+      popoverProps={{
+        matchTargetWidth: true,
+        minimal: true,
+      }}
+      onActiveItemChange={(item) => setActiveItem(item?.package.name)}
+      onQueryChange={setQuery}
+      onItemSelect={(item, e) => {
+        if (
+          e?.type === "keyup" &&
+          (e as React.KeyboardEvent<HTMLElement>).key === "Enter"
+        ) {
+          goToSearch()
+        } else {
+          setQuery(item.package.name)
+          setLocation(`/package/${item.package.name}`)
+        }
+      }}
     />
   )
 }

@@ -1,0 +1,67 @@
+// https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/import
+import defaultImport from "module-name";
+import * as namespaceImport from "module-name2";
+import { export1 } from "module-name3";
+import { export1 as alias1 } from "module-name";
+import { default as alias2 } from "module-name2";
+import { export2, export3 } from "module-name3";
+import { export4, export2 as alias3 } from "module-name2";
+import { "string name" as alias4 } from "module-name3";
+import defaultExport2, { export5 } from "module-name";
+import defaultExport3, * as name1 from "module-name";
+import "module-name";
+import type defaultImport from "type-module-name";
+import type * as namespaceImport from "type-module-name";
+import { type internal } from "type-module-name";
+import type { export7 } from "type-module-name";
+import type { export1 as alias5 } from "type-module-name";
+import defaultExport4, { type export1 as alias6 } from "mixed-module-name";
+import json from "module-name.json" assert { type: "json" };
+import json1 from "./module-name.json" with { type: "json" };
+
+// https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/export
+
+import("./dynamic");
+import("./dynamicWithAttribute", { with: { type: "json" } });
+import(`./dynamic${"import"}`);
+
+// Exporting declarations
+export let dec1, dec2; // also var
+export const dec3 = 1, dec4 = 2; // also var, let
+export function functionName() {}
+export class ClassName {}
+export function* generatorFunctionName() {}
+export const { name3, name2: bar } = o;
+export const [ name4, name5 ] = array;
+
+// Export list
+const name6 = 1, name7 = 2, nameN = 3, variable1 = 4, variable2 = 5;
+export { name6, name7 };
+export { variable1 as name8, variable2 as name9, nameN };
+export { variable1 as "export string name" };
+export { name6 as default };
+
+// Default exports
+export default expression;
+export default function functionName2() {}
+export default class ClassName2 {}
+export default function* generatorFunctionName2() {}
+export default function () {}
+export default class {}
+export default function* () {}
+
+// Aggregating modules
+export * from "module-name";
+export * as name10 from "module-name";
+export { name11, name12 } from "module-name";
+export { local1 as exported, import2 as name14, name15 } from "module-name";
+export { default, } from "module-name";
+export { default as name16 } from "module-name";
+
+// Type exports
+export type { typeName1 } from "module-name";
+export type { typeName as alias5 } from "module-name";
+export { type typeName2 } from "module-name";
+export { type typeName2 as alias6 } from "module-name";
+export type * as namespace from "module-name";
+export type A = B;

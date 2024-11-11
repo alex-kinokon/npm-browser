@@ -15,9 +15,9 @@ import type { Packument } from "~/vendor/node-query-registry"
 
 import { Dependencies, Dependents } from "./Dependencies"
 import { FileView } from "./Files"
-
 import { Header } from "./Header"
 import { Playground } from "./Playground"
+import { ProvenanceView } from "./Provenance"
 import { Readme } from "./Readme"
 import { Sidebar } from "./Sidebar"
 import { VersionList } from "./Versions"
@@ -96,7 +96,7 @@ function PackagePageGrid({
   return (
     <Grid>
       <div>
-        <Header id={id} isLoading={isLoading} data={data} />
+        <Header data={data} id={id} isLoading={isLoading} />
 
         {/* Main */}
         <Tabs
@@ -110,6 +110,12 @@ function PackagePageGrid({
         >
           <Tab
             id={TAB.Readme}
+            panel={
+              <>
+                <ProvenanceView id={id} />
+                <Readme data={data} package={id} />
+              </>
+            }
             title={
               // eslint-disable-next-line jsx-a11y/anchor-is-valid
               <a
@@ -122,49 +128,48 @@ function PackagePageGrid({
                 {README_LABEL}
               </a>
             }
-            panel={<Readme package={id} data={data} />}
           />
           <Tab
             id={TAB.Code}
-            title={<a href={`#${TAB.Code}`}>{CODE_LABEL}</a>}
             panel={version ? <FileView package={id} /> : skeleton}
+            title={<a href={`#${TAB.Code}`}>{CODE_LABEL}</a>}
           />
           <Tab
             id={TAB.Dependencies}
+            panel={
+              data ? (
+                <Dependencies
+                  data={data}
+                  isActiveTab={activeTab === (TAB.Dependencies as string)}
+                  version={version}
+                />
+              ) : (
+                skeleton
+              )
+            }
             title={
               <a href={`#${TAB.Dependencies}`}>
                 {DEPENDENCIES_LABEL}
                 {depCount != null && <sup>{depCount}</sup>}
               </a>
             }
-            panel={
-              data ? (
-                <Dependencies
-                  data={data}
-                  version={version}
-                  isActiveTab={activeTab === (TAB.Dependencies as string)}
-                />
-              ) : (
-                skeleton
-              )
-            }
           />
           <Tab
             id={TAB.Dependents}
-            title={<a href={`#${TAB.Dependents}`}>{DEPENDENTS_LABEL}</a>}
             panel={<Dependents package={id} />}
+            title={<a href={`#${TAB.Dependents}`}>{DEPENDENTS_LABEL}</a>}
           />
           <Tab
             id={TAB.Versions}
-            title={<a href={`#${TAB.Versions}`}>{VERSIONS_LABEL}</a>}
             panel={data ? <VersionList data={data} /> : skeleton}
+            title={<a href={`#${TAB.Versions}`}>{VERSIONS_LABEL}</a>}
           />
           {false && (
             <Tab
-              id={TAB.Playground}
               disabled
-              title={PLAYGROUND_LABEL}
+              id={TAB.Playground}
               panel={<Playground package={id} />}
+              title={PLAYGROUND_LABEL}
             />
           )}
         </Tabs>
@@ -202,7 +207,7 @@ export default function PackagePage({
         {isError ? (
           <PageError error={error as Error} />
         ) : (
-          <PackagePageGrid id={id} data={data} isLoading={isLoading} />
+          <PackagePageGrid data={data} id={id} isLoading={isLoading} />
         )}
 
         <Divider css="-ml-0.5 mt-[40px]" />

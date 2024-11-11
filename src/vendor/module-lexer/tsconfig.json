@@ -1,0 +1,13 @@
+{
+  "compilerOptions": {
+    "allowImportingTsExtensions": true,
+    "strict": true,
+    "esModuleInterop": true,
+    "moduleResolution": "node",
+    "noEmit": true,
+    "useUnknownInCatchVariables": false,
+    "useDefineForClassFields": true,
+    "target": "ESNext"
+  },
+  "include": ["./*.ts", "bench", "src", "scripts", "test", "repl.ts"]
+}

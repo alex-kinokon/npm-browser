@@ -1,11 +1,13 @@
+import { queryOptions } from "~/utils/queryType"
+import * as npm from "~/vendor/node-query-registry"
+
 import type { IssuesResult } from "./githubIssues"
 import type { PullsResult } from "./githubPull"
+import type { GithubRepo } from "./githubRepo"
 import type { FileResult } from "./npmFile"
 import type { NpmPackage } from "./npmPackage"
 import type { NpmUser } from "./npmUser"
-import { queryOptions } from "~/utils/queryType"
-import * as npm from "~/vendor/node-query-registry"
-import type { GithubRepo } from "./githubRepo"
+import type { Provenance } from "./provenance"
 
 if (typeof window !== "undefined") {
   // onlineManager.setOnline(false)
@@ -41,6 +43,14 @@ export function getSearchSuggestions(params: npm.SearchCriteria) {
       npm.searchPackages({
         query: params,
       }),
+  })
+}
+
+export function getProvenance(name: string, version: string) {
+  return queryOptions({
+    queryKey: ["getProvenance", name, version],
+    queryFn: () =>
+      get<Provenance>(`${npmMirror}/package/${name}/v/${version}/provenance`),
   })
 }
 

@@ -7,7 +7,7 @@ import { T, useT } from "~/Locale"
 export default function Footer() {
   const t = useT()
   return (
-    <footer css="mb-10 mt-5 flex items-center" className={Classes.RUNNING_TEXT}>
+    <footer className={Classes.RUNNING_TEXT} css="mb-10 mt-5 flex items-center">
       <div
         className={css`
           flex: 1%;
@@ -25,9 +25,9 @@ export default function Footer() {
       </div>
       <div>
         <Link
+          css="flex items-center"
           href="https://github.com"
           target="_blank"
-          css="flex items-center"
           className={css`
             &:not(:hover) {
               color: #24292f;
@@ -37,7 +37,7 @@ export default function Footer() {
             }
           `}
         >
-          <Icon icon="SiGithub" css="mr-1" />
+          <Icon css="mr-1" icon="SiGithub" />
           GitHub
         </Link>
       </div>

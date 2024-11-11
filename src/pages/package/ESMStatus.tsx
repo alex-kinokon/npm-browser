@@ -6,7 +6,7 @@ import type {
   RawPackageManifest,
 } from "~/vendor/node-query-registry"
 
-import { type PackageIdentifier } from "./package"
+import type { PackageIdentifier } from "./package"
 
 function isESM({ type, module, exports }: RawPackageManifest) {
   return (
@@ -16,7 +16,7 @@ function isESM({ type, module, exports }: RawPackageManifest) {
       typeof exports === "object" &&
       !Array.isArray(exports) &&
       Object.values(exports).some(
-        (obj) => obj && "import" in (obj as object),
+        (obj) => obj && typeof obj === "object" && "import" in obj,
       )) ||
     false
   )
